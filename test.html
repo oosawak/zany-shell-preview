@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>Recipe Saver (Mobile Optimized)</title>
+<title>Recipe Saver (Pixel 7a Optimized)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
@@ -90,7 +90,7 @@
 <!-- QR -->
 <script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
 
-<!-- WebWorker (埋め込み) -->
+<!-- WebWorker -->
 <script id="llm-worker" type="javascript/worker">
   importScripts("https://cdn.jsdelivr.net/npm/@xenova/transformers/dist/transformers.min.js");
 
@@ -98,7 +98,7 @@
 
   async function loadModel() {
     if (generator) return;
-    postMessage({ type: "status", message: "Loading 0.5B model..." });
+    postMessage({ type: "status", message: "Loading model (0.5B)..." });
 
     generator = await transformers.pipeline(
       "text-generation",
@@ -106,7 +106,7 @@
       { dtype: "q4" }
     );
 
-    postMessage({ type: "status", message: "Model loaded" });
+    postMessage({ type: "status", message: "Model ready" });
   }
 
   function extractJSON(text) {
@@ -130,7 +130,7 @@
 
       postMessage({ type: "status", message: "Running LLM..." });
 
-      const out = await generator(prompt, { max_new_tokens: 250 });
+      const out = await generator(prompt, { max_new_tokens: 120 });
       const raw = out[0].generated_text;
       const json = extractJSON(raw);
 
@@ -145,7 +145,6 @@
 </script>
 
 <script>
-/* Toast */
 function toast(msg) {
   const t = document.getElementById("toast");
   t.textContent = msg;
@@ -153,35 +152,21 @@ function toast(msg) {
   setTimeout(() => t.style.opacity = 0, 2000);
 }
 
-/* Image compression */
-async function compressImage(file, maxWidth = 800, quality = 0.7) {
+/* OCR 用に画像を縮小 */
+async function fileToImageData(file, maxWidth = 1200) {
   const img = new Image();
   img.src = URL.createObjectURL(file);
   await img.decode();
 
-  const scale = maxWidth / img.width;
-  const w = maxWidth;
-  const h = img.height * scale;
+  const w = Math.min(maxWidth, img.naturalWidth);
+  const h = img.naturalHeight * (w / img.naturalWidth);
 
-  const canvas = document.createElement("canvas");
-  canvas.width = w;
-  canvas.height = h;
-  const ctx = canvas.getContext("2d");
+  const c = document.createElement("canvas");
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext("2d");
   ctx.drawImage(img, 0, 0, w, h);
 
-  return canvas.toDataURL("image/jpeg", quality);
-}
-
-/* ImageData for OCR/QR */
-async function fileToImageData(file) {
-  const img = new Image();
-  img.src = URL.createObjectURL(file);
-  await img.decode();
-  const c = document.createElement("canvas");
-  c.width = img.naturalWidth;
-  c.height = img.naturalHeight;
-  const ctx = c.getContext("2d");
-  ctx.drawImage(img, 0, 0);
   return ctx.getImageData(0, 0, c.width, c.height);
 }
 
@@ -197,7 +182,7 @@ document.getElementById("process").onclick = async () => {
 
   toast("Running OCR...");
   const imgData = await fileToImageData(info);
-  const ocr = await Tesseract.recognize(imgData, "jpn");
+  const ocr = await Tesseract.recognize(imgData, "eng");
   document.getElementById("ocrText").value = ocr.data.text;
 
   toast("Decoding QR...");
@@ -208,7 +193,7 @@ document.getElementById("process").onclick = async () => {
   toast("OCR + QR done");
 };
 
-/* WebWorker 起動 */
+/* Worker 起動 */
 const workerBlob = new Blob(
   [document.querySelector("#llm-worker").textContent],
   { type: "text/javascript" }
@@ -227,6 +212,10 @@ llmWorker.onmessage = (e) => {
   }
 };
 
+llmWorker.onerror = (e) => {
+  toast("Worker error: " + e.message);
+};
+
 llmWorker.postMessage({ type: "load" });
 
 /* Run LLM */
@@ -234,27 +223,8 @@ document.getElementById("runLLM").onclick = async () => {
   const text_raw = document.getElementById("ocrText").value;
 
   const prompt = `
-Analyze the following Japanese text and separate it into “recipe information” and “store information”.
-
-Output MUST be valid JSON with the following structure:
-
-{
-  "recipe": {
-    "title": "",
-    "ingredients": [],
-    "steps": [],
-    "tags": []
-  },
-  "store": {
-    "name": "",
-    "address": "",
-    "phone": "",
-    "hours": "",
-    "notes": ""
-  }
-}
-
-Put any extra information into notes.
+Extract recipe and store info from this Japanese text.
+Output JSON only.
 
 Text:
 ${text_raw}
