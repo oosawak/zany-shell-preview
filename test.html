@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Recipe Saver (transformers.js)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+  body { font-family: sans-serif; padding: 16px; background: #fafafa; }
+  h2 { margin-top: 24px; }
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  img.thumb { width: 120px; border-radius: 8px; }
+  textarea { width: 100%; height: 120px; padding: 8px; }
+  input, button {
+    font-size: 16px;
+    padding: 10px;
+    margin: 6px 0;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  button {
+    background: #007bff;
+    color: white;
+    border: none;
+  }
+  button:active { opacity: 0.7; }
+
+toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: 9999;
+  }
+</style>
+</head>
+
+<body>
+
+<div id="toast"></div>
+
+<div class="card">
+  <h3>LLM Model & Backup</h3>
+  <button onclick='setModel('Xenova/Qwen2.5-0.5B-Instruct')'>0.5B (Fast)</button>
+  <button onclick='setModel('Xenova/Qwen2.5-1.5B-Instruct')'>1.5B (High Quality)</button>
+  <button onclick="exportDB()">Export DB</button>
+  <input type="file" id="importFile">
+</div>
+
+<div class="card">
+  <h2>📸 Add New Entry</h2>
+
+  <label>Thumbnail Image</label>
+  <input id="thumb" type="file" accept="image/*">
+
+  <label>Info Image (OCR)</label>
+  <input id="info" type="file" accept="image/*">
+
+  <label>QR Image</label>
+  <input id="qr" type="file" accept="image/*">
+
+  <button id="process">Process Images (OCR + QR)</button>
+
+  <h3>OCR Result</h3>
+  <textarea id="ocrText"></textarea>
+
+  <h3>LLM JSON Output</h3>
+  <textarea id="llmJson"></textarea>
+
+  <button id="runLLM">Run Local LLM</button>
+  <button id="save">Save to DB</button>
+</div>
+
+<div class="card">
+  <h2>📚 Saved Entries</h2>
+  <input id="tagSearch" placeholder="Search by tag (space separated)">
+  <div id="list"></div>
+</div>
+
+<!-- OCR -->
+<script src="https://unpkg.com/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
+<!-- QR -->
+<script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
+
+<!-- 埋め込み WebWorker コード -->
+<script id="llm-worker" type="javascript/worker">
+  importScripts("https://cdn.jsdelivr.net/npm/@xenova/transformers/dist/transformers.min.js");
+
+  let generator = null;
+  let currentModel = null;
+
+  async function loadModel(modelName) {
+    if (generator && currentModel === modelName) {
+      postMessage({ type: "status", message: "Model already loaded" });
+      return;
+    }
+    postMessage({ type: "status", message: "Loading model: " + modelName });
+
+    generator = await transformers.pipeline(
+      "text-generation",
+      modelName,
+      { dtype: "q4" } // INT4 量子化
+    );
+
+    currentModel = modelName;
+    postMessage({ type: "status", message: "Model loaded: " + modelName });
+  }
+
+  function extractJSON(text) {
+    const match = text.match(/\{[\s\S]*\}/);
+    return match ? match[0] : null;
+  }
+
+  onmessage = async (e) => {
+    const { type, model, prompt } = e.data;
+
+    if (type === "load") {
+      await loadModel(model);
+      return;
+    }
+
+    if (type === "run") {
+      if (!generator) {
+        postMessage({ type: "error", message: "Model not loaded" });
+        return;
+      }
+
+      postMessage({ type: "status", message: "Running LLM..." });
+
+      const out = await generator(prompt, { maxnewtokens: 250 });
+      const raw = out[0].generated_text;
+      const json = extractJSON(raw);
+
+      if (!json) {
+        postMessage({ type: "error", message: "No JSON found" });
+        return;
+      }
+
+      postMessage({ type: "result", json });
+    }
+  };
+</script>
+
+<script>
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.opacity = 1;
+  setTimeout(() => t.style.opacity = 0, 2000);
+}
+
+async function compressImage(file, maxWidth = 800, quality = 0.7) {
+  const img = new Image();
+  img.src = URL.createObjectURL(file);
+  await img.decode();
+
+  const scale = maxWidth / img.width;
+  const w = maxWidth;
+  const h = img.height * scale;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0, w, h);
+
+  return canvas.toDataURL("image/jpeg", quality);
+}
+
+async function fileToImageData(file) {
+  const img = new Image();
+  img.src = URL.createObjectURL(file);
+  await img.decode();
+  const c = document.createElement("canvas");
+  c.width = img.naturalWidth;
+  c.height = img.naturalHeight;
+  const ctx = c.getContext("2d");
+  ctx.drawImage(img, 0, 0);
+  return ctx.getImageData(0, 0, c.width, c.height);
+}
+
+document.getElementById("process").onclick = async () => {
+  const info = document.getElementById("info").files[0];
+  const qr = document.getElementById("qr").files[0];
+
+  if (!info || !qr) {
+    toast("3 images required");
+    return;
+  }
+
+  toast("Running OCR...");
+  const imgData = await fileToImageData(info);
+  const ocr = await Tesseract.recognize(imgData, "jpn");
+  document.getElementById("ocrText").value = ocr.data.text;
+
+  toast("Decoding QR...");
+  const qrData = await fileToImageData(qr);
+  const qrCode = jsQR(qrData.data, qrData.width, qrData.height);
+  window.extractedURL = qrCode ? qrCode.data : null;
+
+  toast("OCR + QR done");
+};
+
+/ WebWorker 起動 /
+const workerBlob = new Blob(
+  [document.querySelector("#llm-worker").textContent],
+  { type: "text/javascript" }
+);
+const workerURL = URL.createObjectURL(workerBlob);
+const llmWorker = new Worker(workerURL);
+
+let selectedModel = "Xenova/Qwen2.5-0.5B-Instruct";
+
+llmWorker.onmessage = (e) => {
+  const { type, message, json } = e.data;
+
+  if (type === "status") {
+    toast(message);
+  }
+
+  if (type === "error") {
+    toast("LLM Error: " + message);
+  }
+
+  if (type === "result") {
+    document.getElementById("llmJson").value = json;
+    toast("LLM JSON ready");
+  }
+};
+
+function setModel(modelName) {
+  selectedModel = modelName;
+  llmWorker.postMessage({ type: "load", model: selectedModel });
+}
+
+document.getElementById("runLLM").onclick = async () => {
+  const text_raw = document.getElementById("ocrText").value;
+
+  const prompt = `
+Analyze the following Japanese text and separate it into “recipe information” and “store information”.
+
+Output MUST be valid JSON with the following structure:
+
+{
+  "recipe": {
+    "title": "",
+    "ingredients": [],
+    "steps": [],
+    "tags": []
+  },
+  "store": {
+    "name": "",
+    "address": "",
+    "phone": "",
+    "hours": "",
+    "notes": ""
+  }
+}
+
+Put any extra information into notes.
+
+Text:
+${text_raw}
+`;
+
+  llmWorker.postMessage({
+    type: "run",
+    prompt,
+    model: selectedModel
+  });
+};
+
+llmWorker.postMessage({
+  type: "load",
+  model: selectedModel
+});
+
+/ IndexedDB /
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open("recipesDB", 2);
+    req.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains("recipes")) {
+        db.createObjectStore("recipes", { keyPath: "id" });
+      }
+    };
+    req.onsuccess = (e) => resolve(e.target.result);
+    req.onerror = (e) => reject(e.target.error);
+  });
+}
+
+async function saveEntry(entry) {
+  const db = await openDB();
+  const tx = db.transaction("recipes", "readwrite");
+  tx.objectStore("recipes").put(entry);
+}
+
+async function loadAll() {
+  const db = await openDB();
+  const tx = db.transaction("recipes", "readonly");
+  const req = tx.objectStore("recipes").getAll();
+  return new Promise((res) => (req.onsuccess = () => res(req.result)));
+}
+
+async function deleteEntry(id) {
+  const db = await openDB();
+  const tx = db.transaction("recipes", "readwrite");
+  tx.objectStore("recipes").delete(id);
+  toast("Deleted");
+}
+
+/ Save to DB /
+document.getElementById("save").onclick = async () => {
+  const thumb = document.getElementById("thumb").files[0];
+  const info = document.getElementById("info").files[0];
+  const qr = document.getElementById("qr").files[0];
+
+  if (!thumb || !info || !qr) {
+    toast("3 images required");
+    return;
+  }
+
+  const jsonText = document.getElementById("llmJson").value;
+  if (!jsonText.trim()) {
+    toast("Run LLM first");
+    return;
+  }
+
+  let parsed;
+  try {
+    parsed = JSON.parse(jsonText);
+  } catch {
+    toast("Invalid JSON");
+    return;
+  }
+
+  const entry = {
+    id: crypto.randomUUID(),
+    thumbnail_image: await compressImage(thumb, 300, 0.7),
+    info_image: await compressImage(info, 800, 0.7),
+    qr_image: await compressImage(qr, 800, 0.7),
+
+    url: window.extractedURL || null,
+    text_raw: document.getElementById("ocrText").value,
+
+    recipe: parsed.recipe || {},
+    store: parsed.store || {},
+
+    created_at: new Date().toISOString(),
+  };
+
+  await saveEntry(entry);
+  toast("Saved");
+  renderList();
+};
+
+/ List + Tag Search /
+async function renderList() {
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  const all = await loadAll();
+  const q = document.getElementById("tagSearch").value.trim().toLowerCase();
+  const tags = q.split(/\s+/).filter(Boolean);
+
+  all.forEach((r) => {
+    const entryTags = (r.recipe?.tags || []).map((t) => t.toLowerCase());
+    const match = tags.every((t) => entryTags.some((x) => x.includes(t)));
+    if (tags.length && !match) return;
+
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `
+      <img class="thumb" src="${r.thumbnail_image}">
+      <h3>${r.recipe?.title || "(no title)"}</h3>
+      <p><b>${r.store?.name || ""}</b></p>
+      <p><a href="${r.url || "#"}" target="_blank">${r.url || ""}</a></p>
+      <button onclick='edit("${r.id}")'>Edit</button>
+      <button onclick='deleteEntry("${r.id}").then(renderList)'>Delete</button>
+    `;
+    list.appendChild(div);
+  });
+}
+
+document.getElementById("tagSearch").oninput = renderList;
+
+/ Edit Form /
+window.edit = async (id) => {
+  const all = await loadAll();
+  const r = all.find((x) => x.id === id);
+  if (!r) return;
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "card";
+  wrapper.innerHTML = `
+    <h3>Edit Entry</h3>
+
+    <label>Title</label>
+    <input id="e_title" value="${r.recipe.title || ""}">
+
+    <label>Ingredients (one per line)</label>
+    <textarea id="e_ing">${(r.recipe.ingredients || []).join("\n")}</textarea>
+
+    <label>Steps (one per line)</label>
+    <textarea id="e_steps">${(r.recipe.steps || []).join("\n")}</textarea>
+
+    <label>Tags (space separated)</label>
+    <input id="e_tags" value="${(r.recipe.tags || []).join(" ")}">
+
+    <h4>Store Info</h4>
+
+    <label>Name</label>
+    <input id="e_sname" value="${r.store.name || ""}">
+
+    <label>Address</label>
+    <input id="e_addr" value="${r.store.address || ""}">
+
+    <label>Phone</label>
+    <input id="e_phone" value="${r.store.phone || ""}">
+
+    <label>Hours</label>
+    <input id="e_hours" value="${r.store.hours || ""}">
+
+    <label>Notes</label>
+    <textarea id="e_notes">${r.store.notes || ""}</textarea>
+
+    <button id="e_save">Save</button>
+  `;
+  document.body.prepend(wrapper);
+
+  document.getElementById("e_save").onclick = async () => {
+    r.recipe.title = document.getElementById("e_title").value;
+    r.recipe.ingredients = document.getElementById("e_ing").value.split("\n").filter(Boolean);
+    r.recipe.steps = document.getElementById("e_steps").value.split("\n").filter(Boolean);
+    r.recipe.tags = document.getElementById("e_tags").value.split(/\s+/).filter(Boolean);
+
+    r.store.name = document.getElementById("e_sname").value;
+    r.store.address = document.getElementById("e_addr").value;
+    r.store.phone = document.getElementById("e_phone").value;
+    r.store.hours = document.getElementById("e_hours").value;
+    r.store.notes = document.getElementById("e_notes").value;
+
+    await saveEntry(r);
+    toast("Updated");
+    location.reload();
+  };
+};
+
+/ Export / Import /
+async function exportDB() {
+  const all = await loadAll();
+  const blob = new Blob([JSON.stringify(all, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "recipes_backup.json";
+  a.click();
+  toast("Exported");
+}
+
+async function importDB(file) {
+  const text = await file.text();
+  const arr = JSON.parse(text);
+  for (const entry of arr) {
+    await saveEntry(entry);
+  }
+  toast("Imported");
+  renderList();
+}
+
+document.getElementById("importFile").onchange = (e) => {
+  const file = e.target.files[0];
+  if (file) importDB(file);
+};
+
+renderList();
+</script>
+
+</body>
+</html>
