@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>Recipe Saver (transformers.js)</title>
+<title>Recipe Saver (Mobile Optimized)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
@@ -33,7 +33,7 @@
   }
   button:active { opacity: 0.7; }
 
-toast {
+  #toast {
     position: fixed;
     bottom: 20px;
     left: 50%;
@@ -52,14 +52,6 @@ toast {
 <body>
 
 <div id="toast"></div>
-
-<div class="card">
-  <h3>LLM Model & Backup</h3>
-  <button onclick='setModel('Xenova/Qwen2.5-0.5B-Instruct')'>0.5B (Fast)</button>
-  <button onclick='setModel('Xenova/Qwen2.5-1.5B-Instruct')'>1.5B (High Quality)</button>
-  <button onclick="exportDB()">Export DB</button>
-  <input type="file" id="importFile">
-</div>
 
 <div class="card">
   <h2>📸 Add New Entry</h2>
@@ -88,6 +80,8 @@ toast {
 <div class="card">
   <h2>📚 Saved Entries</h2>
   <input id="tagSearch" placeholder="Search by tag (space separated)">
+  <button onclick="exportDB()">Export DB</button>
+  <input type="file" id="importFile">
   <div id="list"></div>
 </div>
 
@@ -96,28 +90,23 @@ toast {
 <!-- QR -->
 <script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
 
-<!-- 埋め込み WebWorker コード -->
+<!-- WebWorker (埋め込み) -->
 <script id="llm-worker" type="javascript/worker">
   importScripts("https://cdn.jsdelivr.net/npm/@xenova/transformers/dist/transformers.min.js");
 
   let generator = null;
-  let currentModel = null;
 
-  async function loadModel(modelName) {
-    if (generator && currentModel === modelName) {
-      postMessage({ type: "status", message: "Model already loaded" });
-      return;
-    }
-    postMessage({ type: "status", message: "Loading model: " + modelName });
+  async function loadModel() {
+    if (generator) return;
+    postMessage({ type: "status", message: "Loading 0.5B model..." });
 
     generator = await transformers.pipeline(
       "text-generation",
-      modelName,
-      { dtype: "q4" } // INT4 量子化
+      "Xenova/Qwen2.5-0.5B-Instruct",
+      { dtype: "q4" }
     );
 
-    currentModel = modelName;
-    postMessage({ type: "status", message: "Model loaded: " + modelName });
+    postMessage({ type: "status", message: "Model loaded" });
   }
 
   function extractJSON(text) {
@@ -126,10 +115,10 @@ toast {
   }
 
   onmessage = async (e) => {
-    const { type, model, prompt } = e.data;
+    const { type, prompt } = e.data;
 
     if (type === "load") {
-      await loadModel(model);
+      await loadModel();
       return;
     }
 
@@ -141,7 +130,7 @@ toast {
 
       postMessage({ type: "status", message: "Running LLM..." });
 
-      const out = await generator(prompt, { maxnewtokens: 250 });
+      const out = await generator(prompt, { max_new_tokens: 250 });
       const raw = out[0].generated_text;
       const json = extractJSON(raw);
 
@@ -156,6 +145,7 @@ toast {
 </script>
 
 <script>
+/* Toast */
 function toast(msg) {
   const t = document.getElementById("toast");
   t.textContent = msg;
@@ -163,6 +153,7 @@ function toast(msg) {
   setTimeout(() => t.style.opacity = 0, 2000);
 }
 
+/* Image compression */
 async function compressImage(file, maxWidth = 800, quality = 0.7) {
   const img = new Image();
   img.src = URL.createObjectURL(file);
@@ -181,6 +172,7 @@ async function compressImage(file, maxWidth = 800, quality = 0.7) {
   return canvas.toDataURL("image/jpeg", quality);
 }
 
+/* ImageData for OCR/QR */
 async function fileToImageData(file) {
   const img = new Image();
   img.src = URL.createObjectURL(file);
@@ -193,6 +185,7 @@ async function fileToImageData(file) {
   return ctx.getImageData(0, 0, c.width, c.height);
 }
 
+/* OCR + QR */
 document.getElementById("process").onclick = async () => {
   const info = document.getElementById("info").files[0];
   const qr = document.getElementById("qr").files[0];
@@ -215,7 +208,7 @@ document.getElementById("process").onclick = async () => {
   toast("OCR + QR done");
 };
 
-/ WebWorker 起動 /
+/* WebWorker 起動 */
 const workerBlob = new Blob(
   [document.querySelector("#llm-worker").textContent],
   { type: "text/javascript" }
@@ -223,30 +216,20 @@ const workerBlob = new Blob(
 const workerURL = URL.createObjectURL(workerBlob);
 const llmWorker = new Worker(workerURL);
 
-let selectedModel = "Xenova/Qwen2.5-0.5B-Instruct";
-
 llmWorker.onmessage = (e) => {
   const { type, message, json } = e.data;
 
-  if (type === "status") {
-    toast(message);
-  }
-
-  if (type === "error") {
-    toast("LLM Error: " + message);
-  }
-
+  if (type === "status") toast(message);
+  if (type === "error") toast("LLM Error: " + message);
   if (type === "result") {
     document.getElementById("llmJson").value = json;
     toast("LLM JSON ready");
   }
 };
 
-function setModel(modelName) {
-  selectedModel = modelName;
-  llmWorker.postMessage({ type: "load", model: selectedModel });
-}
+llmWorker.postMessage({ type: "load" });
 
+/* Run LLM */
 document.getElementById("runLLM").onclick = async () => {
   const text_raw = document.getElementById("ocrText").value;
 
@@ -277,19 +260,10 @@ Text:
 ${text_raw}
 `;
 
-  llmWorker.postMessage({
-    type: "run",
-    prompt,
-    model: selectedModel
-  });
+  llmWorker.postMessage({ type: "run", prompt });
 };
 
-llmWorker.postMessage({
-  type: "load",
-  model: selectedModel
-});
-
-/ IndexedDB /
+/* IndexedDB */
 function openDB() {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open("recipesDB", 2);
@@ -324,7 +298,7 @@ async function deleteEntry(id) {
   toast("Deleted");
 }
 
-/ Save to DB /
+/* Save to DB */
 document.getElementById("save").onclick = async () => {
   const thumb = document.getElementById("thumb").files[0];
   const info = document.getElementById("info").files[0];
@@ -369,7 +343,7 @@ document.getElementById("save").onclick = async () => {
   renderList();
 };
 
-/ List + Tag Search /
+/* List + Tag Search */
 async function renderList() {
   const list = document.getElementById("list");
   list.innerHTML = "";
@@ -399,7 +373,7 @@ async function renderList() {
 
 document.getElementById("tagSearch").oninput = renderList;
 
-/ Edit Form /
+/* Edit Form */
 window.edit = async (id) => {
   const all = await loadAll();
   const r = all.find((x) => x.id === id);
@@ -461,7 +435,7 @@ window.edit = async (id) => {
   };
 };
 
-/ Export / Import /
+/* Export / Import */
 async function exportDB() {
   const all = await loadAll();
   const blob = new Blob([JSON.stringify(all, null, 2)], { type: "application/json" });
