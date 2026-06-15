@@ -23,6 +23,33 @@ const LANGUAGES = {
     language_english: 'English',
     settings_vrm_default: 'デフォルト VRM',
     settings_glb_default: 'デフォルト GLB',
+    settings_tab_theme: 'テーマ',
+    settings_tab_media: 'メディア',
+    settings_tab_features: '機能',
+    settings_tab_3d: '3D',
+    settings_theme_general: '全体テーマ',
+    settings_theme_customization: 'テーマカスタマイズ',
+    settings_media_bgm: 'BGM',
+    settings_features_title: '機能のオン / オフ',
+    settings_3d_vrm_title: 'VRMアバター',
+    settings_3d_glb_title: 'GLBモデル',
+    settings_3d_chair_title: 'GLBの椅子',
+    settings_media_add_bgm: 'BGMを追加',
+    settings_media_add_url: 'URL を追加',
+    settings_media_playlist: '再生リスト',
+    settings_feature_clock: '時計',
+    settings_feature_pomodoro: 'ポモドーロタイマー',
+    settings_feature_music: '音楽プレイヤー',
+    settings_feature_rain: '雨アニメーション',
+    settings_feature_vrm: 'VRMアバター',
+    settings_feature_mascot: 'デスクトップマスコット',
+    settings_feature_ssh: 'SSHターミナル',
+    settings_left_right: '左右',
+    settings_vertical: '縦位置',
+    settings_scale: '大きさ',
+    settings_rotation: '向き',
+    settings_reset: '位置・向きをリセット',
+    settings_copy: '設定をコピー',
 
     // Workshop
     workshop_title: 'Workshop',
@@ -33,6 +60,26 @@ const LANGUAGES = {
     workshop_unsubscribe: 'Unsubscribe',
     workshop_delete: '削除',
     workshop_apply: '適用',
+    workshop_save_title: 'Workshopに保存',
+    workshop_search_placeholder: '検索...',
+    workshop_tab_theme: 'テーマ',
+    workshop_tab_vrm: 'VRM',
+    workshop_tab_glb: 'GLB',
+    workshop_tab_apps: 'アプリ',
+    workshop_empty: 'アイテムがありません',
+    workshop_create_new: '+ 新規作成',
+    workshop_form_title: '新規作成',
+    workshop_field_id: 'ID (英数字とハイフン)',
+    workshop_field_name: '名前',
+    workshop_field_desc: '説明',
+    workshop_field_author: '作者',
+    workshop_detail_id: 'ID',
+    workshop_detail_author: '作者',
+    workshop_detail_version: 'バージョン',
+    workshop_detail_files: 'ファイル',
+    workshop_detail_use: '利用する',
+    workshop_detail_in_use: '利用中',
+    workshop_detail_delete: '削除',
 
     // Theme Editor
     theme_editor_title: 'テーマエディタ',
@@ -56,6 +103,7 @@ const LANGUAGES = {
     theme_behavior_relaxed: 'リラックス',
     theme_behavior_tired: '疲れ',
     theme_glb_environment: 'Static GLB / Scene',
+    theme_environment_note: '環境スロットに配置するオブジェクト',
     theme_save_id: 'テーマ ID',
     theme_save_id_placeholder: '英数字とハイフン',
     theme_save_name: 'テーマ名',
@@ -69,6 +117,18 @@ const LANGUAGES = {
     theme_saved_alert: 'テーマを保存しました',
     theme_save_error_required: 'テーマ ID と名前は必須です',
     theme_save_error: '保存エラー:',
+    theme_tab_colors: 'カラー',
+    theme_tab_background: '背景',
+    theme_tab_character: 'キャラクター',
+    theme_tab_environment: '環境',
+    theme_tab_save: '保存',
+    theme_color_accent_label: 'アクセント',
+    theme_color_secondary_label: 'セカンダリ',
+    theme_color_accent2_label: 'アクセント2',
+    theme_color_text_label: 'テキスト',
+    theme_bg_clear_btn: 'クリア',
+    theme_select_none: '選択なし',
+    theme_saved_to_workshop: 'Workshop に投稿',
 
     // Launcher
     launcher_title: 'ランチャー',
@@ -77,6 +137,24 @@ const LANGUAGES = {
     launcher_editor: 'エディタ',
     launcher_filemanager: 'ファイル',
     launcher_calculator: '計算機',
+    todo_title: 'タスクリスト',
+    todo_placeholder: 'タスクを入力...',
+    todo_add: '追加',
+    ssh_title: 'SSHターミナル',
+    ssh_connecting: '接続中',
+    ssh_connect: '接続',
+    ssh_disconnect: '切断',
+    bgm_add_button: 'URLを追加',
+    player_mute: '消音 / 音声有効',
+    player_shuffle: 'シャッフル',
+    player_prev: '前の曲',
+    player_play: '再生 / 一時停止',
+    player_next: '次の曲',
+    player_repeat: '曲をループ再生',
+    player_volume: 'BGMの音量',
+    pomo_loop: 'ループ',
+    pomo_play: '開始 / 一時停止',
+    pomo_cancel: 'キャンセル',
 
     // Common
     none: 'なし',
@@ -103,6 +181,33 @@ const LANGUAGES = {
     settings_ui_language: 'UI Language',
     settings_vrm_default: 'Default VRM',
     settings_glb_default: 'Default GLB',
+    settings_tab_theme: 'Theme',
+    settings_tab_media: 'Media',
+    settings_tab_features: 'Features',
+    settings_tab_3d: '3D',
+    settings_theme_general: 'Global Theme',
+    settings_theme_customization: 'Theme Customization',
+    settings_media_bgm: 'BGM',
+    settings_features_title: 'Feature Toggles',
+    settings_3d_vrm_title: 'VRM Avatar',
+    settings_3d_glb_title: 'GLB Model',
+    settings_3d_chair_title: 'GLB Chair',
+    settings_media_add_bgm: 'Add BGM',
+    settings_media_add_url: 'Add URL',
+    settings_media_playlist: 'Playlist',
+    settings_feature_clock: 'Clock',
+    settings_feature_pomodoro: 'Pomodoro Timer',
+    settings_feature_music: 'Music Player',
+    settings_feature_rain: 'Rain Animation',
+    settings_feature_vrm: 'VRM Avatar',
+    settings_feature_mascot: 'Desktop Mascot',
+    settings_feature_ssh: 'SSH Terminal',
+    settings_left_right: 'Horizontal',
+    settings_vertical: 'Vertical',
+    settings_scale: 'Scale',
+    settings_rotation: 'Rotation',
+    settings_reset: 'Reset Position / Rotation',
+    settings_copy: 'Copy Settings',
 
     // Workshop
     workshop_title: 'Workshop',
@@ -113,6 +218,26 @@ const LANGUAGES = {
     workshop_unsubscribe: 'Unsubscribe',
     workshop_delete: 'Delete',
     workshop_apply: 'Apply',
+    workshop_save_title: 'Save to Workshop',
+    workshop_search_placeholder: 'Search...',
+    workshop_tab_theme: 'Themes',
+    workshop_tab_vrm: 'VRM',
+    workshop_tab_glb: 'GLB',
+    workshop_tab_apps: 'Apps',
+    workshop_empty: 'No items yet',
+    workshop_create_new: '+ Create New',
+    workshop_form_title: 'Create New',
+    workshop_field_id: 'ID (alphanumeric and hyphens)',
+    workshop_field_name: 'Name',
+    workshop_field_desc: 'Description',
+    workshop_field_author: 'Author',
+    workshop_detail_id: 'ID',
+    workshop_detail_author: 'Author',
+    workshop_detail_version: 'Version',
+    workshop_detail_files: 'Files',
+    workshop_detail_use: 'Use',
+    workshop_detail_in_use: 'In Use',
+    workshop_detail_delete: 'Delete',
 
     // Theme Editor
     theme_editor_title: 'Theme Editor',
@@ -136,6 +261,7 @@ const LANGUAGES = {
     theme_behavior_relaxed: 'Relaxed',
     theme_behavior_tired: 'Tired',
     theme_glb_environment: 'Static GLB / Scene',
+    theme_environment_note: 'Objects placed in the environment slot',
     theme_save_id: 'Theme ID',
     theme_save_id_placeholder: 'Alphanumeric and hyphens',
     theme_save_name: 'Theme Name',
@@ -149,6 +275,18 @@ const LANGUAGES = {
     theme_saved_alert: 'Theme saved successfully',
     theme_save_error_required: 'Theme ID and name are required',
     theme_save_error: 'Save error:',
+    theme_tab_colors: 'Colors',
+    theme_tab_background: 'Background',
+    theme_tab_character: 'Character',
+    theme_tab_environment: 'Environment',
+    theme_tab_save: 'Save',
+    theme_color_accent_label: 'Accent',
+    theme_color_secondary_label: 'Secondary',
+    theme_color_accent2_label: 'Accent 2',
+    theme_color_text_label: 'Text',
+    theme_bg_clear_btn: 'Clear',
+    theme_select_none: 'None',
+    theme_saved_to_workshop: 'Publish to Workshop',
 
     // Launcher
     launcher_title: 'Launcher',
@@ -157,6 +295,24 @@ const LANGUAGES = {
     launcher_editor: 'Editor',
     launcher_filemanager: 'File Manager',
     launcher_calculator: 'Calculator',
+    todo_title: 'Task List',
+    todo_placeholder: 'Enter a task...',
+    todo_add: 'Add',
+    ssh_title: 'SSH Terminal',
+    ssh_connecting: 'Connecting',
+    ssh_connect: 'Connect',
+    ssh_disconnect: 'Disconnect',
+    bgm_add_button: 'Add URL',
+    player_mute: 'Mute / Enable Audio',
+    player_shuffle: 'Shuffle',
+    player_prev: 'Previous',
+    player_play: 'Play / Pause',
+    player_next: 'Next',
+    player_repeat: 'Loop Track',
+    player_volume: 'BGM Volume',
+    pomo_loop: 'Loop',
+    pomo_play: 'Start / Pause',
+    pomo_cancel: 'Cancel',
 
     // Common
     none: 'None',
@@ -181,69 +337,183 @@ function setLanguage(lang) {
   updateAllUITexts();
 }
 
+function setText(selector, key) {
+  const el = document.querySelector(selector);
+  if (el) el.textContent = t(key);
+}
+
+function setTextAll(selector, keys) {
+  document.querySelectorAll(selector).forEach((el, index) => {
+    const key = typeof keys === 'function' ? keys(el, index) : keys[index];
+    if (key) el.textContent = t(key);
+  });
+}
+
+function setPlaceholder(selector, key) {
+  const el = document.querySelector(selector);
+  if (el) el.placeholder = t(key);
+}
+
+function setTitle(selector, key) {
+  const el = document.querySelector(selector);
+  if (el) el.title = t(key);
+}
+
+function setOptionTexts(selector, valueToKey) {
+  const select = document.querySelector(selector);
+  if (!select) return;
+  select.querySelectorAll('option').forEach(option => {
+    const key = valueToKey[option.value];
+    if (key) option.textContent = t(key);
+  });
+}
+
 function updateAllUITexts() {
+  document.documentElement.lang = currentLanguage;
+
+  const languageSelect = document.getElementById('ui-language-select');
+  if (languageSelect) languageSelect.value = currentLanguage;
+
   // Clock weekday labels
   if (typeof updateClock === 'function') updateClock();
 
-  // Settings title
-  const settingsTitle = document.querySelector('#settings-panel h3');
-  if (settingsTitle) settingsTitle.textContent = t('settings_title');
+  setText('#settings-panel > .todo-header h3', 'settings_title');
+  setText('#todo-panel > .todo-header h3', 'todo_title');
+  setText('#ssh-panel > .todo-header h3', 'ssh_title');
+  setText('#workshop-panel > .todo-header h3', 'workshop_title');
+  setText('#theme-editor-panel .theme-editor-header h3', 'theme_editor_title');
+  setText('#launcher-panel h3', 'launcher_title');
+  setText('#workshop-save-modal .workshop-save-header h4', 'workshop_save_title');
 
-  // Theme Editor
-  const themeTitle = document.querySelector('#theme-editor-panel .theme-editor-header h3');
-  if (themeTitle) themeTitle.textContent = t('theme_editor_title');
+  setTextAll('#settings-tabs .settings-tab-btn', ['settings_tab_theme', 'settings_tab_media', 'settings_tab_features', 'settings_tab_3d']);
+  setTextAll('.theme-editor-tabs .theme-editor-tab', ['theme_tab_colors', 'theme_tab_background', 'theme_tab_character', 'theme_tab_environment', 'theme_tab_save']);
+  setTextAll('#workshop-panel .workshop-tabs .workshop-tab', ['workshop_tab_theme', 'workshop_tab_vrm', 'workshop_tab_glb', 'workshop_tab_apps']);
 
-  // Update tab labels
-  document.querySelectorAll('.theme-editor-tab').forEach(tab => {
-    const dataTab = tab.dataset.tab;
-    const labels = {
-      colors: t('theme_color'),
-      background: t('theme_background'),
-      character: t('theme_character'),
-      environment: t('theme_environment'),
-      save: t('theme_save'),
-    };
-    if (labels[dataTab]) tab.textContent = labels[dataTab];
+  const settingsThemeLabels = document.querySelectorAll('#settings-panel .settings-tab-section[data-settings-tab="theme"] .settings-list .settings-item > span');
+  if (settingsThemeLabels[0]) settingsThemeLabels[0].textContent = t('settings_ui_theme');
+  if (settingsThemeLabels[1]) settingsThemeLabels[1].textContent = t('settings_ui_language');
+  const settingsThemeSectionLabels = document.querySelectorAll('#settings-panel .settings-tab-section[data-settings-tab="theme"] .settings-section-label');
+  if (settingsThemeSectionLabels[0]) settingsThemeSectionLabels[0].textContent = t('settings_theme_general');
+  if (settingsThemeSectionLabels[1]) settingsThemeSectionLabels[1].textContent = t('settings_theme_customization');
+
+  const settingsThemeCustomizeLabels = document.querySelectorAll('#settings-panel .settings-tab-section[data-settings-tab="theme"] .settings-list:nth-of-type(2) .settings-item > span');
+  if (settingsThemeCustomizeLabels[0]) settingsThemeCustomizeLabels[0].textContent = t('theme_color_accent_label');
+  if (settingsThemeCustomizeLabels[1]) settingsThemeCustomizeLabels[1].textContent = t('theme_color_secondary_label');
+  if (settingsThemeCustomizeLabels[2]) settingsThemeCustomizeLabels[2].textContent = t('theme_bg_upload');
+  if (settingsThemeCustomizeLabels[3]) settingsThemeCustomizeLabels[3].textContent = t('theme_bg_upload');
+  setText('#settings-panel #theme-reset-btn', 'settings_reset');
+  setText('#settings-panel #theme-save-btn', 'theme_save_btn');
+
+  setText('#settings-panel .settings-tab-section[data-settings-tab="media"] .settings-section-label', 'settings_media_bgm');
+  const settingsMediaLabels = document.querySelectorAll('#settings-panel .settings-tab-section[data-settings-tab="media"] .settings-list .settings-item > span');
+  if (settingsMediaLabels[0]) settingsMediaLabels[0].textContent = t('settings_media_add_bgm');
+  if (settingsMediaLabels[1]) settingsMediaLabels[1].textContent = t('settings_media_add_url');
+  if (settingsMediaLabels[2]) settingsMediaLabels[2].textContent = t('settings_media_playlist');
+  setText('#settings-panel #bgm-url-add-btn', 'bgm_add_button');
+
+  setText('#settings-panel .settings-tab-section[data-settings-tab="features"] .settings-section-label', 'settings_features_title');
+  const featureLabels = document.querySelectorAll('#settings-panel .settings-tab-section[data-settings-tab="features"] .settings-item > span');
+  const featureKeys = ['settings_feature_clock', 'settings_feature_pomodoro', 'settings_feature_music', 'settings_feature_rain', 'settings_feature_mascot', 'settings_feature_vrm', 'settings_feature_ssh'];
+  featureLabels.forEach((label, index) => { if (featureKeys[index]) label.textContent = t(featureKeys[index]); });
+
+  const threeDSections = document.querySelectorAll('#settings-panel .settings-tab-section[data-settings-tab="3d"] .settings-section-label');
+  if (threeDSections[0]) threeDSections[0].textContent = t('settings_3d_vrm_title');
+  if (threeDSections[1]) threeDSections[1].textContent = t('settings_3d_glb_title');
+  if (threeDSections[2]) threeDSections[2].textContent = t('settings_3d_chair_title');
+
+  const vrmLabels = document.querySelectorAll('#settings-panel .settings-tab-section[data-settings-tab="3d"] .settings-list:nth-of-type(1) .settings-item > span');
+  const glbLabels = document.querySelectorAll('#settings-panel .settings-tab-section[data-settings-tab="3d"] .settings-list:nth-of-type(2) .settings-item > span');
+  const chairLabels = document.querySelectorAll('#settings-panel .settings-tab-section[data-settings-tab="3d"] .settings-list:nth-of-type(3) .settings-item > span');
+  [vrmLabels, glbLabels, chairLabels].forEach(list => {
+    if (list[0]) list[0].textContent = t('settings_left_right');
+    if (list[1]) list[1].textContent = t('settings_vertical');
+    if (list[2]) list[2].textContent = t('settings_scale');
+    if (list[3]) list[3].textContent = t('settings_rotation');
   });
+  setText('#vrm-reset-btn', 'settings_reset');
+  setText('#vrm-copy-btn', 'settings_copy');
+  setText('#glb-reset-btn', 'settings_reset');
+  setText('#glb-copy-btn', 'settings_copy');
+  setText('#glb-chair-reset-btn', 'settings_reset');
 
-  // Update form labels
-  document.querySelectorAll('.theme-form-group label').forEach(label => {
-    const text = label.textContent.trim();
-    const keyMap = {
-      'テーマ ID': 'theme_save_id',
-      'テーマ名': 'theme_save_name',
-      '説明': 'theme_save_desc',
-      '作者': 'theme_save_author',
-    };
-    if (keyMap[text]) label.textContent = t(keyMap[text]);
+  setPlaceholder('#todo-input', 'todo_placeholder');
+  setTitle('#todo-add-btn', 'todo_add');
+  setPlaceholder('#workshop-search-query', 'workshop_search_placeholder');
+  setTitle('#workshop-search-btn', 'workshop_search');
+  setText('#workshop-items .workshop-empty', 'workshop_empty');
+  setText('#workshop-create-btn', 'workshop_create_new');
+  setText('#workshop-form-title', 'workshop_form_title');
+  setPlaceholder('#workshop-item-id', 'workshop_field_id');
+  setPlaceholder('#workshop-item-name', 'workshop_field_name');
+  setPlaceholder('#workshop-item-desc', 'workshop_field_desc');
+  setPlaceholder('#workshop-item-author', 'workshop_field_author');
+  setText('#workshop-form-save', 'workshop_save');
+  setText('#workshop-form-cancel', 'workshop_cancel');
+  const workshopMeta = document.querySelectorAll('#workshop-detail .workshop-detail-meta > div');
+  if (workshopMeta[0]) workshopMeta[0].childNodes[0].nodeValue = `${t('workshop_detail_id')}: `;
+  if (workshopMeta[1]) workshopMeta[1].childNodes[0].nodeValue = `${t('workshop_detail_author')}: `;
+  if (workshopMeta[2]) workshopMeta[2].childNodes[0].nodeValue = `${t('workshop_detail_version')}: `;
+  setText('#workshop-detail-toggle-label', 'workshop_detail_use');
+  setText('#workshop-detail-delete', 'workshop_detail_delete');
+  setText('#workshop-detail-files h5', 'workshop_detail_files');
+  setText('#workshop-detail-name', 'workshop_form_title');
+
+  setPlaceholder('#theme-save-id', 'theme_save_id_placeholder');
+  setPlaceholder('#theme-save-name', 'theme_save_name_placeholder');
+  setPlaceholder('#theme-save-desc', 'theme_save_desc_placeholder');
+  setPlaceholder('#theme-save-author', 'theme_save_author_placeholder');
+  document.querySelectorAll('#theme-save-btn').forEach(btn => {
+    btn.textContent = t('theme_save_btn');
   });
+  setText('#theme-publish-btn', 'theme_publish_btn');
+  setText('#theme-bg-clear-btn', 'theme_bg_clear_btn');
+  setText('#theme-bg-preview', 'theme_bg_preview');
+  setText('#theme-color-accent + label', 'theme_color_accent');
+  setText('#theme-color-secondary + label', 'theme_color_secondary');
+  setText('#theme-color-accent2 + label', 'theme_color_accent2');
+  setText('#theme-color-text + label', 'theme_color_text');
 
-  // Update select labels
-  document.querySelectorAll('.theme-select-group label').forEach(label => {
-    const text = label.textContent.trim();
-    const keyMap = {
-      'VRM セット': 'theme_vrm_set',
-      'Animated GLB キャラクター': 'theme_glb_character',
-      'behavior_profile': 'theme_behavior_profile',
-      'Static GLB / Scene': 'theme_glb_environment',
-    };
-    if (keyMap[text]) label.textContent = t(keyMap[text]);
-  });
+  setText('#theme-vrm-select + label', 'theme_vrm_set');
+  setText('#theme-glb-char-select + label', 'theme_glb_character');
+  setText('#theme-behavior-select + label', 'theme_behavior_profile');
+  setText('#theme-glb-env-select + label', 'theme_glb_environment');
+  setText('#theme-editor-panel .theme-editor-tab-content[data-tab-content="environment"] p', 'theme_environment_note');
+  setTextAll('#theme-behavior-select option', ['theme_behavior_neutral', 'theme_behavior_focused', 'theme_behavior_relaxed', 'theme_behavior_tired']);
+  setOptionTexts('#ui-theme-select', { zany: 'theme_ui_zany', default: 'theme_ui_default' });
+  setOptionTexts('#ui-language-select', { ja: 'settings_ui_language', en: 'launcher_browser' });
 
-  // Update buttons
-  const themeSaveBtn = document.getElementById('theme-save-btn');
-  if (themeSaveBtn) themeSaveBtn.textContent = t('theme_save_btn');
+  setTitle('#btn-todo', 'todo_title');
+  setTitle('#btn-stats', 'settings_features_title');
+  setTitle('#btn-calendar', 'launcher_calculator');
+  setTitle('#btn-distraction', 'settings_theme_customization');
+  setTitle('#btn-ssh', 'ssh_title');
+  setTitle('#btn-workshop', 'workshop_title');
+  setTitle('#btn-theme-editor', 'theme_editor_title');
+  setTitle('#btn-launcher', 'launcher_title');
+  setTitle('#btn-settings', 'settings_title');
+  setTitle('#btn-close', 'close');
 
-  const themePublishBtn = document.getElementById('theme-publish-btn');
-  if (themePublishBtn) themePublishBtn.textContent = t('theme_publish_btn');
+  setTitle('#btn-scene', 'settings_theme');
+  setTitle('#btn-rain', 'theme_bg_preview');
+  setTitle('#btn-sound', 'theme_color_text');
+  setTitle('#btn-vrm', 'settings_3d_vrm_title');
+  setTitle('#btn-glb', 'settings_3d_glb_title');
+  setTitle('#btn-save-workshop', 'workshop_save_title');
 
-  // Launcher
-  const launcherTitle = document.querySelector('#launcher-panel h3');
-  if (launcherTitle) launcherTitle.textContent = t('launcher_title');
+  setTitle('#player-mute', 'player_mute');
+  setTitle('#player-shuffle', 'player_shuffle');
+  setTitle('#player-prev', 'player_prev');
+  setTitle('#player-play', 'player_play');
+  setTitle('#player-next', 'player_next');
+  setTitle('#player-repeat', 'player_repeat');
+  setTitle('#volume-slider', 'player_volume');
 
-  // Workshop
-  const workshopTitle = document.querySelector('#workshop-panel h3');
-  if (workshopTitle) workshopTitle.textContent = t('workshop_title');
+  setText('#pomo-config-view .pomo-loop-control > span', 'pomo_loop');
+  const pomoLabels = document.querySelectorAll('.pomo-time-controls .time-control-label');
+  if (pomoLabels[0]) pomoLabels[0].textContent = t('pomodoro_work');
+  if (pomoLabels[1]) pomoLabels[1].textContent = t('pomodoro_break');
+  setTitle('#pomo-play-btn', 'pomo_play');
+  setText('#pomo-stop-btn', 'pomo_cancel');
 }
 
 function updateAllUITexts() {
@@ -282,7 +552,7 @@ function updateAllUITexts() {
   const featureSection = document.querySelector('#settings-panel .settings-tab-section[data-settings-tab="features"]');
   if (featureSection) {
     const labels = featureSection.querySelectorAll('.settings-item > span');
-    ['settings_feature_clock', 'settings_feature_pomodoro', 'settings_feature_music', 'settings_feature_rain', 'settings_feature_vrm', 'settings_feature_ssh']
+    ['settings_feature_clock', 'settings_feature_pomodoro', 'settings_feature_music', 'settings_feature_rain', 'settings_feature_mascot', 'settings_feature_vrm', 'settings_feature_ssh']
       .forEach((key, index) => { if (labels[index]) labels[index].textContent = t(key); });
     const featureHeader = featureSection.querySelector('.settings-section-label');
     if (featureHeader) featureHeader.textContent = t('settings_features_title');
@@ -337,9 +607,7 @@ function updateAllUITexts() {
   setPlaceholder('#theme-save-name', 'theme_save_name_placeholder');
   setPlaceholder('#theme-save-desc', 'theme_save_desc_placeholder');
   setPlaceholder('#theme-save-author', 'theme_save_author_placeholder');
-  document.querySelectorAll('#theme-save-btn').forEach(btn => {
-    btn.textContent = t('theme_save_btn');
-  });
+  setText('#theme-save-btn', 'theme_save_btn');
   setText('#theme-publish-btn', 'theme_publish_btn');
   setText('#theme-bg-clear-btn', 'theme_bg_clear_btn');
   setTextAll('#theme-editor-panel .theme-color-group label', ['theme_color_accent', 'theme_color_secondary', 'theme_color_accent2', 'theme_color_text']);
@@ -1753,9 +2021,15 @@ let distractionMode = false;
 
 btnDistraction.addEventListener('click', () => {
   distractionMode = !distractionMode;
-  document.body.classList.toggle('hide-ui', distractionMode);
-  btnDistraction.classList.toggle('active', distractionMode);
+  applyVisibilityModes();
 });
+
+function applyVisibilityModes() {
+  const mascotMode = !!features.mascot;
+  document.body.classList.toggle('hide-ui', distractionMode || mascotMode);
+  document.body.classList.toggle('desktop-mascot-mode', mascotMode);
+  btnDistraction.classList.toggle('active', distractionMode);
+}
 
 // Settings panel with feature on/off toggles (persisted to localStorage)
 const settingsPanel = document.getElementById('settings-panel');
@@ -1791,6 +2065,7 @@ const FEATURE_DEFAULTS = {
   music: true,
   rain: true,
   vrm: true,
+  mascot: false,
   ssh: true
 };
 let features = { ...FEATURE_DEFAULTS, ...JSON.parse(localStorage.getItem('features') || '{}') };
@@ -1801,6 +2076,7 @@ function applyFeatures() {
   document.querySelector('.music-player').classList.toggle('hidden', !features.music);
   document.getElementById('vrm-canvas').classList.toggle('hidden', !features.vrm);
   document.getElementById('btn-ssh').classList.toggle('hidden', !features.ssh);
+  applyVisibilityModes();
 
   // Rain: reuse the existing toolbar toggle state
   rainActive = features.rain;
@@ -4241,6 +4517,194 @@ workshopDetailDelete.addEventListener('click', async () => {
   }
 });
 
+// ============================================================================
+// VRoid Hub OAuth 2.0 Integration (#39)
+// ============================================================================
+
+function initVroidHubCallbackHandler() {
+  const url = new URL(window.location.href);
+  const code = url.searchParams.get('code');
+  const state = url.searchParams.get('state');
+
+  if (code && state && window.__TAURI__) {
+    handleVroidHubCallback(code, state);
+  }
+}
+
+async function handleVroidHubCallback(code, state) {
+  try {
+    const result = await invoke('vroid_hub_exchange_code', { code, state });
+    if (result) {
+      localStorage.setItem('vroid_hub_connected', 'true');
+      window.history.replaceState({}, document.title, window.location.pathname);
+      await loadVroidHubVrmList();
+      updateVroidHubStatus();
+    }
+  } catch (error) {
+    console.error('VRoid Hub callback error:', error);
+    localStorage.setItem('vroid_hub_connected', 'false');
+    showErrorMessage('VRoid Hub authentication failed: ' + error);
+  }
+}
+
+function isVroidHubConnected() {
+  return localStorage.getItem('vroid_hub_connected') === 'true';
+}
+
+function updateVroidHubStatus() {
+  const statusEl = document.getElementById('vroid-hub-status');
+  if (statusEl) {
+    statusEl.textContent = isVroidHubConnected() ? 'Connected' : 'Not connected';
+  }
+}
+
+async function loadVroidHubVrmList() {
+  if (!window.__TAURI__) return;
+
+  try {
+    const vrmList = await invoke('vroid_hub_get_vrm_list');
+    localStorage.setItem('vroid_hub_vrm_list_cache', JSON.stringify(vrmList));
+    populateVroidHubVrmSelector(vrmList);
+  } catch (error) {
+    console.error('Failed to load VRM list:', error);
+    showErrorMessage('VRoid Hub VRM list loading failed');
+  }
+}
+
+function populateVroidHubVrmSelector(vrmList) {
+  const listEl = document.getElementById('vroid-hub-list');
+  if (!listEl) return;
+
+  listEl.innerHTML = '';
+  vrmList.forEach(vrm => {
+    const item = document.createElement('div');
+    item.className = 'vroid-hub-item';
+    item.dataset.vrmId = vrm.id;
+    item.dataset.vrmName = vrm.name;
+
+    if (vrm.thumbnail_url) {
+      const img = document.createElement('img');
+      img.src = vrm.thumbnail_url;
+      img.alt = vrm.name;
+      item.appendChild(img);
+    }
+
+    const name = document.createElement('div');
+    name.textContent = vrm.name;
+    name.style.fontSize = '12px';
+    name.style.whiteSpace = 'nowrap';
+    name.style.overflow = 'hidden';
+    name.style.textOverflow = 'ellipsis';
+    item.appendChild(name);
+
+    listEl.appendChild(item);
+  });
+}
+
+async function downloadVroidHubVrm(vrmId, vrmName) {
+  if (!window.__TAURI__) return;
+
+  try {
+    showDownloadProgress(vrmId);
+    const workshopId = await invoke('vroid_hub_download_vrm', { vrm_id: vrmId, vrm_name: vrmName });
+    await applyWorkshopVrm({ id: workshopId, name: vrmName, item_type: 'vrm_sets' });
+    hideDownloadProgress();
+  } catch (error) {
+    console.error('VRM download error:', error);
+    showErrorMessage('VRM download failed: ' + error);
+    hideDownloadProgress();
+  }
+}
+
+function showDownloadProgress(vrmId) {
+  const progressEl = document.getElementById('vroid-download-progress');
+  if (progressEl) {
+    progressEl.style.display = 'block';
+  }
+}
+
+function hideDownloadProgress() {
+  const progressEl = document.getElementById('vroid-download-progress');
+  if (progressEl) {
+    progressEl.style.display = 'none';
+  }
+}
+
+function updateDownloadProgress(vrmId, downloaded, total) {
+  const fillEl = document.getElementById('progress-fill');
+  if (fillEl) {
+    const percent = Math.round((downloaded / total) * 100);
+    fillEl.style.width = percent + '%';
+  }
+}
+
+function showErrorMessage(msg) {
+  console.error(msg);
+  // TODO: Show user-friendly error notification
+}
+
+// VRoid Hub event listeners
+document.addEventListener('DOMContentLoaded', () => {
+  // Connect button
+  const connectBtn = document.getElementById('btn-vroid-connect');
+  if (connectBtn) {
+    connectBtn.addEventListener('click', async () => {
+      try {
+        if (!window.__TAURI__) {
+          showErrorMessage('VRoid Hub requires Tauri');
+          return;
+        }
+        const authUrl = await invoke('vroid_hub_get_auth_url');
+        window.open(authUrl, '_blank');
+      } catch (error) {
+        console.error('Failed to get auth URL:', error);
+        showErrorMessage('Failed to initiate VRoid Hub login');
+      }
+    });
+  }
+
+  // Source toggle (Workshop vs VRoid Hub)
+  document.querySelectorAll('[data-source]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const source = e.target.dataset.source;
+      const workshopSel = document.getElementById('workshop-vrm-selector');
+      const vroidPanel = document.getElementById('vroid-hub-panel');
+
+      if (workshopSel) {
+        workshopSel.style.display = source === 'workshop' ? 'block' : 'none';
+      }
+      if (vroidPanel) {
+        vroidPanel.style.display = source === 'vroid_hub' ? 'block' : 'none';
+      }
+
+      if (source === 'vroid_hub') {
+        if (isVroidHubConnected()) {
+          loadVroidHubVrmList();
+        } else {
+          const statusEl = document.getElementById('vroid-hub-status');
+          if (statusEl) statusEl.textContent = 'Not connected';
+        }
+      }
+    });
+  });
+
+  // VRM item selection
+  document.addEventListener('click', async (e) => {
+    if (e.target.classList.contains('vroid-hub-item')) {
+      const vrmId = e.target.dataset.vrmId;
+      const vrmName = e.target.dataset.vrmName || 'VRM Model';
+      await downloadVroidHubVrm(vrmId, vrmName);
+    }
+  });
+
+  // Download progress listener
+  if (window.__TAURI__) {
+    window.__TAURI__.event.listen('vroid_hub_download_progress', (event) => {
+      updateDownloadProgress(event.payload.vrm_id, event.payload.downloaded, event.payload.total);
+    });
+  }
+});
+
 // Load saved workshop items on startup
 async function loadWorkshopOnStartup() {
   const activeTheme = localStorage.getItem('workshop_active_themes');
@@ -4305,3 +4769,7 @@ async function loadWorkshopOnStartup() {
 // (still-null) THREE_Lib bindings instead of hitting the TDZ.
 applyScene();
 loadWorkshopOnStartup();
+
+// VRoid Hub OAuth callback handler
+initVroidHubCallbackHandler();
+updateVroidHubStatus();
