@@ -1,4 +1,387 @@
 // ==========================================
+// 0. I18N (多言語 UI サポート) #38
+// ==========================================
+const LANGUAGES = {
+  ja: {
+    // Clock
+    time_period_am: 'AM',
+    time_period_pm: 'PM',
+    weekdays: ['日', '月', '火', '水', '木', '金', '土'],
+
+    // Pomodoro
+    pomodoro_work: '作業',
+    pomodoro_break: '休憩',
+
+    // Settings
+    settings_title: '設定',
+    settings_theme: 'テーマ',
+    settings_ui_theme: 'UI テーマ',
+    settings_ui_language: 'UI 言語',
+    theme_ui_zany: 'Zany',
+    theme_ui_default: 'デフォルト',
+    language_japanese: '日本語',
+    language_english: 'English',
+    settings_vrm_default: 'デフォルト VRM',
+    settings_glb_default: 'デフォルト GLB',
+
+    // Workshop
+    workshop_title: 'Workshop',
+    workshop_search: '検索',
+    workshop_create: '新規作成',
+    workshop_loading: 'ロード中...',
+    workshop_subscribe: 'Subscribe',
+    workshop_unsubscribe: 'Unsubscribe',
+    workshop_delete: '削除',
+    workshop_apply: '適用',
+
+    // Theme Editor
+    theme_editor_title: 'テーマエディタ',
+    theme_color: 'カラー',
+    theme_background: '背景',
+    theme_character: 'キャラクター',
+    theme_environment: '環境',
+    theme_save: '保存',
+    theme_color_accent: 'アクセント',
+    theme_color_secondary: 'セカンダリ',
+    theme_color_accent2: 'アクセント2',
+    theme_color_text: 'テキスト',
+    theme_bg_upload: '背景画像',
+    theme_bg_clear: 'クリア',
+    theme_bg_preview: '背景プレビュー',
+    theme_vrm_set: 'VRM セット',
+    theme_glb_character: 'Animated GLB キャラクター',
+    theme_behavior_profile: 'behavior_profile',
+    theme_behavior_neutral: 'ニュートラル',
+    theme_behavior_focused: '集中',
+    theme_behavior_relaxed: 'リラックス',
+    theme_behavior_tired: '疲れ',
+    theme_glb_environment: 'Static GLB / Scene',
+    theme_save_id: 'テーマ ID',
+    theme_save_id_placeholder: '英数字とハイフン',
+    theme_save_name: 'テーマ名',
+    theme_save_name_placeholder: 'テーマの表示名',
+    theme_save_desc: '説明',
+    theme_save_desc_placeholder: 'このテーマについての説明',
+    theme_save_author: '作者',
+    theme_save_author_placeholder: '作者名',
+    theme_save_btn: 'テーマを保存',
+    theme_publish_btn: 'Workshop に投稿',
+    theme_saved_alert: 'テーマを保存しました',
+    theme_save_error_required: 'テーマ ID と名前は必須です',
+    theme_save_error: '保存エラー:',
+
+    // Launcher
+    launcher_title: 'ランチャー',
+    launcher_terminal: 'ターミナル',
+    launcher_browser: 'ブラウザ',
+    launcher_editor: 'エディタ',
+    launcher_filemanager: 'ファイル',
+    launcher_calculator: '計算機',
+
+    // Common
+    none: 'なし',
+    close: '閉じる',
+    apply: '適用',
+    delete: '削除',
+    save: '保存',
+    cancel: 'キャンセル',
+  },
+  en: {
+    // Clock
+    time_period_am: 'AM',
+    time_period_pm: 'PM',
+    weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+
+    // Pomodoro
+    pomodoro_work: 'Work',
+    pomodoro_break: 'Break',
+
+    // Settings
+    settings_title: 'Settings',
+    settings_theme: 'Theme',
+    settings_ui_theme: 'UI Theme',
+    settings_ui_language: 'UI Language',
+    settings_vrm_default: 'Default VRM',
+    settings_glb_default: 'Default GLB',
+
+    // Workshop
+    workshop_title: 'Workshop',
+    workshop_search: 'Search',
+    workshop_create: 'Create New',
+    workshop_loading: 'Loading...',
+    workshop_subscribe: 'Subscribe',
+    workshop_unsubscribe: 'Unsubscribe',
+    workshop_delete: 'Delete',
+    workshop_apply: 'Apply',
+
+    // Theme Editor
+    theme_editor_title: 'Theme Editor',
+    theme_color: 'Colors',
+    theme_background: 'Background',
+    theme_character: 'Character',
+    theme_environment: 'Environment',
+    theme_save: 'Save',
+    theme_color_accent: 'Accent',
+    theme_color_secondary: 'Secondary',
+    theme_color_accent2: 'Accent 2',
+    theme_color_text: 'Text',
+    theme_bg_upload: 'Background Image',
+    theme_bg_clear: 'Clear',
+    theme_bg_preview: 'Preview',
+    theme_vrm_set: 'VRM Set',
+    theme_glb_character: 'Animated GLB Character',
+    theme_behavior_profile: 'Behavior Profile',
+    theme_behavior_neutral: 'Neutral',
+    theme_behavior_focused: 'Focused',
+    theme_behavior_relaxed: 'Relaxed',
+    theme_behavior_tired: 'Tired',
+    theme_glb_environment: 'Static GLB / Scene',
+    theme_save_id: 'Theme ID',
+    theme_save_id_placeholder: 'Alphanumeric and hyphens',
+    theme_save_name: 'Theme Name',
+    theme_save_name_placeholder: 'Display name',
+    theme_save_desc: 'Description',
+    theme_save_desc_placeholder: 'Description of this theme',
+    theme_save_author: 'Author',
+    theme_save_author_placeholder: 'Author name',
+    theme_save_btn: 'Save Theme',
+    theme_publish_btn: 'Publish to Workshop',
+    theme_saved_alert: 'Theme saved successfully',
+    theme_save_error_required: 'Theme ID and name are required',
+    theme_save_error: 'Save error:',
+
+    // Launcher
+    launcher_title: 'Launcher',
+    launcher_terminal: 'Terminal',
+    launcher_browser: 'Browser',
+    launcher_editor: 'Editor',
+    launcher_filemanager: 'File Manager',
+    launcher_calculator: 'Calculator',
+
+    // Common
+    none: 'None',
+    close: 'Close',
+    apply: 'Apply',
+    delete: 'Delete',
+    save: 'Save',
+    cancel: 'Cancel',
+  }
+};
+
+let currentLanguage = localStorage.getItem('ui_language') || 'ja';
+
+function t(key) {
+  return LANGUAGES[currentLanguage]?.[key] || LANGUAGES.ja[key] || key;
+}
+
+function setLanguage(lang) {
+  if (!LANGUAGES[lang]) return;
+  currentLanguage = lang;
+  localStorage.setItem('ui_language', lang);
+  updateAllUITexts();
+}
+
+function updateAllUITexts() {
+  // Clock weekday labels
+  if (typeof updateClock === 'function') updateClock();
+
+  // Settings title
+  const settingsTitle = document.querySelector('#settings-panel h3');
+  if (settingsTitle) settingsTitle.textContent = t('settings_title');
+
+  // Theme Editor
+  const themeTitle = document.querySelector('#theme-editor-panel .theme-editor-header h3');
+  if (themeTitle) themeTitle.textContent = t('theme_editor_title');
+
+  // Update tab labels
+  document.querySelectorAll('.theme-editor-tab').forEach(tab => {
+    const dataTab = tab.dataset.tab;
+    const labels = {
+      colors: t('theme_color'),
+      background: t('theme_background'),
+      character: t('theme_character'),
+      environment: t('theme_environment'),
+      save: t('theme_save'),
+    };
+    if (labels[dataTab]) tab.textContent = labels[dataTab];
+  });
+
+  // Update form labels
+  document.querySelectorAll('.theme-form-group label').forEach(label => {
+    const text = label.textContent.trim();
+    const keyMap = {
+      'テーマ ID': 'theme_save_id',
+      'テーマ名': 'theme_save_name',
+      '説明': 'theme_save_desc',
+      '作者': 'theme_save_author',
+    };
+    if (keyMap[text]) label.textContent = t(keyMap[text]);
+  });
+
+  // Update select labels
+  document.querySelectorAll('.theme-select-group label').forEach(label => {
+    const text = label.textContent.trim();
+    const keyMap = {
+      'VRM セット': 'theme_vrm_set',
+      'Animated GLB キャラクター': 'theme_glb_character',
+      'behavior_profile': 'theme_behavior_profile',
+      'Static GLB / Scene': 'theme_glb_environment',
+    };
+    if (keyMap[text]) label.textContent = t(keyMap[text]);
+  });
+
+  // Update buttons
+  const themeSaveBtn = document.getElementById('theme-save-btn');
+  if (themeSaveBtn) themeSaveBtn.textContent = t('theme_save_btn');
+
+  const themePublishBtn = document.getElementById('theme-publish-btn');
+  if (themePublishBtn) themePublishBtn.textContent = t('theme_publish_btn');
+
+  // Launcher
+  const launcherTitle = document.querySelector('#launcher-panel h3');
+  if (launcherTitle) launcherTitle.textContent = t('launcher_title');
+
+  // Workshop
+  const workshopTitle = document.querySelector('#workshop-panel h3');
+  if (workshopTitle) workshopTitle.textContent = t('workshop_title');
+}
+
+function updateAllUITexts() {
+  document.documentElement.lang = currentLanguage;
+  const languageSelect = document.getElementById('ui-language-select');
+  if (languageSelect) languageSelect.value = currentLanguage;
+  if (typeof updateClock === 'function') updateClock();
+
+  setText('#settings-panel > .todo-header h3', 'settings_title');
+  setText('#todo-panel > .todo-header h3', 'todo_title');
+  setText('#ssh-panel > .todo-header h3', 'ssh_title');
+  setText('#workshop-panel > .todo-header h3', 'workshop_title');
+  setText('#theme-editor-panel .theme-editor-header h3', 'theme_editor_title');
+  setText('#launcher-panel h3', 'launcher_title');
+  setText('#workshop-save-modal .workshop-save-header h4', 'workshop_save_title');
+
+  setTextAll('#settings-tabs .settings-tab-btn', ['settings_tab_theme', 'settings_tab_media', 'settings_tab_features', 'settings_tab_3d']);
+  setTextAll('.theme-editor-tabs .theme-editor-tab', ['theme_tab_colors', 'theme_tab_background', 'theme_tab_character', 'theme_tab_environment', 'theme_tab_save']);
+  setTextAll('#workshop-panel .workshop-tabs .workshop-tab', ['workshop_tab_theme', 'workshop_tab_vrm', 'workshop_tab_glb', 'workshop_tab_apps']);
+
+  const settingsThemeLabels = document.querySelectorAll('#settings-panel .settings-tab-section[data-settings-tab="theme"] .settings-list .settings-item > span');
+  if (settingsThemeLabels[0]) settingsThemeLabels[0].textContent = t('settings_ui_theme');
+  if (settingsThemeLabels[1]) settingsThemeLabels[1].textContent = t('settings_ui_language');
+  const settingsThemeSectionLabels = document.querySelectorAll('#settings-panel .settings-tab-section[data-settings-tab="theme"] .settings-section-label');
+  if (settingsThemeSectionLabels[0]) settingsThemeSectionLabels[0].textContent = t('settings_theme_general');
+  if (settingsThemeSectionLabels[1]) settingsThemeSectionLabels[1].textContent = t('settings_theme_customization');
+  const settingsMediaSection = document.querySelector('#settings-panel .settings-tab-section[data-settings-tab="media"]');
+  if (settingsMediaSection) {
+    const mediaLabels = settingsMediaSection.querySelectorAll('.settings-item > span');
+    if (mediaLabels[0]) mediaLabels[0].textContent = t('settings_media_add_bgm');
+    if (mediaLabels[1]) mediaLabels[1].textContent = t('settings_media_add_url');
+    if (mediaLabels[2]) mediaLabels[2].textContent = t('settings_media_playlist');
+    const mediaSectionLabel = settingsMediaSection.querySelector('.settings-section-label');
+    if (mediaSectionLabel) mediaSectionLabel.textContent = t('settings_media_bgm');
+  }
+  const featureSection = document.querySelector('#settings-panel .settings-tab-section[data-settings-tab="features"]');
+  if (featureSection) {
+    const labels = featureSection.querySelectorAll('.settings-item > span');
+    ['settings_feature_clock', 'settings_feature_pomodoro', 'settings_feature_music', 'settings_feature_rain', 'settings_feature_vrm', 'settings_feature_ssh']
+      .forEach((key, index) => { if (labels[index]) labels[index].textContent = t(key); });
+    const featureHeader = featureSection.querySelector('.settings-section-label');
+    if (featureHeader) featureHeader.textContent = t('settings_features_title');
+  }
+  const threeDSection = document.querySelector('#settings-panel .settings-tab-section[data-settings-tab="3d"]');
+  if (threeDSection) {
+    const sectionLabels = threeDSection.querySelectorAll('.settings-section-label');
+    if (sectionLabels[0]) sectionLabels[0].textContent = t('settings_3d_vrm_title');
+    if (sectionLabels[1]) sectionLabels[1].textContent = t('settings_3d_glb_title');
+    if (sectionLabels[2]) sectionLabels[2].textContent = t('settings_3d_chair_title');
+    const lists = threeDSection.querySelectorAll('.settings-list');
+    const keysByList = [
+      ['settings_left_right', 'settings_vertical', 'settings_scale', 'settings_rotation'],
+      ['settings_left_right', 'settings_vertical', 'settings_scale', 'settings_rotation'],
+      ['settings_left_right', 'settings_vertical', 'settings_scale', 'settings_rotation'],
+    ];
+    lists.forEach((list, listIndex) => {
+      list.querySelectorAll('.settings-item > span').forEach((label, labelIndex) => {
+        const key = keysByList[listIndex]?.[labelIndex];
+        if (key) label.textContent = t(key);
+      });
+    });
+  }
+  setText('#vrm-reset-btn', 'settings_reset');
+  setText('#vrm-copy-btn', 'settings_copy');
+  setText('#glb-reset-btn', 'settings_reset');
+  setText('#glb-copy-btn', 'settings_copy');
+  setText('#glb-chair-reset-btn', 'settings_reset');
+
+  setPlaceholder('#todo-input', 'todo_placeholder');
+  setTitle('#todo-add-btn', 'todo_add');
+  setPlaceholder('#workshop-search-query', 'workshop_search_placeholder');
+  setTitle('#workshop-search-btn', 'workshop_search');
+  setText('#workshop-items .workshop-empty', 'workshop_empty');
+  setText('#workshop-create-btn', 'workshop_create_new');
+  setText('#workshop-form-title', 'workshop_form_title');
+  setPlaceholder('#workshop-item-id', 'workshop_field_id');
+  setPlaceholder('#workshop-item-name', 'workshop_field_name');
+  setPlaceholder('#workshop-item-desc', 'workshop_field_desc');
+  setPlaceholder('#workshop-item-author', 'workshop_field_author');
+  setText('#workshop-form-save', 'workshop_save');
+  setText('#workshop-form-cancel', 'workshop_cancel');
+  const workshopMeta = document.querySelectorAll('#workshop-detail .workshop-detail-meta > div');
+  if (workshopMeta[0]?.firstChild) workshopMeta[0].firstChild.nodeValue = `${t('workshop_detail_id')}: `;
+  if (workshopMeta[1]?.firstChild) workshopMeta[1].firstChild.nodeValue = `${t('workshop_detail_author')}: `;
+  if (workshopMeta[2]?.firstChild) workshopMeta[2].firstChild.nodeValue = `${t('workshop_detail_version')}: `;
+  setText('#workshop-detail-toggle-label', 'workshop_detail_use');
+  setText('#workshop-detail-delete', 'workshop_detail_delete');
+  setText('#workshop-detail-files h5', 'workshop_detail_files');
+
+  setPlaceholder('#theme-save-id', 'theme_save_id_placeholder');
+  setPlaceholder('#theme-save-name', 'theme_save_name_placeholder');
+  setPlaceholder('#theme-save-desc', 'theme_save_desc_placeholder');
+  setPlaceholder('#theme-save-author', 'theme_save_author_placeholder');
+  document.querySelectorAll('#theme-save-btn').forEach(btn => {
+    btn.textContent = t('theme_save_btn');
+  });
+  setText('#theme-publish-btn', 'theme_publish_btn');
+  setText('#theme-bg-clear-btn', 'theme_bg_clear_btn');
+  setTextAll('#theme-editor-panel .theme-color-group label', ['theme_color_accent', 'theme_color_secondary', 'theme_color_accent2', 'theme_color_text']);
+  setTextAll('#theme-editor-panel .theme-select-group label', ['theme_vrm_set', 'theme_glb_character', 'theme_behavior_profile', 'theme_glb_environment']);
+  setText('#theme-editor-panel .theme-editor-tab-content[data-tab-content="environment"] p', 'theme_environment_note');
+  setTextAll('#theme-behavior-select option', ['theme_behavior_neutral', 'theme_behavior_focused', 'theme_behavior_relaxed', 'theme_behavior_tired']);
+  setOptionTexts('#ui-theme-select', { zany: 'theme_ui_zany', default: 'theme_ui_default' });
+  setOptionTexts('#ui-language-select', { ja: 'language_japanese', en: 'language_english' });
+
+  setTitle('#btn-todo', 'todo_title');
+  setTitle('#btn-stats', 'settings_features_title');
+  setTitle('#btn-calendar', 'launcher_calculator');
+  setTitle('#btn-distraction', 'settings_theme_customization');
+  setTitle('#btn-ssh', 'ssh_title');
+  setTitle('#btn-workshop', 'workshop_title');
+  setTitle('#btn-theme-editor', 'theme_editor_title');
+  setTitle('#btn-launcher', 'launcher_title');
+  setTitle('#btn-settings', 'settings_title');
+  setTitle('#btn-close', 'close');
+  setTitle('#btn-scene', 'settings_theme');
+  setTitle('#btn-rain', 'theme_bg_preview');
+  setTitle('#btn-sound', 'theme_color_text');
+  setTitle('#btn-vrm', 'settings_3d_vrm_title');
+  setTitle('#btn-glb', 'settings_3d_glb_title');
+  setTitle('#btn-save-workshop', 'workshop_save_title');
+  setTitle('#player-mute', 'player_mute');
+  setTitle('#player-shuffle', 'player_shuffle');
+  setTitle('#player-prev', 'player_prev');
+  setTitle('#player-play', 'player_play');
+  setTitle('#player-next', 'player_next');
+  setTitle('#player-repeat', 'player_repeat');
+  setTitle('#volume-slider', 'player_volume');
+
+  setText('#pomo-config-view .pomo-loop-control > span', 'pomo_loop');
+  const pomoLabels = document.querySelectorAll('.pomo-time-controls .time-control-label');
+  if (pomoLabels[0]) pomoLabels[0].textContent = t('pomodoro_work');
+  if (pomoLabels[1]) pomoLabels[1].textContent = t('pomodoro_break');
+  setTitle('#pomo-play-btn', 'pomo_play');
+  setText('#pomo-stop-btn', 'pomo_cancel');
+}
+
+// ==========================================
 // 0. INDEXEDDB HELPERS (Workshop Storage)
 // ==========================================
 const DB_NAME = 'zany-shell-workshop';
@@ -84,7 +467,7 @@ function updateClock() {
   // Time: HH:MM
   let hh = now.getHours();
   const mm = String(now.getMinutes()).padStart(2, "0");
-  const ampm = hh >= 12 ? "PM" : "AM";
+  const ampm = hh >= 12 ? t('time_period_pm') : t('time_period_am');
   hh = hh % 12;
   hh = hh ? hh : 12; // 0 -> 12
   const hhStr = String(hh).padStart(2, "0");
@@ -96,8 +479,8 @@ function updateClock() {
   const yyyy = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, "0");
   const date = String(now.getDate()).padStart(2, "0");
-  const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
-  const day = weekdays[now.getDay()];
+  const weekdaysArray = t('weekdays').split ? t('weekdays') : LANGUAGES[currentLanguage].weekdays;
+  const day = weekdaysArray[now.getDay()];
 
   document.getElementById("date-text").textContent = `${yyyy}/${month}/${date}(${day})`;
 }
@@ -246,11 +629,174 @@ function playAlarmSound() {
 // ==========================================
 // 3. BGM MUSIC PLAYER CONTROL
 // ==========================================
-const playlist = [
-  { title: "Lofi Smooth", artist: "PulseBox" },
-  { title: "Late Night Coding", artist: "Lo-Fi Beats" },
-  { title: "Rainy Window", artist: "Cozy Chill" }
+const BGM_PLAYLIST_STORAGE_KEY = 'bgmPlaylist';
+const LEGACY_DEFAULT_BGM_URLS = [
+  './assets/pulsebox-lofi-smooth-522876.mp3',
+  './assets/bgm.mp3',
+  './assets/rain_sound.mp3'
 ];
+const DEFAULT_BGM_PLAYLIST = [
+  {
+    title: "Lofi Smooth",
+    artist: "PulseBox",
+    url: "./assets/mp3/pulsebox-lofi-smooth-522876.mp3",
+    kind: "audio"
+  },
+  {
+    title: "Coffee Chill",
+    artist: "romanbelov",
+    url: "./assets/mp3/romanbelov-coffee-chill-out-15283.mp3",
+    kind: "audio"
+  },
+  {
+    title: "Chill Background",
+    artist: "sleeping signal",
+    url: "./assets/mp3/chill_background-sleeping-signal-chill-lofi-background-music-14973.mp3",
+    kind: "audio"
+  },
+  {
+    title: "Bathroom Chill",
+    artist: "chill background",
+    url: "./assets/mp3/chill_background-bathroom-chill-background-music-14977.mp3",
+    kind: "audio"
+  },
+  {
+    title: "Waterfall Kero",
+    artist: "watrfallkero",
+    url: "./assets/mp3/watrfallkero-lofi-beat-chill-7373.mp3",
+    kind: "audio"
+  },
+  {
+    title: "Welcome",
+    artist: "welc0mei0",
+    url: "./assets/mp3/welc0mei0-190117-chill-japan-calm-simple-nostalgic-143427.mp3",
+    kind: "audio"
+  },
+  {
+    title: "Akiko Shina",
+    artist: "akiko_shina",
+    url: "./assets/mp3/akiko_shina-lofi-pianoquottonightquot-248623.mp3",
+    kind: "audio"
+  }
+];
+
+function inferTrackKind(url) {
+  const normalized = String(url || '').trim().toLowerCase();
+  if (!normalized) return 'audio';
+  if (normalized.startsWith('data:audio/') || normalized.startsWith('blob:')) return 'audio';
+  if (/\.(mp3|wav|ogg|m4a|aac|flac)(\?|#|$)/.test(normalized)) return 'audio';
+  return 'audio';
+}
+
+function inferTrackNameFromUrl(url) {
+  const normalized = String(url || '').trim();
+  if (!normalized) return 'Untitled URL';
+
+  try {
+    if (normalized.startsWith('data:') || normalized.startsWith('blob:')) {
+      return 'Uploaded media';
+    }
+
+    const parsed = new URL(normalized, window.location.href);
+    const lastSegment = parsed.pathname.split('/').filter(Boolean).pop();
+    if (lastSegment) {
+      return decodeURIComponent(lastSegment).replace(/\.[^.]+$/, '');
+    }
+    return parsed.hostname.replace(/^www\./, '');
+  } catch {
+    const lastSegment = normalized.split('/').filter(Boolean).pop();
+    return lastSegment ? lastSegment.replace(/\.[^.]+$/, '') : 'Untitled URL';
+  }
+}
+
+function getTrackHostLabel(url) {
+  const normalized = String(url || '').trim();
+  if (!normalized) return 'URL';
+  if (normalized.startsWith('data:')) return 'アップロード';
+  if (normalized.startsWith('blob:')) return 'ローカルファイル';
+  try {
+    return new URL(normalized, window.location.href).hostname.replace(/^www\./, '');
+  } catch {
+    return 'URL';
+  }
+}
+
+function normalizePlaylistTrack(track, index = 0) {
+  const url = track?.url || track?.data || track?.src || '';
+  const kind = track?.kind || inferTrackKind(url);
+  const title = track?.title || track?.name || inferTrackNameFromUrl(url) || `Track ${index + 1}`;
+  const artist = track?.artist || track?.sourceLabel || getTrackHostLabel(url);
+  return {
+    id: track?.id || `bgm-${Date.now()}-${index}`,
+    title,
+    artist,
+    url,
+    kind,
+    source: track?.source || (track?.data ? 'upload' : 'url')
+  };
+}
+
+function isLegacyDefaultPlaylist(parsed) {
+  if (!Array.isArray(parsed) || parsed.length !== LEGACY_DEFAULT_BGM_URLS.length) {
+    return false;
+  }
+
+  return parsed.every((track, index) => {
+    const url = String(track?.url || track?.src || '').trim();
+    return url === LEGACY_DEFAULT_BGM_URLS[index];
+  });
+}
+
+function loadBgmPlaylistFromStorage() {
+  const stored = localStorage.getItem(BGM_PLAYLIST_STORAGE_KEY);
+  if (stored === null) {
+    return DEFAULT_BGM_PLAYLIST.map((track, index) => normalizePlaylistTrack(track, index));
+  }
+
+  try {
+    const parsed = JSON.parse(stored);
+    if (!Array.isArray(parsed)) {
+      return DEFAULT_BGM_PLAYLIST.map((track, index) => normalizePlaylistTrack(track, index));
+    }
+    if (isLegacyDefaultPlaylist(parsed)) {
+      const migrated = DEFAULT_BGM_PLAYLIST.map((track, index) => normalizePlaylistTrack(track, index));
+      localStorage.setItem(BGM_PLAYLIST_STORAGE_KEY, JSON.stringify(migrated));
+      return migrated;
+    }
+    return parsed.map((track, index) => normalizePlaylistTrack(track, index)).filter(track => track.url);
+  } catch {
+    return DEFAULT_BGM_PLAYLIST.map((track, index) => normalizePlaylistTrack(track, index));
+  }
+}
+
+function saveBgmPlaylist() {
+  try {
+    localStorage.setItem(BGM_PLAYLIST_STORAGE_KEY, JSON.stringify(bgmPlaylist));
+    return true;
+  } catch (error) {
+    console.warn('Failed to persist BGM playlist:', error);
+    return false;
+  }
+}
+
+function setPlayerPlayingState(playing) {
+  isPlaying = playing;
+  playBtn.querySelector('.play-icon').classList.toggle('hidden', playing);
+  playBtn.querySelector('.pause-icon').classList.toggle('hidden', !playing);
+}
+
+function applyTrackSource(track) {
+  if (!track || !track.url) {
+    bgm.removeAttribute('src');
+    bgm.load();
+    return;
+  }
+
+  bgm.src = track.url;
+  bgm.load();
+}
+
+const playlist = loadBgmPlaylistFromStorage();
 let currentTrackIndex = 0;
 let isPlaying = false;
 let isShuffle = false;
@@ -269,25 +815,54 @@ const totalTimeLabel = document.getElementById('total-time');
 
 // Load track metadata
 function loadTrack(index) {
+  if (!playlist.length) {
+    currentTrackIndex = 0;
+    trackTitle.textContent = '再生リストが空です';
+    trackArtist.textContent = '音声ファイルか音声URLを追加してください';
+    applyTrackSource(null);
+    setPlayerPlayingState(false);
+    return;
+  }
+
+  const normalizedIndex = ((index % playlist.length) + playlist.length) % playlist.length;
+  const track = playlist[normalizedIndex];
+  if (!track) return;
+
+  currentTrackIndex = normalizedIndex;
+  trackTitle.textContent = track.title;
+  trackArtist.textContent = `${track.artist} · 音声`;
+  applyTrackSource(track);
+}
+
+function playCurrentTrack() {
+  const track = playlist[currentTrackIndex];
+  if (!track) return;
+
+  bgm.play().then(() => {
+    setPlayerPlayingState(true);
+  }).catch(e => console.log('BGM playback failed due to user-gesture requirements:', e));
+}
+
+function pauseCurrentTrack() {
+  bgm.pause();
+  setPlayerPlayingState(false);
+}
+
+function selectTrack(index, shouldAutoplay = false) {
   currentTrackIndex = index;
-  trackTitle.textContent = playlist[index].title;
-  trackArtist.textContent = playlist[index].artist;
-  // In a real app we might load dynamic files: bgm.src = `./assets/${playlist[index].file}`;
+  loadTrack(index);
+  if (shouldAutoplay) {
+    playCurrentTrack();
+  }
 }
 loadTrack(currentTrackIndex);
 
 playBtn.addEventListener('click', togglePlay);
 function togglePlay() {
   if (isPlaying) {
-    bgm.pause();
-    isPlaying = false;
-    playBtn.querySelector('.play-icon').classList.remove('hidden');
-    playBtn.querySelector('.pause-icon').classList.add('hidden');
+    pauseCurrentTrack();
   } else {
-    bgm.play().catch(e => console.log('BGM playback failed due to user-gesture requirements:', e));
-    isPlaying = true;
-    playBtn.querySelector('.play-icon').classList.add('hidden');
-    playBtn.querySelector('.pause-icon').classList.remove('hidden');
+    playCurrentTrack();
   }
 }
 
@@ -358,8 +933,7 @@ seekSlider.addEventListener('input', (e) => {
 document.getElementById('player-prev').addEventListener('click', () => {
   let prevIndex = currentTrackIndex - 1;
   if (prevIndex < 0) prevIndex = playlist.length - 1;
-  loadTrack(prevIndex);
-  if (isPlaying) bgm.play();
+  selectTrack(prevIndex, isPlaying);
 });
 
 document.getElementById('player-next').addEventListener('click', () => {
@@ -367,20 +941,20 @@ document.getElementById('player-next').addEventListener('click', () => {
 });
 
 function nextTrack() {
+  if (!playlist.length) return;
   let nextIndex = currentTrackIndex + 1;
   if (isShuffle) {
     nextIndex = Math.floor(Math.random() * playlist.length);
   } else if (nextIndex >= playlist.length) {
     nextIndex = 0;
   }
-  loadTrack(nextIndex);
-  if (isPlaying) bgm.play();
+  selectTrack(nextIndex, isPlaying);
 }
 
 bgm.addEventListener('ended', () => {
   if (isRepeat) {
     bgm.currentTime = 0;
-    bgm.play();
+    playCurrentTrack();
   } else {
     nextTrack();
   }
@@ -592,11 +1166,511 @@ const sceneBgs = {
   ambient: document.getElementById('bg-ambient')
 };
 
+const THEME_PRESETS = {
+  night: {
+    vrm: {
+      pose: {
+        leftUpperLeg:  { x: -1.25, y: 0, z: 0 },
+        rightUpperLeg: { x: -1.25, y: 0, z: 0 },
+        leftLowerLeg:  { x: 1.35, y: 0, z: 0 },
+        rightLowerLeg: { x: 1.35, y: 0, z: 0 },
+        leftUpperArm:  { x: 0.2, y: 0, z: -1.15 },
+        rightUpperArm: { x: 0.2, y: 0, z: 1.15 },
+        leftLowerArm:  { x: 0, y: -0.25, z: 0 },
+        rightLowerArm: { x: 0, y: 0.25, z: 0 },
+        chest: { x: 0, y: 0, z: 0 },
+        head:  { x: 0, y: 0, z: 0 }
+      },
+      expression: 'sleepy',
+      eyeBlink: true,
+      behavior_profile: 'tired' // theme-linked behavior state
+    },
+    glb: {
+      animation: null,
+      animationSpeed: 1.0
+    }
+  },
+  sunset: {
+    vrm: {
+      pose: {
+        leftUpperLeg:  { x: -1.25, y: 0, z: 0 },
+        rightUpperLeg: { x: -1.25, y: 0, z: 0 },
+        leftLowerLeg:  { x: 1.35, y: 0, z: 0 },
+        rightLowerLeg: { x: 1.35, y: 0, z: 0 },
+        leftUpperArm:  { x: 0.1, y: 0, z: -0.9 },
+        rightUpperArm: { x: 0.1, y: 0, z: 0.9 },
+        leftLowerArm:  { x: 0, y: -0.2, z: 0 },
+        rightLowerArm: { x: 0, y: 0.2, z: 0 },
+        chest: { x: 0, y: 0, z: 0 },
+        head:  { x: 0, y: 0, z: 0 }
+      },
+      expression: 'neutral',
+      eyeBlink: true,
+      behavior_profile: 'relaxed'
+    },
+    glb: {
+      animation: null,
+      animationSpeed: 1.0
+    }
+  },
+  ambient: {
+    vrm: {
+      pose: {
+        leftUpperLeg:  { x: -1.25, y: 0, z: 0 },
+        rightUpperLeg: { x: -1.25, y: 0, z: 0 },
+        leftLowerLeg:  { x: 1.35, y: 0, z: 0 },
+        rightLowerLeg: { x: 1.35, y: 0, z: 0 },
+        leftUpperArm:  { x: 0.3, y: 0, z: -1.3 },
+        rightUpperArm: { x: 0.3, y: 0, z: 1.3 },
+        leftLowerArm:  { x: 0, y: -0.3, z: 0 },
+        rightLowerArm: { x: 0, y: 0.3, z: 0 },
+        chest: { x: 0, y: 0, z: 0 },
+        head:  { x: 0, y: 0, z: 0 }
+      },
+      expression: 'happy',
+      eyeBlink: true,
+      behavior_profile: 'focused'
+    },
+    glb: {
+      animation: null,
+      animationSpeed: 1.0
+    }
+  }
+};
+
+function normalizeGlbBoneName(name) {
+  return String(name || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '');
+}
+
+function parseGlbRotationValue(value) {
+  if (Array.isArray(value)) {
+    return {
+      x: Number(value[0] || 0),
+      y: Number(value[1] || 0),
+      z: Number(value[2] || 0)
+    };
+  }
+
+  if (!value || typeof value !== 'object') return null;
+
+  if (Array.isArray(value.rotation)) {
+    return parseGlbRotationValue(value.rotation);
+  }
+
+  return {
+    x: Number(value.x || 0),
+    y: Number(value.y || 0),
+    z: Number(value.z || 0)
+  };
+}
+
+function captureGlbPoseBaseTransforms(root) {
+  if (!root) return;
+  root.traverse((node) => {
+    if (!node || node === root || !node.rotation) return;
+    node.userData.glbPoseBaseRotation = {
+      x: node.rotation.x,
+      y: node.rotation.y,
+      z: node.rotation.z
+    };
+  });
+}
+
+function resetGlbPose(root = currentGlbRoot) {
+  if (!root) return;
+  root.traverse((node) => {
+    if (node === root) return;
+    const baseRotation = node?.userData?.glbPoseBaseRotation;
+    if (!baseRotation || !node.rotation) return;
+    node.rotation.set(baseRotation.x, baseRotation.y, baseRotation.z);
+  });
+}
+
+function findGlbPoseNode(root, boneName) {
+  if (!root || !boneName) return null;
+  const normalizedTarget = normalizeGlbBoneName(boneName);
+  let matchedNode = null;
+
+  root.traverse((node) => {
+    if (matchedNode || !node || !node.name) return;
+    if (node.name === boneName || normalizeGlbBoneName(node.name) === normalizedTarget) {
+      matchedNode = node;
+    }
+  });
+
+  return matchedNode;
+}
+
+function resolveGlbPoseData(themeData) {
+  if (!themeData) return null;
+
+  if (themeData.glb_pose && typeof themeData.glb_pose === 'object' && Object.keys(themeData.glb_pose).length > 0) {
+    return themeData.glb_pose;
+  }
+
+  const glbConfig = themeData.glb_config || {};
+  if (glbConfig.pose_data && typeof glbConfig.pose_data === 'object') {
+    return glbConfig.pose_data;
+  }
+
+  if (glbConfig.pose && typeof glbConfig.pose === 'object') {
+    return glbConfig.pose;
+  }
+
+  return null;
+}
+
+function applyGlbPose(poseData) {
+  if (!currentGlbRoot || !poseData) return false;
+
+  const poseBones = poseData.bones && typeof poseData.bones === 'object' ? poseData.bones : poseData;
+  if (!poseBones || typeof poseBones !== 'object') return false;
+
+  resetGlbPose();
+
+  let appliedCount = 0;
+  Object.entries(poseBones).forEach(([boneName, bonePose]) => {
+    const rotation = parseGlbRotationValue(bonePose);
+    if (!rotation) return;
+
+    const node = findGlbPoseNode(currentGlbRoot, boneName);
+    if (!node) return;
+
+    const baseRotation = node.userData.glbPoseBaseRotation || { x: 0, y: 0, z: 0 };
+    node.rotation.set(
+      baseRotation.x + rotation.x,
+      baseRotation.y + rotation.y,
+      baseRotation.z + rotation.z
+    );
+    appliedCount += 1;
+  });
+
+  if (appliedCount > 0) {
+    currentGlbRoot.updateMatrixWorld(true);
+  }
+
+  return appliedCount > 0;
+}
+
+// テーマを動的に読み込んで全要素を適用
+async function applyTheme(themeData) {
+  if (!themeData) return;
+
+  // 1. CSS 変数（colors）を動的に設定
+  if (themeData.colors) {
+    const root = document.documentElement;
+    Object.entries(themeData.colors).forEach(([key, value]) => {
+      root.style.setProperty(`--${key}`, value);
+    });
+  }
+
+  // 2. 背景画像を変更
+  if (themeData.background && themeData.background.trim() !== '') {
+    const bgElement = document.getElementById('bg-ambient');
+    if (bgElement) {
+      bgElement.style.backgroundImage = `url('${themeData.background}')`;
+    }
+  }
+
+  // 3. VRM 設定を適用（ポーズ・アニメーション・表情・behavior_profile）
+  if (themeData.vrm_config) {
+    const vrmConfig = themeData.vrm_config;
+
+    // Apply behavior profile (integrated pose + expression + animation)
+    const behaviorProfile = resolveVrmBehaviorProfile(themeData);
+    if (currentVrm) {
+      applyVrmBehaviorProfile(behaviorProfile);
+    }
+
+    // Override with explicit pose if provided
+    if (vrmConfig.pose_data && typeof vrmConfig.pose_data === 'object' && currentVrm && currentVrm.humanoid) {
+      Object.entries(vrmConfig.pose_data).forEach(([boneName, rot]) => {
+        const bone = currentVrm.humanoid.getNormalizedBoneNode(boneName);
+        if (bone) {
+          bone.rotation.x = rot.x || 0;
+          bone.rotation.y = rot.y || 0;
+          bone.rotation.z = rot.z || 0;
+        }
+      });
+    }
+
+    // Override with explicit expression if provided
+    if (vrmConfig.expression && currentVrm && currentVrm.expressionManager) {
+      currentVrmExpression = vrmConfig.expression;
+      const expr = currentVrmExpression;
+      currentVrm.expressionManager.setValue('happy', expr === 'happy' ? 1.0 : 0.0);
+      currentVrm.expressionManager.setValue('angry', expr === 'angry' ? 1.0 : 0.0);
+      currentVrm.expressionManager.setValue('sad', expr === 'sad' ? 1.0 : 0.0);
+      currentVrm.expressionManager.setValue('relaxed', expr === 'relaxed' ? 1.0 : 0.0);
+    }
+  }
+
+  // 4. GLB 設定を適用（ポーズ・アニメーション）
+  if (themeData.glb_config) {
+    const glbConfig = themeData.glb_config;
+    const glbPoseData = resolveGlbPoseData(themeData);
+    if (glbPoseData) {
+      applyGlbPose(glbPoseData);
+    }
+    if (glbConfig.animation && glbAnimations[glbConfig.animation]) {
+      playGlbAnimation(glbConfig.animation);
+    }
+    if (glbConfig.pose && typeof glbConfig.pose === 'string' && !glbPoseData) {
+      console.info(`GLB pose "${glbConfig.pose}" is referenced, but no pose data was loaded.`);
+    }
+  }
+}
+
+// Load GLB pose data from Workshop item (for #17 implementation)
+async function loadGlbPoseFromWorkshop(itemId) {
+  let files;
+  let poseData = null;
+
+  if (window.__TAURI__) {
+    files = await workshopInvoke('workshop_list_files', {
+      category: 'glb_characters',
+      id: itemId
+    });
+
+    const poseFiles = files.filter(f => f.includes('pose') && f.endsWith('.json'));
+    if (poseFiles.length > 0) {
+      try {
+        const poseFile = poseFiles[0];
+        const poseRaw = await workshopInvoke('workshop_read_file', {
+          category: 'glb_characters',
+          id: itemId,
+          filename: poseFile
+        });
+        if (poseRaw) {
+          const poseText = new TextDecoder().decode(new Uint8Array(poseRaw));
+          poseData = JSON.parse(poseText);
+        }
+      } catch (e) {
+        console.warn('Failed to load GLB pose from Workshop:', e);
+      }
+    }
+  } else {
+    files = await listFilesFromDB('glb_characters', itemId);
+    const poseFiles = files.filter(f => f.includes('pose') && f.endsWith('.json'));
+    if (poseFiles.length > 0) {
+      try {
+        const poseFile = poseFiles[0];
+        const poseRaw = await readFileFromDB('glb_characters', itemId, poseFile);
+        if (poseRaw) {
+          const poseText = new TextDecoder().decode(new Uint8Array(poseRaw));
+          poseData = JSON.parse(poseText);
+        }
+      } catch (e) {
+        console.warn('Failed to load GLB pose from Workshop:', e);
+      }
+    }
+  }
+
+  return poseData;
+}
+
+function applyVrmPose() {
+  if (!currentVrm || !currentVrm.humanoid) return;
+  const theme = THEME_PRESETS[currentScene];
+  if (!theme || !theme.vrm || !theme.vrm.pose) return;
+
+  const pose = theme.vrm.pose;
+  Object.entries(pose).forEach(([boneName, rot]) => {
+    const bone = currentVrm.humanoid.getNormalizedBoneNode(boneName);
+    if (bone) {
+      bone.rotation.x = rot.x;
+      bone.rotation.y = rot.y;
+      bone.rotation.z = rot.z;
+    }
+  });
+}
+
+// Apply VRM pose from current theme (integrated approach for #32)
+function applyVrmPoseFromTheme() {
+  if (!currentVrm) return;
+  const theme = THEME_PRESETS[currentScene];
+  if (!theme || !theme.vrm) return;
+
+  // Apply behavior profile first, then override with explicit pose
+  const behaviorProfile = resolveVrmBehaviorProfile(theme);
+  applyVrmBehaviorProfile(behaviorProfile);
+
+  // Override with theme's explicit pose if provided
+  if (theme.vrm.pose && currentVrm.humanoid) {
+    Object.entries(theme.vrm.pose).forEach(([boneName, rot]) => {
+      const bone = currentVrm.humanoid.getNormalizedBoneNode(boneName);
+      if (bone) {
+        bone.rotation.x = rot.x || 0;
+        bone.rotation.y = rot.y || 0;
+        bone.rotation.z = rot.z || 0;
+      }
+    });
+  }
+}
+
+function applyGlbPoseFromTheme() {
+  if (!currentGlbRoot) return;
+  const theme = THEME_PRESETS[currentScene];
+  if (!theme || !theme.glb || !theme.glb.pose) return;
+
+  // Only apply pose if asset_role supports it (for #34 implementation)
+  if (currentGlbAssetRole === 'static_object' || currentGlbAssetRole === 'static_scene') {
+    console.info(`GLB asset_role "${currentGlbAssetRole}" is static, skipping pose application`);
+    return;
+  }
+
+  const pose = theme.glb.pose;
+  applyGlbPose(pose);
+}
+
+let currentVrmExpression = 'sleepy';
+let vrmEyeBlinkEnabled = true;
+let currentVrmBehaviorProfile = 'neutral'; // tracking current behavior state
+
+function applyVrmExpression() {
+  if (!currentVrm || !currentVrm.expressionManager) return;
+  const theme = THEME_PRESETS[currentScene];
+  if (!theme || !theme.vrm) return;
+
+  currentVrmExpression = theme.vrm.expression || 'neutral';
+  vrmEyeBlinkEnabled = theme.vrm.eyeBlink !== false;
+
+  const expr = currentVrmExpression;
+  currentVrm.expressionManager.setValue('happy', expr === 'happy' ? 1.0 : 0.0);
+  currentVrm.expressionManager.setValue('angry', expr === 'angry' ? 1.0 : 0.0);
+  currentVrm.expressionManager.setValue('sad', expr === 'sad' ? 1.0 : 0.0);
+  currentVrm.expressionManager.setValue('relaxed', expr === 'relaxed' ? 1.0 : 0.0);
+}
+
+// VRM behavior profiles: emotional/contextual states (focused, relaxed, tired, etc.)
+const VRM_BEHAVIOR_PROFILES = {
+  neutral: {
+    label: 'ニュートラル',
+    pose: null,
+    expression: 'neutral',
+    eyeBlink: true
+  },
+  focused: {
+    label: '集中',
+    pose: { chest: { x: 0.1, y: 0, z: 0 } },
+    expression: 'neutral',
+    eyeBlink: true
+  },
+  relaxed: {
+    label: 'リラックス',
+    pose: { chest: { x: -0.1, y: 0, z: 0 } },
+    expression: 'relaxed',
+    eyeBlink: true
+  },
+  tired: {
+    label: '疲れ',
+    pose: { chest: { x: -0.2, y: 0, z: 0 } },
+    expression: 'sad',
+    eyeBlink: false
+  }
+};
+
+// Apply behavior profile (combining pose + expression)
+function applyVrmBehaviorProfile(profileName) {
+  if (!currentVrm) return false;
+
+  const profile = VRM_BEHAVIOR_PROFILES[profileName];
+  if (!profile) {
+    console.warn(`VRM behavior profile "${profileName}" not found`);
+    return false;
+  }
+
+  currentVrmBehaviorProfile = profileName;
+
+  // Apply pose if defined
+  if (profile.pose && currentVrm.humanoid) {
+    Object.entries(profile.pose).forEach(([boneName, rot]) => {
+      const bone = currentVrm.humanoid.getNormalizedBoneNode(boneName);
+      if (bone) {
+        bone.rotation.x = (rot.x || 0);
+        bone.rotation.y = (rot.y || 0);
+        bone.rotation.z = (rot.z || 0);
+      }
+    });
+  }
+
+  // Apply expression
+  if (profile.expression && currentVrm.expressionManager) {
+    currentVrmExpression = profile.expression;
+    vrmEyeBlinkEnabled = profile.eyeBlink !== false;
+
+    const expr = profile.expression;
+    currentVrm.expressionManager.setValue('happy', expr === 'happy' ? 1.0 : 0.0);
+    currentVrm.expressionManager.setValue('angry', expr === 'angry' ? 1.0 : 0.0);
+    currentVrm.expressionManager.setValue('sad', expr === 'sad' ? 1.0 : 0.0);
+    currentVrm.expressionManager.setValue('relaxed', expr === 'relaxed' ? 1.0 : 0.0);
+  }
+
+  return true;
+}
+
+// Resolve VRM behavior profile from theme/vrm config
+function resolveVrmBehaviorProfile(themeData) {
+  if (!themeData) return 'neutral';
+
+  const vrmConfig = themeData.vrm_config || {};
+
+  // Priority: explicit behavior_profile > default
+  if (vrmConfig.behavior_profile && typeof vrmConfig.behavior_profile === 'string') {
+    return vrmConfig.behavior_profile;
+  }
+
+  // Fallback: infer from expression
+  if (vrmConfig.expression) {
+    if (vrmConfig.expression === 'happy') return 'focused';
+    if (vrmConfig.expression === 'relaxed') return 'relaxed';
+    if (vrmConfig.expression === 'sad') return 'tired';
+  }
+
+  return 'neutral';
+}
+
+function playGlbAnimation(name, speed = 1.0) {
+  if (!glbAnimationMixer || !glbAnimations[name]) return;
+  stopGlbAnimation();
+  const clip = glbAnimations[name];
+  const action = glbAnimationMixer.clipAction(clip);
+  action.setLoop(THREE_Lib ? THREE_Lib.LoopRepeat : 1);
+  action.timeScale = speed;
+  action.play();
+  currentGlbAnimationAction = action;
+}
+
+function stopGlbAnimation() {
+  if (currentGlbAnimationAction) {
+    currentGlbAnimationAction.stop();
+    currentGlbAnimationAction = null;
+  }
+}
+
+function applyGlbAnimation() {
+  const theme = THEME_PRESETS[currentScene];
+  if (!theme || !theme.glb) return;
+  const animName = theme.glb.animation;
+  const speed = theme.glb.animationSpeed || 1.0;
+  if (animName && glbAnimations[animName]) {
+    playGlbAnimation(animName, speed);
+  } else {
+    stopGlbAnimation();
+  }
+}
+
 function applyScene() {
   SCENES.forEach(name => sceneBgs[name].classList.toggle('active', name === currentScene));
   document.body.classList.toggle('theme-ambient', currentScene === 'ambient');
   localStorage.setItem('scene', currentScene);
   update3DLights();
+  // Apply VRM behavior profile (pose + expression integrated) for #32
+  applyVrmPoseFromTheme();
+  applyGlbPoseFromTheme();
+  applyGlbAnimation();
 }
 
 btnScene.addEventListener('click', () => {
@@ -605,6 +1679,71 @@ btnScene.addEventListener('click', () => {
 });
 // NOTE: 起動時の applyScene() はファイル末尾で呼ぶ。
 // ここで呼ぶと update3DLights() が宣言前の THREE_Lib (TDZ) に触れて落ちる。
+
+// ==========================================
+// 7.5 LAUNCHER PANEL
+// ==========================================
+const launcherPanel = document.getElementById('launcher-panel');
+const btnLauncher = document.getElementById('btn-launcher');
+const launcherCloseBtn = document.getElementById('launcher-close-btn');
+
+btnLauncher.addEventListener('click', () => {
+  closeOtherDrawers(launcherPanel);
+  launcherPanel.classList.toggle('active');
+  btnLauncher.classList.toggle('active', launcherPanel.classList.contains('active'));
+});
+
+launcherCloseBtn.addEventListener('click', () => {
+  launcherPanel.classList.remove('active');
+  btnLauncher.classList.remove('active');
+});
+
+document.querySelectorAll('.launcher-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const app = item.dataset.app;
+    launchApp(app);
+  });
+});
+
+function launchApp(appName) {
+  switch (appName) {
+    case 'terminal':
+      sshPanel.classList.add('active');
+      btnSsh.classList.add('active');
+      launcherPanel.classList.remove('active');
+      btnLauncher.classList.remove('active');
+      break;
+    case 'browser':
+      alert('ブラウザは準備中です');
+      break;
+    case 'editor':
+      alert('エディタは準備中です');
+      break;
+    case 'filemanager':
+      alert('ファイルマネージャは準備中です');
+      break;
+    case 'calculator':
+      alert('電卓は準備中です');
+      break;
+    case 'settings':
+      settingsPanel.classList.add('active');
+      btnSettings.classList.add('active');
+      launcherPanel.classList.remove('active');
+      btnLauncher.classList.remove('active');
+      break;
+    case 'ai':
+      alert('AIは準備中です');
+      break;
+    case 'ssh':
+      sshPanel.classList.add('active');
+      btnSsh.classList.add('active');
+      launcherPanel.classList.remove('active');
+      btnLauncher.classList.remove('active');
+      break;
+    default:
+      alert('準備中です');
+  }
+}
 
 // ==========================================
 // 8. DISTRACTION-FREE & SETTINGS
@@ -622,6 +1761,29 @@ btnDistraction.addEventListener('click', () => {
 const settingsPanel = document.getElementById('settings-panel');
 const btnSettings = document.getElementById('btn-settings');
 const settingsCloseBtn = document.getElementById('settings-close-btn');
+const SETTINGS_TAB_KEY = 'settingsTab';
+const settingsTabButtons = Array.from(document.querySelectorAll('.settings-tab-btn'));
+const settingsTabSections = Array.from(document.querySelectorAll('.settings-tab-section'));
+let currentSettingsTab = localStorage.getItem(SETTINGS_TAB_KEY) || 'theme';
+if (!settingsTabButtons.some(btn => btn.dataset.settingsTab === currentSettingsTab)) {
+  currentSettingsTab = 'theme';
+}
+
+function applySettingsTab(tab) {
+  currentSettingsTab = tab;
+  localStorage.setItem(SETTINGS_TAB_KEY, tab);
+  settingsTabButtons.forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.settingsTab === tab);
+  });
+  settingsTabSections.forEach(section => {
+    section.classList.toggle('hidden', section.dataset.settingsTab !== tab);
+  });
+}
+
+settingsTabButtons.forEach(btn => {
+  btn.addEventListener('click', () => applySettingsTab(btn.dataset.settingsTab));
+});
+applySettingsTab(currentSettingsTab);
 
 const FEATURE_DEFAULTS = {
   clock: true,
@@ -681,12 +1843,225 @@ uiThemeSelect.addEventListener('change', () => {
 });
 applyUiTheme();
 
+// UI Language selector (#38)
+const uiLanguageSelect = document.getElementById('ui-language-select');
+if (uiLanguageSelect) {
+  uiLanguageSelect.value = currentLanguage;
+  uiLanguageSelect.addEventListener('change', () => {
+    setLanguage(uiLanguageSelect.value);
+  });
+}
+
+updateAllUITexts();
+
+// ==========================================
+// 8.5 THEME CUSTOMIZATION
+// ==========================================
+const customAccentColor = document.getElementById('custom-accent-color');
+const customAccent2Color = document.getElementById('custom-accent2-color');
+const customBgNight = document.getElementById('custom-bg-night');
+const customBgSunset = document.getElementById('custom-bg-sunset');
+const themeResetBtn = document.getElementById('theme-reset-btn');
+const themeSaveBtn = document.getElementById('theme-save-btn');
+
+const THEME_DEFAULTS = {
+  accentColor: '#ff7b54',
+  accent2Color: '#4adede',
+  bgNight: null,
+  bgSunset: null
+};
+
+let customTheme = { ...THEME_DEFAULTS, ...JSON.parse(localStorage.getItem('customTheme') || '{}') };
+
+function applyCustomTheme() {
+  if (customTheme.accentColor) {
+    document.documentElement.style.setProperty('--accent', customTheme.accentColor);
+    document.documentElement.style.setProperty('--accent-rgb', hexToRgb(customTheme.accentColor));
+  }
+  if (customTheme.accent2Color) {
+    document.documentElement.style.setProperty('--accent-2', customTheme.accent2Color);
+  }
+  if (customTheme.bgNight) {
+    document.getElementById('bg-night').style.backgroundImage = `url(${customTheme.bgNight})`;
+  }
+  if (customTheme.bgSunset) {
+    document.getElementById('bg-sunset').style.backgroundImage = `url(${customTheme.bgSunset})`;
+  }
+}
+
+function hexToRgb(hex) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255, 123, 84';
+}
+
+function loadThemeControls() {
+  customAccentColor.value = customTheme.accentColor || THEME_DEFAULTS.accentColor;
+  customAccent2Color.value = customTheme.accent2Color || THEME_DEFAULTS.accent2Color;
+}
+
+customAccentColor.addEventListener('input', () => {
+  customTheme.accentColor = customAccentColor.value;
+  applyCustomTheme();
+});
+
+customAccent2Color.addEventListener('input', () => {
+  customTheme.accent2Color = customAccent2Color.value;
+  applyCustomTheme();
+});
+
+customBgNight.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      customTheme.bgNight = ev.target.result;
+      applyCustomTheme();
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+customBgSunset.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      customTheme.bgSunset = ev.target.result;
+      applyCustomTheme();
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+themeResetBtn.addEventListener('click', () => {
+  customTheme = { ...THEME_DEFAULTS };
+  localStorage.removeItem('customTheme');
+  document.documentElement.style.removeProperty('--accent');
+  document.documentElement.style.removeProperty('--accent-rgb');
+  document.documentElement.style.removeProperty('--accent-2');
+  document.getElementById('bg-night').style.backgroundImage = '';
+  document.getElementById('bg-sunset').style.backgroundImage = '';
+  loadThemeControls();
+});
+
+themeSaveBtn.addEventListener('click', () => {
+  localStorage.setItem('customTheme', JSON.stringify(customTheme));
+  alert(t('theme_saved_alert'));
+});
+
+loadThemeControls();
+applyCustomTheme();
+
+// ==========================================
+// 8.6 BGM PLAYLIST
+// ==========================================
+const bgmUpload = document.getElementById('bgm-upload');
+const bgmUrlTitle = document.getElementById('bgm-url-title');
+const bgmUrlInput = document.getElementById('bgm-url-input');
+const bgmUrlAddBtn = document.getElementById('bgm-url-add-btn');
+const bgmPlaylistEl = document.getElementById('bgm-playlist');
+let bgmPlaylist = playlist;
+
+function renderBgmPlaylist() {
+  if (!bgmPlaylistEl) return;
+
+  if (!bgmPlaylist.length) {
+    bgmPlaylistEl.innerHTML = '<li class="settings-playlist-empty">音声ファイルか音声URLを追加してください</li>';
+    return;
+  }
+
+  bgmPlaylistEl.innerHTML = bgmPlaylist.map((track, i) => {
+    const sourceLabel = track.source === 'upload' ? 'アップロード' : '音声URL';
+    return `
+    <li class="settings-playlist-item">
+      <div class="settings-playlist-item-main">
+        <div class="settings-playlist-item-meta">
+          <span class="settings-playlist-item-name">${escapeHtml(track.title)}</span>
+          <span class="settings-playlist-item-url">${escapeHtml(track.url)}</span>
+        </div>
+        <div class="settings-playlist-item-submeta">${escapeHtml(track.artist)} · ${escapeHtml(sourceLabel)}</div>
+      </div>
+      <div class="settings-playlist-item-actions">
+        <button class="settings-playlist-item-play" data-index="${i}" data-action="play">再生</button>
+        <button class="settings-playlist-item-remove" data-index="${i}">&times;</button>
+      </div>
+    </li>
+  `; }).join('');
+
+  bgmPlaylistEl.querySelectorAll('.settings-playlist-item-play').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = Number(btn.dataset.index);
+      const track = bgmPlaylist[idx];
+      if (!track) return;
+      selectTrack(idx, true);
+    });
+  });
+
+  bgmPlaylistEl.querySelectorAll('.settings-playlist-item-remove').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.index);
+      bgmPlaylist.splice(idx, 1);
+      saveBgmPlaylist();
+      renderBgmPlaylist();
+      if (!bgmPlaylist.length) {
+        pauseCurrentTrack();
+      } else if (currentTrackIndex >= bgmPlaylist.length) {
+        selectTrack(0, false);
+      } else {
+        loadTrack(currentTrackIndex);
+      }
+    });
+  });
+}
+
+bgmUpload.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      bgmPlaylist.push(normalizePlaylistTrack({
+        title: file.name.replace(/\.[^.]+$/, ''),
+        artist: 'アップロード',
+        url: ev.target.result,
+        kind: 'audio',
+        source: 'upload'
+      }, bgmPlaylist.length));
+      renderBgmPlaylist();
+      saveBgmPlaylist();
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+bgmUrlAddBtn.addEventListener('click', () => {
+  const url = bgmUrlInput.value.trim();
+  if (!url) {
+    alert('URL を入力してください');
+    return;
+  }
+
+  const title = bgmUrlTitle.value.trim() || inferTrackNameFromUrl(url);
+  bgmPlaylist.push(normalizePlaylistTrack({
+    title,
+    artist: getTrackHostLabel(url),
+    url,
+    kind: inferTrackKind(url),
+    source: 'url'
+  }, bgmPlaylist.length));
+  renderBgmPlaylist();
+  saveBgmPlaylist();
+  bgmUrlTitle.value = '';
+  bgmUrlInput.value = '';
+});
+
+renderBgmPlaylist();
+
 // Drawers share the same slot, so opening one closes the others
 function closeOtherDrawers(except) {
-  [[todoPanel, btnTodo], [settingsPanel, btnSettings], [sshPanel, btnSsh], [workshopPanel, btnWorkshopEl]].forEach(([panel, btn]) => {
+  [[todoPanel, btnTodo], [settingsPanel, btnSettings], [sshPanel, btnSsh], [workshopPanel, btnWorkshop], [launcherPanel, btnLauncher]].forEach(([panel, btn]) => {
     if (panel !== except) {
       panel.classList.remove('active');
-      if (btn) btn.classList.remove('active');
+      btn.classList.remove('active');
     }
   });
 }
@@ -718,8 +2093,6 @@ const sshKeypathInput = document.getElementById('ssh-keypath');
 const sshConnectBtn = document.getElementById('ssh-connect-btn');
 const sshDisconnectBtn = document.getElementById('ssh-disconnect-btn');
 const sshStatus = document.getElementById('ssh-status');
-const sshOutput = document.getElementById('ssh-output');
-const sshCommandInput = document.getElementById('ssh-command');
 const sshHostInput = document.getElementById('ssh-host');
 const sshUserInput = document.getElementById('ssh-user');
 const sshSavePassword = document.getElementById('ssh-save-password');
@@ -773,9 +2146,67 @@ function sshInvoke(cmd, args) {
   return window.__TAURI__.core.invoke(cmd, args);
 }
 
-function appendSshOutput(text) {
-  sshOutput.textContent += text;
-  sshOutput.scrollTop = sshOutput.scrollHeight;
+// xterm.js terminal (PTY 付きインタラクティブシェル)
+let sshTerm = null;
+let sshFitAddon = null;
+let sshUnlisteners = [];
+
+function ensureSshTerm() {
+  if (sshTerm) return sshTerm;
+  sshTerm = new Terminal({
+    fontSize: 12,
+    fontFamily: '"SF Mono", "Menlo", monospace',
+    cursorBlink: true,
+    theme: {
+      background: '#0a0c10',
+      foreground: '#d4f5e9'
+    }
+  });
+  sshFitAddon = new FitAddon.FitAddon();
+  sshTerm.loadAddon(sshFitAddon);
+  sshTerm.open(document.getElementById('ssh-term'));
+
+  sshTerm.onData((data) => {
+    sshInvoke('ssh_write', { data }).catch(err => console.error('ssh_write:', err));
+  });
+
+  const resizeObserver = new ResizeObserver(() => {
+    if (!sshTerminal.classList.contains('hidden')) {
+      sshFitAddon.fit();
+      sshInvoke('ssh_resize', { cols: sshTerm.cols, rows: sshTerm.rows }).catch(() => {});
+    }
+  });
+  resizeObserver.observe(document.getElementById('ssh-term'));
+
+  return sshTerm;
+}
+
+async function startSshShell() {
+  const term = ensureSshTerm();
+  term.reset();
+
+  const { listen } = window.__TAURI__.event;
+  sshUnlisteners.push(await listen('ssh-output', (e) => {
+    term.write(new Uint8Array(e.payload));
+  }));
+  sshUnlisteners.push(await listen('ssh-closed', () => {
+    term.write('\r\n[セッションが終了しました]\r\n');
+    teardownSshShell();
+  }));
+
+  sshConnectForm.classList.add('hidden');
+  sshTerminal.classList.remove('hidden');
+
+  sshFitAddon.fit();
+  await sshInvoke('ssh_open_shell', { cols: term.cols, rows: term.rows });
+  term.focus();
+}
+
+function teardownSshShell() {
+  sshUnlisteners.forEach(un => un());
+  sshUnlisteners = [];
+  sshTerminal.classList.add('hidden');
+  sshConnectForm.classList.remove('hidden');
 }
 
 sshConnectBtn.addEventListener('click', async () => {
@@ -786,43 +2217,25 @@ sshConnectBtn.addEventListener('click', async () => {
   sshConnectBtn.disabled = true;
   sshConnectBtn.textContent = '接続中...';
   try {
-    let message;
     if (sshAuthMethod.value === 'key') {
-      message = await sshInvoke('ssh_connect_with_key', {
+      await sshInvoke('ssh_connect_with_key', {
         host, user,
         keyPath: sshKeypathInput.value.trim() || '~/.ssh/id_ed25519'
       });
     } else {
-      message = await sshInvoke('ssh_connect', {
+      await sshInvoke('ssh_connect', {
         host, user,
         password: sshPasswordInput.value
       });
     }
     saveSshConn();
     sshStatus.textContent = `${user}@${host}`;
-    sshOutput.textContent = `${message}\n`;
-    sshConnectForm.classList.add('hidden');
-    sshTerminal.classList.remove('hidden');
-    sshCommandInput.focus();
+    await startSshShell();
   } catch (err) {
     alert(`SSH 接続エラー: ${err}`);
   } finally {
     sshConnectBtn.disabled = false;
     sshConnectBtn.textContent = '接続';
-  }
-});
-
-sshCommandInput.addEventListener('keypress', async (e) => {
-  if (e.key !== 'Enter') return;
-  const command = sshCommandInput.value.trim();
-  if (!command) return;
-  sshCommandInput.value = '';
-  appendSshOutput(`$ ${command}\n`);
-  try {
-    const output = await sshInvoke('ssh_exec', { command });
-    appendSshOutput(output.endsWith('\n') || output === '' ? output : output + '\n');
-  } catch (err) {
-    appendSshOutput(`[エラー] ${err}\n`);
   }
 });
 
@@ -832,9 +2245,7 @@ sshDisconnectBtn.addEventListener('click', async () => {
   } catch (err) {
     console.error('SSH disconnect error:', err);
   }
-  sshTerminal.classList.add('hidden');
-  sshConnectForm.classList.remove('hidden');
-  sshOutput.textContent = '';
+  teardownSshShell();
 });
 
 applyFeatures();
@@ -843,11 +2254,14 @@ applyFeatures();
 const btnClose = document.getElementById('btn-close');
 btnClose.addEventListener('click', () => {
   if (window.__TAURI__) {
-    try {
-      window.__TAURI__.window.getCurrentWindow().close();
-    } catch (err) {
-      console.error('Error closing Tauri window:', err);
-    }
+    sshInvoke('app_quit').catch((err) => {
+      console.error('Error quitting Tauri app:', err);
+      try {
+        window.__TAURI__.window.getCurrentWindow().close();
+      } catch (closeErr) {
+        console.error('Fallback window close failed:', closeErr);
+      }
+    });
   } else {
     // Normal browser alert fallback
     if (confirm('ウィジェットを終了しますか？ (ブラウザ環境のためタブを閉じます)')) {
@@ -881,6 +2295,135 @@ let currentGlbRoot = null;
 let currentGlbChairNode = null;
 let currentGlbNodeSummary = 'GLB: 読み込み待ち';
 let currentGlbChairCandidateSummary = '椅子候補: 読み込み待ち';
+let glbAnimationMixer = null;
+let glbAnimations = {};
+let currentGlbAnimationAction = null;
+let currentGlbAssetRole = 'animated_character'; // static_object / animated_character / static_scene
+
+// ==========================================
+// 2-SLOT SYSTEM (#35 Implementation)
+// ==========================================
+const SLOT_SYSTEM = {
+  // character_slot: VRM or Animated GLB (1 item)
+  character_slot: {
+    type: null, // 'vrm' | 'glb_character' | null
+    id: null,   // loaded item ID
+    displayName: null
+  },
+  // environment_slot: Static GLB or Scene (1 item)
+  environment_slot: {
+    type: null, // 'glb_static' | 'scene' | null
+    id: null,   // loaded item ID
+    displayName: null
+  },
+  // scene_mode: future extension for complex layouts
+  scene_mode: false // when true, ignores 2-slot constraint
+};
+
+// Update slot state when loading VRM
+function updateCharacterSlot(vrmId, displayName) {
+  SLOT_SYSTEM.character_slot = {
+    type: 'vrm',
+    id: vrmId,
+    displayName: displayName || 'Loaded VRM'
+  };
+  console.log('Character slot updated (VRM):', SLOT_SYSTEM.character_slot);
+}
+
+// Update slot state when loading Animated GLB
+function updateCharacterSlotGlb(glbId, displayName) {
+  if (currentGlbAssetRole !== 'animated_character') {
+    console.warn('Attempting to load non-animated GLB to character_slot');
+    return false;
+  }
+  SLOT_SYSTEM.character_slot = {
+    type: 'glb_character',
+    id: glbId,
+    displayName: displayName || 'Loaded GLB Character'
+  };
+  console.log('Character slot updated (Animated GLB):', SLOT_SYSTEM.character_slot);
+  return true;
+}
+
+// Update environment slot with static GLB
+function updateEnvironmentSlot(glbId, displayName) {
+  if (currentGlbAssetRole !== 'static_object' && currentGlbAssetRole !== 'static_scene') {
+    console.warn('Attempting to load animated GLB to environment_slot (requires static)');
+    return false;
+  }
+  SLOT_SYSTEM.environment_slot = {
+    type: currentGlbAssetRole === 'static_scene' ? 'scene' : 'glb_static',
+    id: glbId,
+    displayName: displayName || 'Loaded Environment'
+  };
+  console.log('Environment slot updated:', SLOT_SYSTEM.environment_slot);
+  return true;
+}
+
+// Clear a slot
+function clearSlot(slotName) {
+  if (slotName === 'character_slot') {
+    SLOT_SYSTEM.character_slot = { type: null, id: null, displayName: null };
+  } else if (slotName === 'environment_slot') {
+    SLOT_SYSTEM.environment_slot = { type: null, id: null, displayName: null };
+  }
+  console.log(`${slotName} cleared`);
+}
+
+// Get active slot info for UI display
+function getSlotInfo() {
+  return {
+    character: SLOT_SYSTEM.character_slot.displayName || 'None',
+    environment: SLOT_SYSTEM.environment_slot.displayName || 'None',
+    sceneMode: SLOT_SYSTEM.scene_mode
+  };
+}
+
+// GLB asset role definitions (for #34 implementation)
+const GLB_ASSET_ROLES = {
+  static_object: {
+    label: '静的オブジェクト',
+    description: '家具や小物など、動かないオブジェクト',
+    supportsAnimation: false,
+    supportsPose: false
+  },
+  animated_character: {
+    label: 'アニメーション付きキャラクター',
+    description: 'ボーンアニメーションを持つキャラクター',
+    supportsAnimation: true,
+    supportsPose: true,
+    behaviorProfiles: true // can apply behavior_profiles
+  },
+  static_scene: {
+    label: '静的シーン',
+    description: '複数のオブジェクトを含む背景シーン',
+    supportsAnimation: false,
+    supportsPose: false
+  }
+};
+
+// Detect GLB asset role from model structure
+function detectGlbAssetRole(gltf) {
+  // If has animations, likely an animated character
+  if (gltf.animations && gltf.animations.length > 0) {
+    return 'animated_character';
+  }
+
+  // Check for skeleton/armature (indicates rigged model)
+  let hasSkeleton = false;
+  gltf.scene.traverse((node) => {
+    if (node.type === 'Bone' || node.name.toLowerCase().includes('armature')) {
+      hasSkeleton = true;
+    }
+  });
+
+  if (hasSkeleton) {
+    return 'animated_character';
+  }
+
+  // Default to static object if no animations or skeleton
+  return 'static_object';
+}
 
 const lookAtTarget = { position: { x: 0, y: 1.0, z: 2.0 } }; // Look target fallback
 const vrmCanvas = document.getElementById('vrm-canvas');
@@ -916,7 +2459,7 @@ vrmUpload.addEventListener('change', (e) => {
     loadVrmModel(url);
     pendingSaveFile = file;
     pendingSaveCategory = 'vrm_sets';
-    if (btnSaveWorkshop) btnSaveWorkshop.classList.remove('hidden');
+    btnSaveWorkshop.classList.remove('hidden');
   }
 });
 glbUpload.addEventListener('change', (e) => {
@@ -926,88 +2469,80 @@ glbUpload.addEventListener('change', (e) => {
     loadGlbModel(url);
     pendingSaveFile = file;
     pendingSaveCategory = 'glb_characters';
-    if (btnSaveWorkshop) btnSaveWorkshop.classList.remove('hidden');
+    btnSaveWorkshop.classList.remove('hidden');
   }
 });
 
-if (btnSaveWorkshop) {
-  btnSaveWorkshop.addEventListener('click', () => {
-    if (!pendingSaveFile) return;
-    workshopSaveType.textContent = pendingSaveCategory === 'vrm_sets' ? 'VRM' : 'GLB';
-    workshopSaveId.value = '';
-    workshopSaveName.value = pendingSaveFile.name.replace(/\.[^.]+$/, '');
-    workshopSaveDesc.value = '';
-    workshopSaveAuthor.value = '';
-    workshopSaveModal.classList.remove('hidden');
-  });
-}
+btnSaveWorkshop.addEventListener('click', () => {
+  if (!pendingSaveFile) return;
+  workshopSaveType.textContent = pendingSaveCategory === 'vrm_sets' ? 'VRM' : 'GLB';
+  workshopSaveId.value = '';
+  workshopSaveName.value = pendingSaveFile.name.replace(/\.[^.]+$/, '');
+  workshopSaveDesc.value = '';
+  workshopSaveAuthor.value = '';
+  workshopSaveModal.classList.remove('hidden');
+});
 
-if (workshopSaveClose) {
-  workshopSaveClose.addEventListener('click', () => {
-    workshopSaveModal.classList.add('hidden');
-  });
-}
+workshopSaveClose.addEventListener('click', () => {
+  workshopSaveModal.classList.add('hidden');
+});
 
-if (workshopSaveCancel) {
-  workshopSaveCancel.addEventListener('click', () => {
-    workshopSaveModal.classList.add('hidden');
-  });
-}
+workshopSaveCancel.addEventListener('click', () => {
+  workshopSaveModal.classList.add('hidden');
+});
 
-if (workshopSaveConfirm) {
-  workshopSaveConfirm.addEventListener('click', async () => {
-    const id = workshopSaveId.value.trim();
-    const name = workshopSaveName.value.trim();
-    const desc = workshopSaveDesc.value.trim();
-    const author = workshopSaveAuthor.value.trim();
+workshopSaveConfirm.addEventListener('click', async () => {
+  const id = workshopSaveId.value.trim();
+  const name = workshopSaveName.value.trim();
+  const desc = workshopSaveDesc.value.trim();
+  const author = workshopSaveAuthor.value.trim();
 
-    if (!id || !name) {
-      alert('IDと名前は必須です');
-      return;
+  if (!id || !name) {
+    alert('IDと名前は必須です');
+    return;
+  }
+
+  try {
+    const ext = pendingSaveFile.name.split('.').pop();
+    const filename = `model.${ext}`;
+    const arrayBuffer = await pendingSaveFile.arrayBuffer();
+    const data = Array.from(new Uint8Array(arrayBuffer));
+
+    if (window.__TAURI__) {
+      await workshopInvoke('workshop_create_item', {
+        category: pendingSaveCategory,
+        id,
+        name,
+        description: desc,
+        author
+      });
+      await workshopInvoke('workshop_save_file', {
+        category: pendingSaveCategory,
+        id,
+        filename,
+        data
+      });
+    } else {
+      const meta = {
+        id,
+        name,
+        description: desc,
+        author,
+        version: '1.0.0',
+        item_type: pendingSaveCategory,
+        created_at: String(Date.now())
+      };
+      localStorage.setItem(`workshop_meta_${pendingSaveCategory}_${id}`, JSON.stringify(meta));
+      await saveFileToDB(pendingSaveCategory, id, filename, data);
     }
 
-    try {
-      const ext = pendingSaveFile.name.split('.').pop();
-      const filename = `model.${ext}`;
-      const arrayBuffer = await pendingSaveFile.arrayBuffer();
-      const data = Array.from(new Uint8Array(arrayBuffer));
-
-      if (window.__TAURI__) {
-        await workshopInvoke('workshop_create_item', {
-          category: pendingSaveCategory,
-          id,
-          name,
-          description: desc,
-          author
-        });
-        await workshopInvoke('workshop_save_file', {
-          category: pendingSaveCategory,
-          id,
-          filename,
-          data
-        });
-      } else {
-        const meta = {
-          id,
-          name,
-          description: desc,
-          author,
-          version: '1.0.0',
-          item_type: pendingSaveCategory,
-          created_at: String(Date.now())
-        };
-        localStorage.setItem(`workshop_meta_${pendingSaveCategory}_${id}`, JSON.stringify(meta));
-        await saveFileToDB(pendingSaveCategory, id, filename, data);
-      }
-
-      workshopSaveModal.classList.add('hidden');
-      if (btnSaveWorkshop) btnSaveWorkshop.classList.add('hidden');
-      alert('Workshopに保存しました');
-    } catch (err) {
-      alert('保存エラー: ' + err);
-    }
-  });
-}
+    workshopSaveModal.classList.add('hidden');
+    btnSaveWorkshop.classList.add('hidden');
+    alert('Workshopに保存しました');
+  } catch (err) {
+    alert('保存エラー: ' + err);
+  }
+});
 
 function create3DContext(canvas) {
   const THREE = THREE_Lib;
@@ -1087,6 +2622,7 @@ function initThreeScenes() {
 
   function updateSleepyEyes(vrm, deltaTime) {
     if (!vrm.expressionManager) return;
+    if (!vrmEyeBlinkEnabled) return;
 
     eyeTimer -= deltaTime;
     const transitionSpeed = 5.0;
@@ -1148,6 +2684,9 @@ function initThreeScenes() {
     }
     if (glbRenderer3D && glbScene3D && glbCamera3D) {
       glbRenderer3D.render(glbScene3D, glbCamera3D);
+    }
+    if (glbAnimationMixer) {
+      glbAnimationMixer.update(deltaTime);
     }
   }
   tick();
@@ -1279,33 +2818,10 @@ function loadVrmModel(url) {
       vrm.scene.rotation.y = (vrmSettings.rotation * Math.PI) / 180;
       vrm.scene.position.set(0.0, -0.18, 0.0);
 
-      if (vrm.humanoid) {
-        const leftUpperLeg = vrm.humanoid.getNormalizedBoneNode('leftUpperLeg');
-        const rightUpperLeg = vrm.humanoid.getNormalizedBoneNode('rightUpperLeg');
-        const leftLowerLeg = vrm.humanoid.getNormalizedBoneNode('leftLowerLeg');
-        const rightLowerLeg = vrm.humanoid.getNormalizedBoneNode('rightLowerLeg');
+      applyVrmPose();
 
-        if (leftUpperLeg) leftUpperLeg.rotation.x = -1.25;
-        if (rightUpperLeg) rightUpperLeg.rotation.x = -1.25;
-        if (leftLowerLeg) leftLowerLeg.rotation.x = 1.35;
-        if (rightLowerLeg) rightLowerLeg.rotation.x = 1.35;
-
-        const leftUpperArm = vrm.humanoid.getNormalizedBoneNode('leftUpperArm');
-        const rightUpperArm = vrm.humanoid.getNormalizedBoneNode('rightUpperArm');
-        const leftLowerArm = vrm.humanoid.getNormalizedBoneNode('leftLowerArm');
-        const rightLowerArm = vrm.humanoid.getNormalizedBoneNode('rightLowerArm');
-
-        if (leftUpperArm) {
-          leftUpperArm.rotation.z = -1.15;
-          leftUpperArm.rotation.x = 0.2;
-        }
-        if (rightUpperArm) {
-          rightUpperArm.rotation.z = 1.15;
-          rightUpperArm.rotation.x = 0.2;
-        }
-        if (leftLowerArm) leftLowerArm.rotation.y = -0.25;
-        if (rightLowerArm) rightLowerArm.rotation.y = 0.25;
-      }
+      // Update character_slot for 2-slot system (#35)
+      updateCharacterSlot('default', 'VRM Avatar');
 
       if (vrm.lookAt && vrmLookTargetObj) {
         vrm.lookAt.target = vrmLookTargetObj;
@@ -1313,6 +2829,7 @@ function loadVrmModel(url) {
 
       vrm.scene.updateMatrixWorld(true);
       frameVrmModel(vrm.scene, vrmCamera3D);
+      applyVrmExpression();
 
       console.log('VRM avatar loaded successfully.');
     },
@@ -1341,9 +2858,28 @@ function loadGlbModel(url) {
   loader.load(
     url,
     (gltf) => {
+      // Detect asset role (for #34 implementation)
+      currentGlbAssetRole = detectGlbAssetRole(gltf);
+      console.log('Detected GLB asset role:', currentGlbAssetRole);
+
       currentGlbRoot = gltf.scene;
       glbScene3D.add(gltf.scene);
       glbScene3D.updateMatrixWorld(true);
+      captureGlbPoseBaseTransforms(gltf.scene);
+
+      // Only process animations for animated characters
+      if (currentGlbAssetRole === 'animated_character' && gltf.animations && gltf.animations.length > 0) {
+        const THREE = THREE_Lib;
+        glbAnimationMixer = new THREE.AnimationMixer(gltf.scene);
+        glbAnimations = {};
+        gltf.animations.forEach(clip => {
+          glbAnimations[clip.name] = clip;
+        });
+        console.log('GLB animations:', Object.keys(glbAnimations));
+      } else {
+        glbAnimationMixer = null;
+        glbAnimations = {};
+      }
 
       const glbNodeNames = [];
       const glbChairCandidates = [];
@@ -1406,6 +2942,7 @@ function loadGlbModel(url) {
         currentGlbRoot.rotation.y = (glbSettings.rotation * Math.PI) / 180;
       }
       applyGlbChairSettings();
+      applyGlbAnimation();
 
       console.log('GLB/GLTF model loaded successfully.');
     },
@@ -1424,9 +2961,9 @@ function loadGlbModel(url) {
 // 10. MODEL SETTINGS (position / size / facing)
 // ==========================================
 const MODEL_POSITION_MODE = 'center';
-const VRM_DEFAULTS = { posX: 344, posY: -658, scale: 214, rotation: -22 };
-const GLB_DEFAULTS = { posX: 270, posY: -829, scale: 285, rotation: -22 };
-const GLB_CHAIR_DEFAULTS = { posX: 5, posY: 0, posZ: 5, scale: 109, rotation: 41 };
+const VRM_DEFAULTS = { posX: 214, posY: -764, scale: 600, rotation: -14 };
+const GLB_DEFAULTS = { posX: -390, posY: -537, scale: 592, rotation: -38 };
+const GLB_CHAIR_DEFAULTS = { posX: 74, posY: -6, posZ: 2, scale: 109, rotation: -102 };
 const VRM_BASE_WIDTH = 500;
 const VRM_BASE_HEIGHT = 600;
 const GLB_BASE_WIDTH = 500;
@@ -1755,20 +3292,347 @@ updateGlbNodeDebug();
 applyVrmSettings();
 applyGlbSettings();
 
-// Startup scene apply: deferred to here so update3DLights() can see the
-// (still-null) THREE_Lib bindings instead of hitting the TDZ.
-applyScene();
+// ==========================================
+// 11. THEME EDITOR (#18 Implementation)
+// ==========================================
+const themeEditorPanel = document.getElementById('theme-editor-panel');
+const btnThemeEditor = document.getElementById('btn-theme-editor');
+const themeEditorCloseBtn = document.getElementById('theme-editor-close-btn');
 
-// ==========================================
-// 11. WORKSHOP PANEL (Tauri only)
-// ==========================================
-if (window.__TAURI__) {
-  const btnWorkshop = document.getElementById('btn-workshop');
-  if (btnWorkshop) btnWorkshop.style.display = '';
+let themeEditorState = {
+  colors: {
+    accent: '#00ffcc',
+    secondary: '#4adede',
+    accent2: '#ff7b54',
+    text: '#ffffff'
+  },
+  background: null,
+  vrm: null,
+  glb_character: null,
+  glb_environment: null,
+  behavior_profile: 'neutral'
+};
+
+let themeEditorBackup = null;
+
+const themeEditorTabs = document.querySelectorAll('.theme-editor-tab');
+themeEditorTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    themeEditorTabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.theme-editor-tab-content').forEach(content => {
+      content.classList.remove('active');
+    });
+    document.querySelector(`[data-tab-content="${tab.dataset.tab}"]`).classList.add('active');
+  });
+});
+
+['accent', 'secondary', 'accent2', 'text'].forEach(colorName => {
+  const input = document.getElementById(`theme-color-${colorName}`);
+  if (input) {
+    const updateColor = (e) => {
+      themeEditorState.colors[colorName] = e.target.value;
+      previewThemeChanges();
+    };
+    input.addEventListener('input', updateColor);
+    input.addEventListener('change', updateColor);
+  }
+});
+
+const themeBgUpload = document.getElementById('theme-bg-upload');
+if (themeBgUpload) {
+  themeBgUpload.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        themeEditorState.background = evt.target.result;
+        const preview = document.getElementById('theme-bg-preview');
+        if (preview) preview.style.backgroundImage = `url('${evt.target.result}')`;
+        previewThemeChanges();
+      };
+      reader.readAsDataURL(file);
+    }
+  });
 }
 
+document.getElementById('theme-bg-clear-btn')?.addEventListener('click', () => {
+  themeEditorState.background = null;
+  const preview = document.getElementById('theme-bg-preview');
+  if (preview) preview.style.backgroundImage = 'none';
+});
+
+async function populateThemeEditorSelects() {
+  const vrmSelect = document.getElementById('theme-vrm-select');
+  const glbCharSelect = document.getElementById('theme-glb-char-select');
+  const glbEnvSelect = document.getElementById('theme-glb-env-select');
+
+  try {
+    let vrmItems = [];
+    let glbItems = [];
+
+    if (window.__TAURI__) {
+      vrmItems = await invoke('workshop_list_items', { category: 'vrm_sets' });
+      glbItems = await invoke('workshop_list_items', { category: 'glb_characters' });
+    } else {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('workshop_meta_vrm_sets_')) {
+          vrmItems.push(JSON.parse(localStorage.getItem(key)));
+        }
+        if (key.startsWith('workshop_meta_glb_characters_')) {
+          glbItems.push(JSON.parse(localStorage.getItem(key)));
+        }
+      }
+    }
+
+    vrmSelect.innerHTML = '<option value="">なし</option>';
+    vrmItems.forEach(item => {
+      const option = document.createElement('option');
+      option.value = item.id;
+      option.textContent = item.name;
+      vrmSelect.appendChild(option);
+    });
+
+    glbCharSelect.innerHTML = '<option value="">なし</option>';
+    glbItems.forEach(item => {
+      const option = document.createElement('option');
+      option.value = item.id;
+      option.textContent = item.name;
+      glbCharSelect.appendChild(option);
+    });
+
+    glbEnvSelect.innerHTML = '<option value="">なし</option>';
+    glbItems.forEach(item => {
+      const option = document.createElement('option');
+      option.value = item.id;
+      option.textContent = item.name;
+      glbEnvSelect.appendChild(option);
+    });
+  } catch (e) {
+    console.warn('Failed to populate theme editor selects:', e);
+  }
+}
+
+document.getElementById('theme-vrm-select')?.addEventListener('change', (e) => {
+  themeEditorState.vrm = e.target.value;
+});
+
+document.getElementById('theme-glb-char-select')?.addEventListener('change', (e) => {
+  themeEditorState.glb_character = e.target.value;
+});
+
+document.getElementById('theme-glb-env-select')?.addEventListener('change', (e) => {
+  themeEditorState.glb_environment = e.target.value;
+});
+
+document.getElementById('theme-behavior-select')?.addEventListener('change', (e) => {
+  themeEditorState.behavior_profile = e.target.value;
+});
+
+function hexToRgb(hex) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+
+function previewThemeChanges() {
+  const root = document.documentElement;
+
+  // Map theme editor colors to CSS variables
+  const colorMap = {
+    accent: '--accent',
+    secondary: '--accent-2',
+    accent2: '--warm',
+    text: '--text-color'  // New variable for text color
+  };
+
+  Object.entries(themeEditorState.colors).forEach(([key, value]) => {
+    const cssVar = colorMap[key] || `--${key}`;
+    root.style.setProperty(cssVar, value);
+
+    // For accent, also update accent-rgb for rgba usage
+    if (key === 'accent') {
+      const rgb = hexToRgb(value);
+      if (rgb) {
+        root.style.setProperty('--accent-rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`);
+      }
+    }
+
+    // For warm colors, also update warm-rgb
+    if (key === 'accent2') {
+      const rgb = hexToRgb(value);
+      if (rgb) {
+        root.style.setProperty('--warm-rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`);
+      }
+    }
+
+    console.log(`Set CSS variable ${cssVar} to ${value}`);
+  });
+
+  if (themeEditorState.background) {
+    const bgElement = document.getElementById('bg-ambient');
+    if (bgElement) {
+      bgElement.style.backgroundImage = `url('${themeEditorState.background}')`;
+      console.log('Background image updated');
+    }
+  }
+}
+
+async function saveThemeEditorState() {
+  const id = document.getElementById('theme-save-id')?.value.trim();
+  const name = document.getElementById('theme-save-name')?.value.trim();
+  const desc = document.getElementById('theme-save-desc')?.value.trim() || '';
+  const author = document.getElementById('theme-save-author')?.value.trim() || '';
+
+  if (!id || !name) {
+    alert('テーマ ID と名前は必須です');
+    return;
+  }
+
+  try {
+    const meta = { id, name, description: desc, author, version: '1.0.0', type: 'themes' };
+    const colors = themeEditorState.colors;
+    const theme = {
+      colors,
+      background: themeEditorState.background || '',
+      vrm_config: themeEditorState.vrm ? { id: themeEditorState.vrm, behavior_profile: themeEditorState.behavior_profile } : null,
+      glb_config: themeEditorState.glb_character ? { id: themeEditorState.glb_character } : null,
+      environment_config: themeEditorState.glb_environment ? { id: themeEditorState.glb_environment } : null
+    };
+
+    if (window.__TAURI__) {
+      await invoke('workshop_create_item', { category: 'themes', id, name, description: desc, author });
+      await invoke('workshop_save_file', {
+        category: 'themes',
+        id,
+        filename: 'meta.json',
+        data: Array.from(new TextEncoder().encode(JSON.stringify(meta, null, 2)))
+      });
+      await invoke('workshop_save_file', {
+        category: 'themes',
+        id,
+        filename: 'colors.json',
+        data: Array.from(new TextEncoder().encode(JSON.stringify(colors, null, 2)))
+      });
+      await invoke('workshop_save_file', {
+        category: 'themes',
+        id,
+        filename: 'theme.json',
+        data: Array.from(new TextEncoder().encode(JSON.stringify(theme, null, 2)))
+      });
+    } else {
+      localStorage.setItem(`workshop_meta_themes_${id}`, JSON.stringify(meta));
+      const metaBytes = new TextEncoder().encode(JSON.stringify(meta, null, 2));
+      const colorBytes = new TextEncoder().encode(JSON.stringify(colors, null, 2));
+      const themeBytes = new TextEncoder().encode(JSON.stringify(theme, null, 2));
+
+      await saveFileToDB('themes', id, 'meta.json', metaBytes);
+      await saveFileToDB('themes', id, 'colors.json', colorBytes);
+      await saveFileToDB('themes', id, 'theme.json', themeBytes);
+    }
+
+    alert(`テーマ「${name}」を保存しました`);
+    createThemeBackup(); // Update backup after successful save
+    themeEditorPanel.classList.remove('active');
+    if (btnThemeEditor) btnThemeEditor.classList.remove('active');
+  } catch (err) {
+    alert('保存エラー: ' + err);
+  }
+}
+
+document.getElementById('theme-save-btn')?.addEventListener('click', saveThemeEditorState);
+document.getElementById('theme-publish-btn')?.addEventListener('click', () => {
+  alert('Workshop への投稿機能は実装予定です');
+});
+
+function restoreThemeFromBackup() {
+  if (themeEditorBackup) {
+    themeEditorState = JSON.parse(JSON.stringify(themeEditorBackup));
+    // Update color input fields
+    Object.entries(themeEditorState.colors).forEach(([key, value]) => {
+      const input = document.getElementById(`theme-color-${key}`);
+      if (input) input.value = value;
+    });
+    // Update select fields
+    const vrmSelect = document.getElementById('theme-vrm-select');
+    if (vrmSelect) vrmSelect.value = themeEditorState.vrm || '';
+
+    const glbCharSelect = document.getElementById('theme-glb-char-select');
+    if (glbCharSelect) glbCharSelect.value = themeEditorState.glb_character || '';
+
+    const glbEnvSelect = document.getElementById('theme-glb-env-select');
+    if (glbEnvSelect) glbEnvSelect.value = themeEditorState.glb_environment || '';
+
+    const behaviorSelect = document.getElementById('theme-behavior-select');
+    if (behaviorSelect) behaviorSelect.value = themeEditorState.behavior_profile || 'neutral';
+
+    // Update background preview
+    const bgPreview = document.getElementById('theme-bg-preview');
+    if (bgPreview) {
+      if (themeEditorState.background) {
+        bgPreview.style.backgroundImage = `url('${themeEditorState.background}')`;
+      } else {
+        bgPreview.style.backgroundImage = 'none';
+      }
+    }
+
+    previewThemeChanges();
+    console.log('Theme restored from backup');
+  }
+}
+
+function createThemeBackup() {
+  themeEditorBackup = JSON.parse(JSON.stringify(themeEditorState));
+  console.log('Theme backup created');
+}
+
+if (btnThemeEditor) {
+  btnThemeEditor.addEventListener('click', () => {
+    if (!themeEditorPanel.classList.contains('active')) {
+      // Opening panel - create backup
+      createThemeBackup();
+      // Update input fields to match current state
+      Object.entries(themeEditorState.colors).forEach(([key, value]) => {
+        const input = document.getElementById(`theme-color-${key}`);
+        if (input) input.value = value;
+      });
+      // Update select fields
+      const vrmSelect = document.getElementById('theme-vrm-select');
+      if (vrmSelect) vrmSelect.value = themeEditorState.vrm || '';
+
+      const glbCharSelect = document.getElementById('theme-glb-char-select');
+      if (glbCharSelect) glbCharSelect.value = themeEditorState.glb_character || '';
+
+      const glbEnvSelect = document.getElementById('theme-glb-env-select');
+      if (glbEnvSelect) glbEnvSelect.value = themeEditorState.glb_environment || '';
+
+      const behaviorSelect = document.getElementById('theme-behavior-select');
+      if (behaviorSelect) behaviorSelect.value = themeEditorState.behavior_profile || 'neutral';
+    }
+    closeOtherDrawers(themeEditorPanel);
+    themeEditorPanel.classList.toggle('active');
+    btnThemeEditor.classList.toggle('active', themeEditorPanel.classList.contains('active'));
+    populateThemeEditorSelects();
+  });
+}
+
+if (themeEditorCloseBtn) {
+  themeEditorCloseBtn.addEventListener('click', () => {
+    restoreThemeFromBackup();
+    themeEditorPanel.classList.remove('active');
+    if (btnThemeEditor) btnThemeEditor.classList.remove('active');
+  });
+}
+
+// ==========================================
+// 12. WORKSHOP PANEL
+// ==========================================
 const workshopPanel = document.getElementById('workshop-panel');
-const btnWorkshopEl = document.getElementById('btn-workshop');
+const btnWorkshop = document.getElementById('btn-workshop');
 const workshopCloseBtn = document.getElementById('workshop-close-btn');
 const workshopItems = document.getElementById('workshop-items');
 const workshopCreateBtn = document.getElementById('workshop-create-btn');
@@ -1793,10 +3657,13 @@ const workshopDetailApplyLabel = document.getElementById('workshop-detail-toggle
 const workshopDetailDelete = document.getElementById('workshop-detail-delete');
 const workshopDetailFilelist = document.getElementById('workshop-detail-filelist');
 const workshopTabs = document.querySelectorAll('.workshop-tab');
+const workshopSearchQuery = document.getElementById('workshop-search-query');
+const workshopSearchBtn = document.getElementById('workshop-search-btn');
 
 let workshopCurrentCategory = 'themes';
 let workshopCurrentItem = null;
 let workshopEditingId = null;
+let workshopSubscribedItems = new Set();
 
 const WORKSHOP_CATEGORY_ICONS = {
   themes: '🎨',
@@ -1807,29 +3674,36 @@ const WORKSHOP_CATEGORY_ICONS = {
   plugins_wasm: '🔧'
 };
 
+const WORKSHOP_CATEGORY_LABELS = {
+  themes: 'テーマ',
+  vrm_sets: 'VRMセット',
+  glb_characters: 'GLBキャラ',
+  scenes: 'シーン',
+  apps: 'アプリ',
+  plugins_rust: 'Rustプラグイン',
+  plugins_wasm: 'WASMプラグイン'
+};
+
 function workshopInvoke(cmd, args) {
   if (!window.__TAURI__) return Promise.reject('Tauri 環境ではありません');
   return window.__TAURI__.core.invoke(cmd, args);
 }
 
-if (btnWorkshopEl) {
-  btnWorkshopEl.addEventListener('click', () => {
-    closeOtherDrawers(workshopPanel);
-    workshopPanel.classList.toggle('active');
-    btnWorkshopEl.classList.toggle('active', workshopPanel.classList.contains('active'));
-    if (workshopPanel.classList.contains('active')) {
-      loadWorkshopItems();
-    }
-  });
-}
+btnWorkshop.addEventListener('click', () => {
+  closeOtherDrawers(workshopPanel);
+  workshopPanel.classList.toggle('active');
+  btnWorkshop.classList.toggle('active', workshopPanel.classList.contains('active'));
+  if (workshopPanel.classList.contains('active')) {
+    loadWorkshopItems();
+  }
+});
 
-if (workshopCloseBtn) {
-  workshopCloseBtn.addEventListener('click', () => {
-    workshopPanel.classList.remove('active');
-    if (btnWorkshopEl) btnWorkshopEl.classList.remove('active');
-  });
-}
+workshopCloseBtn.addEventListener('click', () => {
+  workshopPanel.classList.remove('active');
+  btnWorkshop.classList.remove('active');
+});
 
+// Category tabs
 workshopTabs.forEach(tab => {
   tab.addEventListener('click', () => {
     workshopTabs.forEach(t => t.classList.remove('active'));
@@ -1890,83 +3764,122 @@ function escapeHtml(str) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-if (workshopCreateBtn) {
-  workshopCreateBtn.addEventListener('click', () => {
-    workshopEditingId = null;
-    workshopFormTitle.textContent = '新規作成';
-    workshopItemId.value = '';
-    workshopItemName.value = '';
-    workshopItemDesc.value = '';
-    workshopItemAuthor.value = '';
-    workshopItemId.disabled = false;
-    workshopForm.classList.remove('hidden');
-    workshopDetail.classList.add('hidden');
-  });
-}
+// Search functionality
+async function searchWorkshopItems() {
+  const query = workshopSearchQuery.value.trim();
+  if (!query) {
+    loadWorkshopItems();
+    return;
+  }
 
-if (workshopFormClose) {
-  workshopFormClose.addEventListener('click', () => {
-    workshopForm.classList.add('hidden');
-  });
-}
-
-if (workshopFormCancel) {
-  workshopFormCancel.addEventListener('click', () => {
-    workshopForm.classList.add('hidden');
-  });
-}
-
-if (workshopFormSave) {
-  workshopFormSave.addEventListener('click', async () => {
-    const id = workshopItemId.value.trim();
-    const name = workshopItemName.value.trim();
-    const desc = workshopItemDesc.value.trim();
-    const author = workshopItemAuthor.value.trim();
-
-    if (!id || !name) {
-      alert('ID と名前は必須です');
-      return;
-    }
-
-    try {
-      if (window.__TAURI__) {
-        if (workshopEditingId) {
-          await workshopInvoke('workshop_update_meta', {
-            category: workshopCurrentCategory,
-            id: workshopEditingId,
-            name,
-            description: desc,
-            author
-          });
-        } else {
-          await workshopInvoke('workshop_create_item', {
-            category: workshopCurrentCategory,
-            id,
-            name,
-            description: desc,
-            author
-          });
+  try {
+    if (window.__TAURI__) {
+      const items = await workshopInvoke('workshop_search_items', {
+        category: workshopCurrentCategory,
+        query
+      });
+      renderWorkshopItems(items);
+    } else {
+      const items = [];
+      const queryLower = query.toLowerCase();
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith(`workshop_meta_${workshopCurrentCategory}_`)) {
+          try {
+            const meta = JSON.parse(localStorage.getItem(key));
+            if (meta.name.toLowerCase().includes(queryLower) ||
+                (meta.description && meta.description.toLowerCase().includes(queryLower)) ||
+                (meta.author && meta.author.toLowerCase().includes(queryLower))) {
+              items.push(meta);
+            }
+          } catch (e) {}
         }
+      }
+      items.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+      renderWorkshopItems(items);
+    }
+  } catch (err) {
+    console.error('Workshop search error:', err);
+    workshopItems.innerHTML = '<div class="workshop-empty">検索エラー</div>';
+  }
+}
+
+workshopSearchBtn.addEventListener('click', searchWorkshopItems);
+workshopSearchQuery.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') searchWorkshopItems();
+});
+
+// Create new item
+workshopCreateBtn.addEventListener('click', () => {
+  workshopEditingId = null;
+  workshopFormTitle.textContent = '新規作成';
+  workshopItemId.value = '';
+  workshopItemName.value = '';
+  workshopItemDesc.value = '';
+  workshopItemAuthor.value = '';
+  workshopItemId.disabled = false;
+  workshopForm.classList.remove('hidden');
+  workshopDetail.classList.add('hidden');
+});
+
+workshopFormClose.addEventListener('click', () => {
+  workshopForm.classList.add('hidden');
+});
+
+workshopFormCancel.addEventListener('click', () => {
+  workshopForm.classList.add('hidden');
+});
+
+workshopFormSave.addEventListener('click', async () => {
+  const id = workshopItemId.value.trim();
+  const name = workshopItemName.value.trim();
+  const desc = workshopItemDesc.value.trim();
+  const author = workshopItemAuthor.value.trim();
+
+  if (!id || !name) {
+    alert('ID と名前は必須です');
+    return;
+  }
+
+  try {
+    if (window.__TAURI__) {
+      if (workshopEditingId) {
+        await workshopInvoke('workshop_update_meta', {
+          category: workshopCurrentCategory,
+          id: workshopEditingId,
+          name,
+          description: desc,
+          author
+        });
       } else {
-        const meta = {
+        await workshopInvoke('workshop_create_item', {
+          category: workshopCurrentCategory,
           id,
           name,
           description: desc,
-          author,
-          version: '1.0.0',
-          item_type: workshopCurrentCategory,
-          created_at: String(Date.now())
-        };
-        localStorage.setItem(`workshop_meta_${workshopCurrentCategory}_${id}`, JSON.stringify(meta));
+          author
+        });
       }
-      workshopForm.classList.add('hidden');
-      loadWorkshopItems();
-    } catch (err) {
-      alert('保存エラー: ' + err);
+    } else {
+      const meta = {
+        id,
+        name,
+        description: desc,
+        author,
+        version: '1.0.0',
+        item_type: workshopCurrentCategory,
+        created_at: String(Date.now())
+      };
+      localStorage.setItem(`workshop_meta_${workshopCurrentCategory}_${id}`, JSON.stringify(meta));
     }
-  });
-}
+    workshopForm.classList.add('hidden');
+    loadWorkshopItems();
+  } catch (err) {
+    alert('保存エラー: ' + err);
+  }
+});
 
+// Show item detail
 async function showWorkshopDetail(id) {
   try {
     let item;
@@ -2012,35 +3925,58 @@ async function showWorkshopDetail(id) {
   }
 }
 
-if (workshopDetailClose) {
-  workshopDetailClose.addEventListener('click', () => {
-    workshopDetail.classList.add('hidden');
-  });
-}
+workshopDetailClose.addEventListener('click', () => {
+  workshopDetail.classList.add('hidden');
+});
 
-if (workshopDetailApply) {
-  workshopDetailApply.addEventListener('change', async () => {
-    if (!workshopCurrentItem) return;
-    const item = workshopCurrentItem;
-    const activeKey = `workshop_active_${item.item_type}`;
+// Apply item (theme/model)
+workshopDetailApply.addEventListener('change', async () => {
+  if (!workshopCurrentItem) return;
+  const item = workshopCurrentItem;
+  const activeKey = `workshop_active_${item.item_type}`;
 
-    if (workshopDetailApply.checked) {
-      try {
-        if (item.item_type === 'themes') {
-          await applyWorkshopTheme(item);
-        } else if (item.item_type === 'vrm_sets') {
-          await applyWorkshopVrm(item);
-        } else if (item.item_type === 'glb_characters') {
-          await applyWorkshopGlb(item);
+  if (workshopDetailApply.checked) {
+    try {
+      // Subscribe if not already subscribed
+      if (!workshopSubscribedItems.has(item.id)) {
+        if (window.__TAURI__) {
+          await workshopInvoke('workshop_subscribe_item', {
+            category: item.item_type,
+            id: item.id
+          });
         }
-        localStorage.setItem(activeKey, item.id);
-        workshopDetailApplyLabel.textContent = '利用中';
-      } catch (err) {
-        workshopDetailApply.checked = false;
-        workshopDetailApplyLabel.textContent = '利用する';
-        alert('適用エラー: ' + err);
+        workshopSubscribedItems.add(item.id);
+        localStorage.setItem(`workshop_subscribed_${item.id}`, 'true');
       }
-    } else {
+
+      if (item.item_type === 'themes') {
+        await applyWorkshopTheme(item);
+      } else if (item.item_type === 'vrm_sets') {
+        await applyWorkshopVrm(item);
+      } else if (item.item_type === 'glb_characters') {
+        await applyWorkshopGlb(item);
+      }
+      localStorage.setItem(activeKey, item.id);
+      workshopDetailApplyLabel.textContent = '利用中';
+    } catch (err) {
+      workshopDetailApply.checked = false;
+      workshopDetailApplyLabel.textContent = '利用する';
+      alert('適用エラー: ' + err);
+    }
+  } else {
+    try {
+      // Unsubscribe
+      if (workshopSubscribedItems.has(item.id)) {
+        if (window.__TAURI__) {
+          await workshopInvoke('workshop_unsubscribe_item', {
+            category: item.item_type,
+            id: item.id
+          });
+        }
+        workshopSubscribedItems.delete(item.id);
+        localStorage.removeItem(`workshop_subscribed_${item.id}`);
+      }
+
       localStorage.removeItem(activeKey);
       workshopDetailApplyLabel.textContent = '利用する';
       if (item.item_type === 'themes') {
@@ -2050,9 +3986,12 @@ if (workshopDetailApply) {
       } else if (item.item_type === 'glb_characters') {
         loadGlbModel(DEFAULT_GLB_URL);
       }
+    } catch (err) {
+      workshopDetailApply.checked = true;
+      alert('削除エラー: ' + err);
     }
-  });
-}
+  }
+});
 
 async function applyWorkshopTheme(item) {
   let files;
@@ -2104,6 +4043,7 @@ function removeWorkshopTheme() {
 async function applyWorkshopVrm(item) {
   let files;
   let data;
+  let behaviorProfiles = null;
 
   if (window.__TAURI__) {
     files = await workshopInvoke('workshop_list_files', {
@@ -2120,6 +4060,24 @@ async function applyWorkshopVrm(item) {
       id: item.id,
       filename: vrmFile
     });
+
+    // Try to load behavior_profiles.json
+    const behaviorFile = files.find(f => f.includes('behavior') && f.endsWith('.json'));
+    if (behaviorFile) {
+      try {
+        const behaviorRaw = await workshopInvoke('workshop_read_file', {
+          category: 'vrm_sets',
+          id: item.id,
+          filename: behaviorFile
+        });
+        if (behaviorRaw) {
+          const behaviorText = new TextDecoder().decode(new Uint8Array(behaviorRaw));
+          behaviorProfiles = JSON.parse(behaviorText);
+        }
+      } catch (e) {
+        console.warn('Failed to load VRM behavior profiles:', e);
+      }
+    }
   } else {
     files = await listFilesFromDB('vrm_sets', item.id);
     const vrmFile = files.find(f => f.endsWith('.vrm'));
@@ -2132,16 +4090,44 @@ async function applyWorkshopVrm(item) {
       alert('VRMファイルの読み込みに失敗しました');
       return;
     }
+
+    // Try to load behavior_profiles.json from IndexedDB
+    const behaviorFile = files.find(f => f.includes('behavior') && f.endsWith('.json'));
+    if (behaviorFile) {
+      try {
+        const behaviorRaw = await readFileFromDB('vrm_sets', item.id, behaviorFile);
+        if (behaviorRaw) {
+          const behaviorText = new TextDecoder().decode(new Uint8Array(behaviorRaw));
+          behaviorProfiles = JSON.parse(behaviorText);
+        }
+      } catch (e) {
+        console.warn('Failed to load VRM behavior profiles:', e);
+      }
+    }
   }
 
   const blob = new Blob([data], { type: 'model/vrm' });
   const url = URL.createObjectURL(blob);
   loadVrmModel(url);
+
+  // Update character_slot for 2-slot system (#35)
+  setTimeout(() => {
+    updateCharacterSlot(item.id, item.name);
+  }, 100);
+
+  // Register loaded behavior profiles
+  if (behaviorProfiles && typeof behaviorProfiles === 'object') {
+    Object.entries(behaviorProfiles).forEach(([key, profile]) => {
+      VRM_BEHAVIOR_PROFILES[key] = profile;
+    });
+    console.log('Loaded VRM behavior profiles:', Object.keys(behaviorProfiles));
+  }
 }
 
 async function applyWorkshopGlb(item) {
   let files;
   let data;
+  let poseData = null;
 
   if (window.__TAURI__) {
     files = await workshopInvoke('workshop_list_files', {
@@ -2158,6 +4144,25 @@ async function applyWorkshopGlb(item) {
       id: item.id,
       filename: glbFile
     });
+
+    // Try to load pose.json
+    const poseFiles = files.filter(f => f.includes('pose') && f.endsWith('.json'));
+    if (poseFiles.length > 0) {
+      try {
+        const poseFile = poseFiles[0];
+        const poseRaw = await workshopInvoke('workshop_read_file', {
+          category: 'glb_characters',
+          id: item.id,
+          filename: poseFile
+        });
+        if (poseRaw) {
+          const poseText = new TextDecoder().decode(new Uint8Array(poseRaw));
+          poseData = JSON.parse(poseText);
+        }
+      } catch (e) {
+        console.warn('Failed to load GLB pose data:', e);
+      }
+    }
   } else {
     files = await listFilesFromDB('glb_characters', item.id);
     const glbFile = files.find(f => f.endsWith('.glb') || f.endsWith('.gltf'));
@@ -2170,36 +4175,73 @@ async function applyWorkshopGlb(item) {
       alert('GLBファイルの読み込みに失敗しました');
       return;
     }
+
+    // Try to load pose.json from IndexedDB
+    const poseFiles = files.filter(f => f.includes('pose') && f.endsWith('.json'));
+    if (poseFiles.length > 0) {
+      try {
+        const poseFile = poseFiles[0];
+        const poseRaw = await readFileFromDB('glb_characters', item.id, poseFile);
+        if (poseRaw) {
+          const poseText = new TextDecoder().decode(new Uint8Array(poseRaw));
+          poseData = JSON.parse(poseText);
+        }
+      } catch (e) {
+        console.warn('Failed to load GLB pose data:', e);
+      }
+    }
   }
 
   const blob = new Blob([data], { type: 'model/gltf-binary' });
   const url = URL.createObjectURL(blob);
   loadGlbModel(url);
-}
 
-if (workshopDetailDelete) {
-  workshopDetailDelete.addEventListener('click', async () => {
-    if (!workshopCurrentItem) return;
-    if (!confirm(`「${workshopCurrentItem.name}」を削除しますか？`)) return;
-
-    try {
-      if (window.__TAURI__) {
-        await workshopInvoke('workshop_delete_item', {
-          category: workshopCurrentCategory,
-          id: workshopCurrentItem.id
-        });
-      } else {
-        localStorage.removeItem(`workshop_meta_${workshopCurrentCategory}_${workshopCurrentItem.id}`);
-        await deleteFilesFromDB(workshopCurrentCategory, workshopCurrentItem.id);
-      }
-      workshopDetail.classList.add('hidden');
-      loadWorkshopItems();
-    } catch (err) {
-      alert('削除エラー: ' + err);
+  // Update 2-slot system based on asset_role (#35)
+  setTimeout(() => {
+    if (currentGlbAssetRole === 'animated_character') {
+      updateCharacterSlotGlb(item.id, item.name);
+    } else if (currentGlbAssetRole === 'static_object' || currentGlbAssetRole === 'static_scene') {
+      updateEnvironmentSlot(item.id, item.name);
     }
-  });
+  }, 100);
+
+  // Apply pose data if available and model supports poses (for #34)
+  if (poseData) {
+    // Wait for model to load, then check asset_role before applying pose
+    setTimeout(() => {
+      if (currentGlbAssetRole === 'animated_character' || GLB_ASSET_ROLES[currentGlbAssetRole]?.supportsPose) {
+        applyGlbPose(poseData);
+        console.log(`Applied pose to GLB (asset_role: ${currentGlbAssetRole})`);
+      } else {
+        console.info(`GLB asset_role "${currentGlbAssetRole}" does not support poses, skipping pose application`);
+      }
+    }, 300);
+  }
 }
 
+// Delete item
+workshopDetailDelete.addEventListener('click', async () => {
+  if (!workshopCurrentItem) return;
+  if (!confirm(`「${workshopCurrentItem.name}」を削除しますか？`)) return;
+
+  try {
+    if (window.__TAURI__) {
+      await workshopInvoke('workshop_delete_item', {
+        category: workshopCurrentCategory,
+        id: workshopCurrentItem.id
+      });
+    } else {
+      localStorage.removeItem(`workshop_meta_${workshopCurrentCategory}_${workshopCurrentItem.id}`);
+      await deleteFilesFromDB(workshopCurrentCategory, workshopCurrentItem.id);
+    }
+    workshopDetail.classList.add('hidden');
+    loadWorkshopItems();
+  } catch (err) {
+    alert('削除エラー: ' + err);
+  }
+});
+
+// Load saved workshop items on startup
 async function loadWorkshopOnStartup() {
   const activeTheme = localStorage.getItem('workshop_active_themes');
   if (activeTheme) {
@@ -2259,4 +4301,7 @@ async function loadWorkshopOnStartup() {
   }
 }
 
+// Startup scene apply: deferred to here so update3DLights() can see the
+// (still-null) THREE_Lib bindings instead of hitting the TDZ.
+applyScene();
 loadWorkshopOnStartup();
