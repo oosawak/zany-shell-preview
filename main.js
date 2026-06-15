@@ -3706,7 +3706,7 @@ document.getElementById('theme-behavior-select')?.addEventListener('change', (e)
   themeEditorState.behavior_profile = e.target.value;
 });
 
-function hexToRgb(hex) {
+function hexToRgbObject(hex) {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result ? {
     r: parseInt(result[1], 16),
@@ -3732,7 +3732,7 @@ function previewThemeChanges() {
 
     // For accent, also update accent-rgb for rgba usage
     if (key === 'accent') {
-      const rgb = hexToRgb(value);
+      const rgb = hexToRgbObject(value);
       if (rgb) {
         root.style.setProperty('--accent-rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`);
       }
@@ -3740,7 +3740,7 @@ function previewThemeChanges() {
 
     // For warm colors, also update warm-rgb
     if (key === 'accent2') {
-      const rgb = hexToRgb(value);
+      const rgb = hexToRgbObject(value);
       if (rgb) {
         root.style.setProperty('--warm-rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`);
       }
