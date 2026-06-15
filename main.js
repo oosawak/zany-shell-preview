@@ -368,7 +368,7 @@ function setOptionTexts(selector, valueToKey) {
   });
 }
 
-function updateAllUITexts() {
+function updateAllUITextsLegacy() {
   document.documentElement.lang = currentLanguage;
 
   const languageSelect = document.getElementById('ui-language-select');
