@@ -501,6 +501,7 @@
         <button class="workshop-tab active" data-category="themes">テーマ</button>
         <button class="workshop-tab" data-category="vrm_sets">VRM</button>
         <button class="workshop-tab" data-category="glb_characters">GLB</button>
+        <button class="workshop-tab" data-category="game_modes">ゲームモード</button>
         <button class="workshop-tab" data-category="apps">アプリ</button>
       </div>
 
@@ -545,6 +546,7 @@
         <div class="workshop-detail-actions">
           <label class="toggle"><input type="checkbox" id="workshop-detail-toggle"><span class="toggle-slider"></span></label>
           <span id="workshop-detail-toggle-label">利用する</span>
+          <button id="workshop-detail-open" class="workshop-detail-open hidden">開く</button>
           <button id="workshop-detail-delete" class="workshop-detail-delete">削除</button>
         </div>
         <div class="workshop-detail-files">
@@ -621,44 +623,6 @@
               <option value="relaxed">リラックス</option>
               <option value="tired">疲れ</option>
             </select>
-          </div>
-
-          <!-- VRoid Hub Section -->
-          <div class="theme-vrm-source-group">
-            <label>VRM ソース:</label>
-            <div class="theme-vrm-source-buttons">
-              <button id="btn-vrm-workshop" class="btn-secondary" data-source="workshop">
-                Workshop
-              </button>
-              <button id="btn-vrm-vroid-hub" class="btn-secondary" data-source="vroid_hub">
-                VRoid Hub
-              </button>
-            </div>
-          </div>
-
-          <!-- VRoid Hub Panel (Hidden by default) -->
-          <div id="vroid-hub-panel" class="vroid-hub-panel" style="display: none;">
-            <div class="vroid-hub-header">
-              <button id="btn-vroid-connect" class="btn-primary">
-                Connect VRoid Hub
-              </button>
-              <span id="vroid-hub-status" class="vroid-status">Not connected</span>
-            </div>
-
-            <div id="vroid-hub-list" class="vroid-hub-list">
-              <!-- VRM items populated here -->
-            </div>
-
-            <div id="vroid-download-progress" class="download-progress" style="display: none;">
-              <div class="progress-bar">
-                <div id="progress-fill" class="progress-fill"></div>
-              </div>
-              <span id="progress-text">Downloading...</span>
-            </div>
-          </div>
-
-          <div id="workshop-vrm-selector" style="display: block;">
-            <!-- Workshop VRM selector will be here -->
           </div>
         </div>
 
