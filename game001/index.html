@@ -1690,7 +1690,7 @@
       const orbitSpeedFill = document.getElementById('orbit-speed-fill');
       const orbitSpeedValue = document.getElementById('orbit-speed-value');
       const assetBase = location.pathname.includes('/docs/game001/') ? '../../game-mode/assets' : '../assets';
-      const planetDrcUrl = `${assetBase}/drc_files/planet.drc`;
+      const planetGlbUrl = '../assets/blender/game001.glb';
       const playerVrmUrl = `${assetBase}/vrm/AvatarSample_C.vrm`;
 
       const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
@@ -1802,7 +1802,6 @@
       }
 
       let GLTFLoader_Lib = null;
-      let DRACOLoader_Lib = null;
       let loadedOrbitPlanetMesh = null;
       let loadedSurfacePlanetMesh = null;
       let playerAvatarGroup = null;
@@ -2384,54 +2383,44 @@
         }
       }
 
-      function applyLoadedPlanetGeometry(geometry, texture) {
+      function applyLoadedPlanetScene(sceneRoot) {
         clearLoadedPlanetMeshes();
-        geometry.computeBoundingBox();
-        const bounds = geometry.boundingBox;
+        sceneRoot.updateMatrixWorld(true);
+        const bounds = new THREE.Box3().setFromObject(sceneRoot);
         const size = new THREE.Vector3();
         bounds.getSize(size);
-        geometry.center();
+        const center = new THREE.Vector3();
+        bounds.getCenter(center);
+        const maxDim = Math.max(size.x, size.y, size.z) || 1;
 
-        const baseScale = Math.max(size.x, size.y, size.z) || 1;
-        const orbitMaterial = new THREE.MeshStandardMaterial({
-          color: 0xffffff,
-          map: texture || null,
-          roughness: 1,
-          metalness: 0.02
-        });
-        const surfaceMaterial = orbitMaterial.clone();
-
-        loadedOrbitPlanetMesh = new THREE.Mesh(geometry, orbitMaterial);
-        loadedOrbitPlanetMesh.scale.setScalar((2.55 / baseScale) * orbitAssetScale);
+        const orbitScene = sceneRoot.clone(true);
+        orbitScene.position.sub(center);
+        orbitScene.scale.setScalar((2.55 / maxDim) * orbitAssetScale);
+        loadedOrbitPlanetMesh = orbitScene;
         planetAssetGroup.add(loadedOrbitPlanetMesh);
 
-        loadedSurfacePlanetMesh = new THREE.Mesh(geometry.clone(), surfaceMaterial);
-        loadedSurfacePlanetMesh.scale.setScalar(surfaceRadius / baseScale);
+        const surfaceScene = sceneRoot.clone(true);
+        surfaceScene.position.sub(center);
+        surfaceScene.scale.setScalar(surfaceRadius / maxDim);
+        loadedSurfacePlanetMesh = surfaceScene;
         surfacePlanetAssetGroup.add(loadedSurfacePlanetMesh);
       }
 
       async function loadPlanetAsset() {
-        if (!DRACOLoader_Lib) return;
+        if (!GLTFLoader_Lib) return;
         console.log('Loading planet asset...');
 
-        const dracoLoader = new DRACOLoader_Lib();
-        dracoLoader.setDecoderPath('./vendor/jsm/libs/draco/');
-        dracoLoader.setDecoderConfig({ type: 'wasm' });
-        dracoLoader.setWorkerLimit(2);
-        dracoLoader.preload();
-
-        const geometry = await new Promise((resolve, reject) => {
-          dracoLoader.load(
-            planetDrcUrl,
+        const loader = new GLTFLoader_Lib();
+        const gltf = await new Promise((resolve, reject) => {
+          loader.load(
+            planetGlbUrl,
             resolve,
             undefined,
             reject
           );
         });
 
-        const texture = createFallbackPlanetTexture();
-        if (texture) texture.needsUpdate = true;
-        applyLoadedPlanetGeometry(geometry, texture);
+        applyLoadedPlanetScene(gltf.scene);
       }
 
       function attachLoadedPlayerAvatar(sceneRoot) {
@@ -2472,12 +2461,10 @@
 
       async function initGameAssets() {
         try {
-          const [gltfMod, dracoMod] = await Promise.all([
-            import('three/addons/loaders/GLTFLoader.js'),
-            import('three/addons/loaders/DRACOLoader.js')
+          const [gltfMod] = await Promise.all([
+            import('three/addons/loaders/GLTFLoader.js')
           ]);
           GLTFLoader_Lib = gltfMod.GLTFLoader;
-          DRACOLoader_Lib = dracoMod.DRACOLoader;
           await Promise.allSettled([
             withTimeout(loadPlanetAsset(), 'planet asset'),
             withTimeout(loadPlayerAsset(), 'player asset')
