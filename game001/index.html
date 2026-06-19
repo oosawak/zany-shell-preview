@@ -2392,15 +2392,18 @@
         const center = new THREE.Vector3();
         bounds.getCenter(center);
         const maxDim = Math.max(size.x, size.y, size.z) || 1;
+        const focusLift = size.y * 0.14;
 
         const orbitScene = sceneRoot.clone(true);
         orbitScene.position.sub(center);
+        orbitScene.position.y += focusLift;
         orbitScene.scale.setScalar((2.55 / maxDim) * orbitAssetScale);
         loadedOrbitPlanetMesh = orbitScene;
         planetAssetGroup.add(loadedOrbitPlanetMesh);
 
         const surfaceScene = sceneRoot.clone(true);
         surfaceScene.position.sub(center);
+        surfaceScene.position.y += focusLift;
         surfaceScene.scale.setScalar(surfaceRadius / maxDim);
         loadedSurfacePlanetMesh = surfaceScene;
         surfacePlanetAssetGroup.add(loadedSurfacePlanetMesh);
