@@ -1761,10 +1761,15 @@
         fpsSmoothed: 60,
         dragging: false,
         move: { forward: 0, strafe: 0, turn: 0 },
+        mouseMove: { forward: 0, strafe: 0 },
         touchMove: { forward: 0, strafe: 0 },
         lookMove: { yaw: 0, pitch: 0 },
         lastPointerX: 0,
         lastPointerY: 0,
+        movePointerId: null,
+        cameraPointerId: null,
+        movePointerOrigin: { x: 0, y: 0 },
+        movePointerOffset: { x: 0, y: 0 },
         leftThumbPointerId: null,
         rightThumbPointerId: null,
         leftThumbOrigin: { x: 0, y: 0 },
@@ -1806,6 +1811,7 @@
       let loadedSurfacePlanetMesh = null;
       let playerAvatarGroup = null;
       let playerPrimitiveMeshes = [];
+      let planetAssetLoadPromise = null;
 
       const speedModes = [
         { label: 'NORMAL', move: 1.0, turn: 1.0, look: 1.0, camera: 1.0, jump: 1.0 },
@@ -1851,7 +1857,6 @@
         metalness: 0.02
       });
       const orbitPlanetScale = 3;
-      const orbitAssetScale = orbitPlanetScale;
       const orbitCameraRadius = 18.0;
       const orbitCameraHeight = 4.8;
       const planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
@@ -2391,15 +2396,7 @@
         bounds.getSize(size);
         const center = new THREE.Vector3();
         bounds.getCenter(center);
-        const maxDim = Math.max(size.x, size.y, size.z) || 1;
         const focusLift = size.y * 0.14;
-
-        const orbitScene = sceneRoot.clone(true);
-        orbitScene.position.sub(center);
-        orbitScene.position.y += focusLift;
-        orbitScene.scale.setScalar((2.55 / maxDim) * orbitAssetScale);
-        loadedOrbitPlanetMesh = orbitScene;
-        planetAssetGroup.add(loadedOrbitPlanetMesh);
 
         const surfaceScene = sceneRoot.clone(true);
         surfaceScene.position.sub(center);
@@ -2410,20 +2407,27 @@
       }
 
       async function loadPlanetAsset() {
-        if (!GLTFLoader_Lib) return;
+        if (loadedSurfacePlanetMesh) return Promise.resolve(loadedSurfacePlanetMesh);
+        if (planetAssetLoadPromise) return planetAssetLoadPromise;
+        if (!GLTFLoader_Lib) return Promise.resolve(null);
         console.log('Loading planet asset...');
 
-        const loader = new GLTFLoader_Lib();
-        const gltf = await new Promise((resolve, reject) => {
+        planetAssetLoadPromise = new Promise((resolve, reject) => {
+          const loader = new GLTFLoader_Lib();
           loader.load(
             planetGlbUrl,
-            resolve,
+            gltf => {
+              applyLoadedPlanetScene(gltf.scene);
+              resolve(loadedSurfacePlanetMesh);
+            },
             undefined,
             reject
           );
+        }).finally(() => {
+          planetAssetLoadPromise = null;
         });
 
-        applyLoadedPlanetScene(gltf.scene);
+        return planetAssetLoadPromise;
       }
 
       function attachLoadedPlayerAvatar(sceneRoot) {
@@ -2468,10 +2472,7 @@
             import('three/addons/loaders/GLTFLoader.js')
           ]);
           GLTFLoader_Lib = gltfMod.GLTFLoader;
-          await Promise.allSettled([
-            withTimeout(loadPlanetAsset(), 'planet asset'),
-            withTimeout(loadPlayerAsset(), 'player asset')
-          ]);
+          await withTimeout(loadPlayerAsset(), 'player asset');
           console.log('Game assets init finished.');
         } catch (error) {
           console.warn('Failed to initialize game assets:', error);
@@ -2489,9 +2490,9 @@
         planetMesh.visible = orbitFallbackVisible;
         oceanMesh.visible = orbitFallbackVisible;
         atmosphere.visible = orbitFallbackVisible;
-        surfacePlanetMesh.visible = !loadedSurfacePlanetMesh;
-        surfaceOcean.visible = !loadedSurfacePlanetMesh;
-        surfaceAtmosphere.visible = !loadedSurfacePlanetMesh;
+        surfacePlanetMesh.visible = !loadedSurfacePlanetMesh && mode !== 'play';
+        surfaceOcean.visible = !loadedSurfacePlanetMesh && mode !== 'play';
+        surfaceAtmosphere.visible = !loadedSurfacePlanetMesh && mode !== 'play';
       }
 
       function applyCamouflage(silent = false) {
@@ -2605,6 +2606,13 @@
         if (mode === 'entry') {
           viewport.classList.remove('orbiting', 'playing');
         }
+        if (mode !== 'play') {
+          state.dragging = false;
+          state.movePointerId = null;
+          state.cameraPointerId = null;
+          state.mouseMove.forward = 0;
+          state.mouseMove.strafe = 0;
+        }
       }
 
       function resize() {
@@ -2621,7 +2629,9 @@
         enterInterior();
       }
 
-      function enterInterior() {
+      async function enterInterior() {
+        setToast('惑星を読み込み中...', 900);
+        await withTimeout(loadPlanetAsset(), 'planet asset');
         setMode('play');
         const startPos = sphericalToCartesian(surfaceRadius * 1.01, state.surfaceLongitude, state.surfaceLatitude);
         state.player.copy(startPos);
@@ -2702,16 +2712,18 @@
         terrainMesh.visible = false;
         obstacleGroup.visible = false;
         surfaceGroup.rotation.y += delta * 0.012;
-        surfacePlanetMesh.visible = true;
-        surfaceOcean.visible = true;
-        surfaceAtmosphere.visible = true;
+        surfacePlanetMesh.visible = !loadedSurfacePlanetMesh;
+        surfaceOcean.visible = !loadedSurfacePlanetMesh;
+        surfaceAtmosphere.visible = !loadedSurfacePlanetMesh;
         surfacePatchGroup.visible = true;
         surfaceObstacleGroup.visible = true;
         surfacePickupGroup.visible = true;
         projectileGroup.visible = true;
 
         const moveForward = THREE.MathUtils.clamp(state.move.forward + state.touchMove.forward, -1, 1);
-        const moveStrafe = THREE.MathUtils.clamp(state.move.strafe + state.touchMove.strafe, -1, 1);
+        const moveStrafe = THREE.MathUtils.clamp(state.move.strafe + state.touchMove.strafe + state.mouseMove.strafe, -1, 1);
+        const mouseForward = THREE.MathUtils.clamp(state.mouseMove.forward, -1, 1);
+        const moveForwardTotal = THREE.MathUtils.clamp(moveForward + mouseForward, -1, 1);
         const lookYaw = THREE.MathUtils.clamp(state.cameraYawOffset + state.lookMove.yaw * 0.9 * speed.look, -Math.PI, Math.PI);
         const lookPitch = THREE.MathUtils.clamp(state.cameraPitchOffset + state.lookMove.pitch * 0.55 * speed.look, -0.35, 0.62);
 
@@ -2727,10 +2739,10 @@
         const forwardDir = getSurfaceForward();
         const rightDir = new THREE.Vector3().crossVectors(surfaceNormal, forwardDir).normalize();
         const move = new THREE.Vector3();
-        move.addScaledVector(forwardDir, moveForward);
+        move.addScaledVector(forwardDir, moveForwardTotal);
         move.addScaledVector(rightDir, moveStrafe);
         if (move.lengthSq() > 0) {
-          move.normalize().multiplyScalar((moveForward === 0 || moveStrafe === 0 ? 3.7 : 2.65) * speed.move * delta);
+          move.normalize().multiplyScalar((moveForwardTotal === 0 || moveStrafe === 0 ? 3.7 : 2.65) * speed.move * delta);
         }
 
         const nextPos = surfaceBase.clone().add(move);
@@ -2874,26 +2886,67 @@
           if (e.key === 'e' || e.key === 'ArrowRight') state.move.turn = 0;
         });
 
-        canvas.addEventListener('mousedown', e => {
+        canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+        canvas.addEventListener('pointerdown', e => {
           if (state.mode !== 'play') return;
-          state.dragging = true;
-          state.lastPointerX = e.clientX;
-          state.lastPointerY = e.clientY;
+          canvas.setPointerCapture(e.pointerId);
+          if (e.button === 0) {
+            state.movePointerId = e.pointerId;
+            state.movePointerOrigin.x = e.clientX;
+            state.movePointerOrigin.y = e.clientY;
+            state.movePointerOffset.x = 0;
+            state.movePointerOffset.y = 0;
+            state.mouseMove.forward = 0;
+            state.mouseMove.strafe = 0;
+          } else if (e.button === 2) {
+            state.cameraPointerId = e.pointerId;
+            state.dragging = true;
+            state.lastPointerX = e.clientX;
+            state.lastPointerY = e.clientY;
+          }
         });
 
-        window.addEventListener('mouseup', () => {
-          state.dragging = false;
+        canvas.addEventListener('pointermove', e => {
+          if (state.mode !== 'play') return;
+          if (state.movePointerId === e.pointerId) {
+            const rect = canvas.getBoundingClientRect();
+            const radius = Math.max(80, Math.min(rect.width, rect.height) * 0.18);
+            const dx = THREE.MathUtils.clamp(e.clientX - state.movePointerOrigin.x, -radius, radius);
+            const dy = THREE.MathUtils.clamp(e.clientY - state.movePointerOrigin.y, -radius, radius);
+            state.movePointerOffset.x = dx;
+            state.movePointerOffset.y = dy;
+            state.mouseMove.strafe = dx / radius;
+            state.mouseMove.forward = -dy / radius;
+          }
+          if (state.cameraPointerId === e.pointerId && state.dragging) {
+            const dx = e.clientX - state.lastPointerX;
+            const dy = e.clientY - state.lastPointerY;
+            state.lastPointerX = e.clientX;
+            state.lastPointerY = e.clientY;
+            state.cameraYawOffset += dx * 0.004;
+            state.cameraPitchOffset = THREE.MathUtils.clamp(state.cameraPitchOffset - dy * 0.0035, -0.35, 0.62);
+          }
         });
 
-        window.addEventListener('mousemove', e => {
-          if (state.mode !== 'play' || !state.dragging) return;
-          const dx = e.clientX - state.lastPointerX;
-          const dy = e.clientY - state.lastPointerY;
-          state.lastPointerX = e.clientX;
-          state.lastPointerY = e.clientY;
-          state.cameraYawOffset += dx * 0.004;
-          state.cameraPitchOffset = THREE.MathUtils.clamp(state.cameraPitchOffset - dy * 0.0035, -0.35, 0.62);
-        });
+        const releasePointer = e => {
+          if (state.movePointerId === e.pointerId) {
+            state.movePointerId = null;
+            state.movePointerOffset.x = 0;
+            state.movePointerOffset.y = 0;
+            state.mouseMove.forward = 0;
+            state.mouseMove.strafe = 0;
+          }
+          if (state.cameraPointerId === e.pointerId) {
+            state.cameraPointerId = null;
+            state.dragging = false;
+          }
+        };
+
+        canvas.addEventListener('pointerup', releasePointer);
+        canvas.addEventListener('pointercancel', releasePointer);
+        window.addEventListener('pointerup', releasePointer);
+        window.addEventListener('pointercancel', releasePointer);
 
         const bindStick = (pad, thumb, kind) => {
           const idKey = kind === 'left' ? 'leftThumbPointerId' : 'rightThumbPointerId';
