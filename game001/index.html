@@ -1561,6 +1561,7 @@
                 <strong>FPS</strong>
                 <span id="orbit-fps-value">--</span>
               </div>
+              <button class="orbit-btn" id="planet-preview-btn">表示: 球体</button>
               <button class="orbit-btn" id="enter-inside-btn">惑星の中に入る</button>
             </div>
           </div>
@@ -1690,6 +1691,7 @@
       const orbitSpeedFill = document.getElementById('orbit-speed-fill');
       const orbitSpeedValue = document.getElementById('orbit-speed-value');
       const orbitSpeedGauge = document.querySelector('.orbit-gauge');
+      const planetPreviewBtn = document.getElementById('planet-preview-btn');
       const assetBase = location.pathname.includes('/docs/game001/') ? '../../game-mode/assets' : '../assets';
       const planetGlbUrl = '../assets/blender/game001.glb';
       const playerVrmUrl = `${assetBase}/vrm/AvatarSample_C.vrm`;
@@ -1750,6 +1752,7 @@
         planetSpin: 0,
         orbitSpinRate: 1,
         orbitSpinBoost: 0,
+        planetPreviewMode: 'sphere',
         player: new THREE.Vector3(0, 0, 0),
         surfaceLongitude: 0.4,
         surfaceLatitude: 1.15,
@@ -1805,6 +1808,20 @@
       function adjustOrbitSpinRate(delta) {
         state.orbitSpinRate = THREE.MathUtils.clamp(state.orbitSpinRate + delta, orbitSpinRateMin, orbitSpinRateMax);
         syncOrbitSpeedGauge();
+      }
+
+      function syncPlanetPreviewButton() {
+        if (!planetPreviewBtn) return;
+        planetPreviewBtn.textContent = state.planetPreviewMode === 'glb' ? '表示: GLB' : '表示: 球体';
+      }
+
+      function togglePlanetPreviewMode() {
+        state.planetPreviewMode = state.planetPreviewMode === 'glb' ? 'sphere' : 'glb';
+        syncPlanetPreviewButton();
+        if (state.planetPreviewMode === 'glb') {
+          withTimeout(loadPlanetAsset(), 'planet asset');
+        }
+        syncPlanetVisibility(state.mode);
       }
 
       function setOrbitSpinRateFromClientX(clientX) {
@@ -2528,7 +2545,10 @@
             import('three/addons/loaders/GLTFLoader.js')
           ]);
           GLTFLoader_Lib = gltfMod.GLTFLoader;
-          await withTimeout(loadPlayerAsset(), 'player asset');
+          await Promise.allSettled([
+            withTimeout(loadPlanetAsset(), 'planet asset'),
+            withTimeout(loadPlayerAsset(), 'player asset')
+          ]);
           console.log('Game assets init finished.');
         } catch (error) {
           console.warn('Failed to initialize game assets:', error);
@@ -2536,9 +2556,9 @@
       }
 
       function syncPlanetVisibility(mode) {
-        const orbitAssetVisible = Boolean(loadedOrbitPlanetMesh) && mode !== 'play';
+        const orbitAssetVisible = Boolean(loadedOrbitPlanetMesh) && mode !== 'play' && state.planetPreviewMode === 'glb';
         const surfaceAssetVisible = Boolean(loadedSurfacePlanetMesh) && mode === 'play';
-        const orbitFallbackVisible = !loadedOrbitPlanetMesh && mode !== 'play';
+        const orbitFallbackVisible = mode !== 'play' && (!loadedOrbitPlanetMesh || state.planetPreviewMode !== 'glb');
 
         if (loadedOrbitPlanetMesh) loadedOrbitPlanetMesh.visible = orbitAssetVisible;
         if (loadedSurfacePlanetMesh) loadedSurfacePlanetMesh.visible = surfaceAssetVisible;
@@ -2917,6 +2937,10 @@
           });
         }
 
+        if (planetPreviewBtn) {
+          planetPreviewBtn.addEventListener('click', togglePlanetPreviewMode);
+        }
+
         document.addEventListener('keydown', e => {
           if (e.key === 'Escape') {
             leaveGame();
@@ -3129,6 +3153,7 @@
       applyBiome('sunset');
       updateSpeedButton();
       syncBiomeButtons();
+      syncPlanetPreviewButton();
       bindControls();
       initGameAssets();
       resize();
