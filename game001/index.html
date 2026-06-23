@@ -1545,7 +1545,7 @@
               </div>
               <div class="orbit-speed">
                 <strong>Spin speed</strong>
-                <span>カーソルキーで回転を調整できます。</span>
+                <span>カーソルキーかマウスクリックで回転を調整できます。</span>
                 <div class="orbit-gauge" aria-label="Spin speed gauge">
                   <div class="orbit-gauge-track">
                     <div class="orbit-gauge-fill" id="orbit-speed-fill"></div>
@@ -1689,6 +1689,7 @@
       const canvas = document.getElementById('game-canvas');
       const orbitSpeedFill = document.getElementById('orbit-speed-fill');
       const orbitSpeedValue = document.getElementById('orbit-speed-value');
+      const orbitSpeedGauge = document.querySelector('.orbit-gauge');
       const assetBase = location.pathname.includes('/docs/game001/') ? '../../game-mode/assets' : '../assets';
       const planetGlbUrl = '../assets/blender/game001.glb';
       const playerVrmUrl = `${assetBase}/vrm/AvatarSample_C.vrm`;
@@ -1806,6 +1807,15 @@
         syncOrbitSpeedGauge();
       }
 
+      function setOrbitSpinRateFromClientX(clientX) {
+        if (!orbitSpeedGauge) return;
+        const rect = orbitSpeedGauge.getBoundingClientRect();
+        if (rect.width <= 0) return;
+        const ratio = THREE.MathUtils.clamp((clientX - rect.left) / rect.width, 0, 1);
+        state.orbitSpinRate = THREE.MathUtils.lerp(orbitSpinRateMin, orbitSpinRateMax, ratio);
+        syncOrbitSpeedGauge();
+      }
+
       let GLTFLoader_Lib = null;
       let loadedOrbitPlanetMesh = null;
       let loadedSurfacePlanetMesh = null;
@@ -1857,6 +1867,7 @@
         metalness: 0.02
       });
       const orbitPlanetScale = 3;
+      const orbitAssetScale = orbitPlanetScale;
       const orbitCameraRadius = 18.0;
       const orbitCameraHeight = 4.8;
       const planetMesh = new THREE.Mesh(planetGeometry, planetMaterial);
@@ -2396,7 +2407,15 @@
         bounds.getSize(size);
         const center = new THREE.Vector3();
         bounds.getCenter(center);
+        const maxDim = Math.max(size.x, size.y, size.z) || 1;
         const focusLift = size.y * 0.14;
+
+        const orbitScene = sceneRoot.clone(true);
+        orbitScene.position.sub(center);
+        orbitScene.position.y += focusLift;
+        orbitScene.scale.setScalar((2.55 / maxDim) * orbitAssetScale);
+        loadedOrbitPlanetMesh = orbitScene;
+        planetAssetGroup.add(loadedOrbitPlanetMesh);
 
         const surfaceScene = sceneRoot.clone(true);
         surfaceScene.position.sub(center);
@@ -2846,6 +2865,21 @@
       }
 
       function bindControls() {
+        if (orbitSpeedGauge) {
+          orbitSpeedGauge.addEventListener('pointerdown', e => {
+            e.preventDefault();
+            setOrbitSpinRateFromClientX(e.clientX);
+            orbitSpeedGauge.setPointerCapture(e.pointerId);
+          });
+          orbitSpeedGauge.addEventListener('pointermove', e => {
+            if (e.buttons === 0) return;
+            setOrbitSpinRateFromClientX(e.clientX);
+          });
+          orbitSpeedGauge.addEventListener('click', e => {
+            setOrbitSpinRateFromClientX(e.clientX);
+          });
+        }
+
         document.addEventListener('keydown', e => {
           if (e.key === 'Escape') {
             leaveGame();
