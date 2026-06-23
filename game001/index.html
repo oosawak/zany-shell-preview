@@ -686,7 +686,7 @@
         padding-inline: 14px;
       }
 
-      .orbit-camera-editor {
+      .play-camera-editor {
         display: grid;
         gap: 10px;
         padding: 14px 16px;
@@ -697,7 +697,7 @@
         box-shadow: 0 14px 34px rgba(0,0,0,0.28);
       }
 
-      .orbit-camera-editor strong {
+      .play-camera-editor strong {
         display: block;
         font-size: 12px;
         letter-spacing: 0.14em;
@@ -705,14 +705,14 @@
         color: var(--cool-2);
       }
 
-      .orbit-camera-editor > span {
+      .play-camera-editor > span {
         display: block;
         font-size: 12px;
         color: var(--muted);
         line-height: 1.5;
       }
 
-      .orbit-camera-editor label {
+      .play-camera-editor label {
         display: grid;
         grid-template-columns: 18px minmax(0, 1fr) 52px;
         align-items: center;
@@ -721,19 +721,19 @@
         color: rgba(236, 245, 255, 0.82);
       }
 
-      .orbit-camera-editor input[type="range"] {
+      .play-camera-editor input[type="range"] {
         width: 100%;
         accent-color: #62d7df;
       }
 
-      .orbit-camera-editor b {
+      .play-camera-editor b {
         font-size: 12px;
         font-variant-numeric: tabular-nums;
         text-align: right;
         color: #f7fbff;
       }
 
-      .orbit-camera-reset {
+      .play-camera-reset {
         padding-inline: 14px;
       }
 
@@ -1684,21 +1684,6 @@
                 </label>
                 <button class="orbit-btn orbit-center-reset" id="planet-center-reset">中心を戻す</button>
               </div>
-              <div class="orbit-camera-editor">
-                <strong>Camera edit</strong>
-                <span>プレイヤーの後ろから追う距離と高さを調整できます。</span>
-                <label>
-                  <span>D</span>
-                  <input type="range" id="camera-follow-distance" min="2.5" max="10" step="0.05" value="5.25">
-                  <b id="camera-follow-distance-value">5.25</b>
-                </label>
-                <label>
-                  <span>H</span>
-                  <input type="range" id="camera-follow-height" min="1" max="6" step="0.05" value="2.75">
-                  <b id="camera-follow-height-value">2.75</b>
-                </label>
-                <button class="orbit-btn orbit-camera-reset" id="camera-follow-reset">カメラを戻す</button>
-              </div>
               <button class="orbit-btn" id="enter-inside-btn">惑星の中に入る</button>
             </div>
           </div>
@@ -1710,6 +1695,21 @@
               <div class="frame-pill"><b>FPS</b> <span id="fps-value">--</span></div>
             </div>
             <div class="play-toast" id="play-toast">惑星の表面に立っています。</div>
+            <div class="play-camera-editor">
+              <strong>Camera edit</strong>
+              <span>プレイヤーの後ろから追う距離と高さを調整できます。</span>
+              <label>
+                <span>D</span>
+                <input type="range" id="camera-follow-distance" min="2.5" max="10" step="0.05" value="5.25">
+                <b id="camera-follow-distance-value">5.25</b>
+              </label>
+              <label>
+                <span>H</span>
+                <input type="range" id="camera-follow-height" min="1" max="6" step="0.05" value="2.75">
+                <b id="camera-follow-height-value">2.75</b>
+              </label>
+              <button class="orbit-btn play-camera-reset" id="camera-follow-reset">カメラを戻す</button>
+            </div>
             <div class="inventory-panel collapsed" id="inventory-panel">
               <div class="inventory-head">
                 <div>
