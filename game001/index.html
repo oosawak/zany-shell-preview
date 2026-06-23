@@ -635,6 +635,57 @@
         cursor: pointer;
       }
 
+      .orbit-center-editor {
+        display: grid;
+        gap: 10px;
+        padding: 14px 16px;
+        border-radius: 18px;
+        background: rgba(10, 14, 22, 0.62);
+        border: 1px solid rgba(255,255,255,0.08);
+        backdrop-filter: blur(16px);
+        box-shadow: 0 14px 34px rgba(0,0,0,0.28);
+      }
+
+      .orbit-center-editor strong {
+        display: block;
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--cool-2);
+      }
+
+      .orbit-center-editor > span {
+        display: block;
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .orbit-center-editor label {
+        display: grid;
+        grid-template-columns: 18px minmax(0, 1fr) 52px;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+        color: rgba(236, 245, 255, 0.82);
+      }
+
+      .orbit-center-editor input[type="range"] {
+        width: 100%;
+        accent-color: #62d7df;
+      }
+
+      .orbit-center-editor b {
+        font-size: 12px;
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+        color: #f7fbff;
+      }
+
+      .orbit-center-reset {
+        padding-inline: 14px;
+      }
+
       .orbit-speed {
         display: grid;
         gap: 8px;
@@ -1562,6 +1613,26 @@
                 <span id="orbit-fps-value">--</span>
               </div>
               <button class="orbit-btn" id="planet-preview-btn">表示: 球体</button>
+              <div class="orbit-center-editor">
+                <strong>Center edit</strong>
+                <span>惑星の中心を UI で微調整できます。</span>
+                <label>
+                  <span>X</span>
+                  <input type="range" id="planet-center-x" min="-20" max="20" step="0.05" value="0">
+                  <b id="planet-center-x-value">0.00</b>
+                </label>
+                <label>
+                  <span>Y</span>
+                  <input type="range" id="planet-center-y" min="-20" max="20" step="0.05" value="0">
+                  <b id="planet-center-y-value">0.00</b>
+                </label>
+                <label>
+                  <span>Z</span>
+                  <input type="range" id="planet-center-z" min="-20" max="20" step="0.05" value="0">
+                  <b id="planet-center-z-value">0.00</b>
+                </label>
+                <button class="orbit-btn orbit-center-reset" id="planet-center-reset">中心を戻す</button>
+              </div>
               <button class="orbit-btn" id="enter-inside-btn">惑星の中に入る</button>
             </div>
           </div>
@@ -1692,6 +1763,13 @@
       const orbitSpeedValue = document.getElementById('orbit-speed-value');
       const orbitSpeedGauge = document.querySelector('.orbit-gauge');
       const planetPreviewBtn = document.getElementById('planet-preview-btn');
+      const planetCenterX = document.getElementById('planet-center-x');
+      const planetCenterY = document.getElementById('planet-center-y');
+      const planetCenterZ = document.getElementById('planet-center-z');
+      const planetCenterXValue = document.getElementById('planet-center-x-value');
+      const planetCenterYValue = document.getElementById('planet-center-y-value');
+      const planetCenterZValue = document.getElementById('planet-center-z-value');
+      const planetCenterReset = document.getElementById('planet-center-reset');
       const assetBase = location.pathname.includes('/docs/game001/') ? '../../game-mode/assets' : '../assets';
       const planetGlbUrl = '../assets/blender/game001.glb';
       const playerVrmUrl = `${assetBase}/vrm/AvatarSample_C.vrm`;
@@ -1755,6 +1833,7 @@
         planetPreviewMode: 'sphere',
         activePlanetPreviewMode: 'sphere',
         activePlanetCenter: new THREE.Vector3(0, 0, 0),
+        planetCenterOffset: new THREE.Vector3(0, 0, 0),
         activePlanetRadius: 37.2,
         player: new THREE.Vector3(0, 0, 0),
         surfaceLongitude: 0.4,
@@ -1816,6 +1895,42 @@
       function syncPlanetPreviewButton() {
         if (!planetPreviewBtn) return;
         planetPreviewBtn.textContent = state.planetPreviewMode === 'glb' ? '表示: GLB' : '表示: 球体';
+      }
+
+      function syncPlanetCenterEditor() {
+        if (planetCenterX) planetCenterX.value = state.planetCenterOffset.x.toFixed(2);
+        if (planetCenterY) planetCenterY.value = state.planetCenterOffset.y.toFixed(2);
+        if (planetCenterZ) planetCenterZ.value = state.planetCenterOffset.z.toFixed(2);
+        if (planetCenterXValue) planetCenterXValue.textContent = state.planetCenterOffset.x.toFixed(2);
+        if (planetCenterYValue) planetCenterYValue.textContent = state.planetCenterOffset.y.toFixed(2);
+        if (planetCenterZValue) planetCenterZValue.textContent = state.planetCenterOffset.z.toFixed(2);
+      }
+
+      function syncLoadedPlanetCenterOffset() {
+        if (loadedOrbitPlanetMesh) {
+          loadedOrbitPlanetMesh.position.copy(loadedOrbitPlanetCenter).add(state.planetCenterOffset);
+        }
+        if (loadedSurfacePlanetMesh) {
+          loadedSurfacePlanetMesh.position.copy(loadedSurfacePlanetCenter).add(state.planetCenterOffset);
+        }
+      }
+
+      function setPlanetCenterAxis(axis, value) {
+        state.planetCenterOffset[axis] = value;
+        syncPlanetCenterEditor();
+        syncLoadedPlanetCenterOffset();
+        if (state.activePlanetPreviewMode === 'glb') {
+          state.activePlanetCenter.copy(state.planetCenterOffset);
+        }
+      }
+
+      function resetPlanetCenter() {
+        state.planetCenterOffset.set(0, 0, 0);
+        syncPlanetCenterEditor();
+        syncLoadedPlanetCenterOffset();
+        if (state.activePlanetPreviewMode === 'glb') {
+          state.activePlanetCenter.set(0, 0, 0);
+        }
       }
 
       function togglePlanetPreviewMode() {
@@ -2460,6 +2575,7 @@
         surfacePlanetAssetGroup.add(loadedSurfacePlanetMesh);
         loadedSurfacePlanetCenter.copy(center).multiplyScalar(surfaceTargetDiameter / sourceDiameter);
         loadedSurfacePlanetRadius = surfaceTargetDiameter * 0.5;
+        syncLoadedPlanetCenterOffset();
       }
 
       async function loadPlanetAsset() {
@@ -2694,7 +2810,7 @@
         state.activePlanetPreviewMode = state.planetPreviewMode;
         await withTimeout(loadPlanetAsset(), 'planet asset');
         if (state.activePlanetPreviewMode === 'glb') {
-          state.activePlanetCenter.set(0, 0, 0);
+          state.activePlanetCenter.copy(state.planetCenterOffset);
           state.activePlanetRadius = loadedSurfacePlanetRadius;
         } else {
           state.activePlanetCenter.set(0, 0, 0);
@@ -2935,6 +3051,21 @@
           planetPreviewBtn.addEventListener('click', togglePlanetPreviewMode);
         }
 
+        const bindCenterSlider = (input, axis) => {
+          if (!input) return;
+          input.addEventListener('input', () => {
+            setPlanetCenterAxis(axis, Number.parseFloat(input.value) || 0);
+          });
+        };
+
+        bindCenterSlider(planetCenterX, 'x');
+        bindCenterSlider(planetCenterY, 'y');
+        bindCenterSlider(planetCenterZ, 'z');
+
+        if (planetCenterReset) {
+          planetCenterReset.addEventListener('click', resetPlanetCenter);
+        }
+
         document.addEventListener('keydown', e => {
           if (e.key === 'Escape') {
             leaveGame();
@@ -3148,6 +3279,7 @@
       updateSpeedButton();
       syncBiomeButtons();
       syncPlanetPreviewButton();
+      syncPlanetCenterEditor();
       bindControls();
       initGameAssets();
       resize();
