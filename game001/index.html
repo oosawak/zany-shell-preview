@@ -2154,6 +2154,10 @@
         return { normal, east, north };
       }
 
+      function projectOntoPlane(vector, normal) {
+        return vector.clone().sub(normal.clone().multiplyScalar(vector.dot(normal)));
+      }
+
       function clearSurfaceObstacles() {
         surfaceObstacles.splice(0, surfaceObstacles.length);
         while (surfaceObstacleGroup.children.length) surfaceObstacleGroup.remove(surfaceObstacleGroup.children[0]);
@@ -2341,13 +2345,17 @@
       playerShadow.position.y = 0.02;
       player.add(playerShadow);
 
+      const playerVisual = new THREE.Group();
+      playerVisual.position.y = -0.22;
+      player.add(playerVisual);
+
       const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.32, 0.85, 4, 10), playerBodyMaterial);
       torso.position.y = 0.9;
-      player.add(torso);
+      playerVisual.add(torso);
 
       const head = new THREE.Mesh(new THREE.SphereGeometry(0.28, 24, 24), playerBodyMaterial);
       head.position.set(0.04, 1.48, 0.14);
-      player.add(head);
+      playerVisual.add(head);
 
       const eyeGeo = new THREE.SphereGeometry(0.06, 12, 12);
       const eyeMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.4, metalness: 0 });
@@ -2360,7 +2368,7 @@
       pupilL.position.set(-0.12, 1.58, 0.34);
       const pupilR = new THREE.Mesh(new THREE.SphereGeometry(0.02, 8, 8), pupilMaterial);
       pupilR.position.set(0.17, 1.58, 0.34);
-      player.add(eyeL, eyeR, pupilL, pupilR);
+      playerVisual.add(eyeL, eyeR, pupilL, pupilR);
 
       const tail = new THREE.Mesh(
         new THREE.TorusGeometry(0.18, 0.05, 8, 18, Math.PI * 1.25),
@@ -2369,17 +2377,17 @@
       tail.rotation.z = Math.PI * 0.72;
       tail.rotation.y = Math.PI * 0.22;
       tail.position.set(0, 0.82, -0.36);
-      player.add(tail);
+      playerVisual.add(tail);
 
       const legMaterial = new THREE.MeshStandardMaterial({ color: palettes.sunset.player, roughness: 0.7, metalness: 0.02 });
       function addLeg(x, z, rot) {
         const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, 0.58, 6), legMaterial);
         leg.position.set(x, 0.55, z);
         leg.rotation.z = rot;
-        player.add(leg);
+        playerVisual.add(leg);
         const foot = new THREE.Mesh(new THREE.SphereGeometry(0.06, 8, 8), legMaterial);
         foot.position.set(x + Math.sin(rot) * 0.28, 0.22, z + Math.cos(rot) * 0.28);
-        player.add(foot);
+        playerVisual.add(foot);
       }
       addLeg(-0.18, 0.18, 0.35);
       addLeg(0.18, 0.18, -0.35);
@@ -2391,11 +2399,9 @@
         new THREE.MeshStandardMaterial({ color: 0xffb17e, roughness: 0.55, metalness: 0.08 })
       );
       playerAccent.position.set(0, 1.04, 0.18);
-      player.add(playerAccent);
+      playerVisual.add(playerAccent);
 
-      const playerStandOffset = 0.22;
-
-      playerPrimitiveMeshes = player.children.slice();
+      playerPrimitiveMeshes = playerVisual.children.slice();
       playerAvatarGroup = new THREE.Group();
       playerAvatarGroup.visible = false;
       player.add(playerAvatarGroup);
@@ -2916,17 +2922,23 @@
         const lookPitch = THREE.MathUtils.clamp(state.cameraPitchOffset + state.lookMove.pitch * 0.55 * speed.look, -0.35, 0.62);
 
         const turnSpeed = 1.7 * delta * speed.turn;
-        if (state.move.turn !== 0) state.surfaceHeading += state.move.turn * turnSpeed;
+        if (state.move.turn !== 0) state.cameraYawOffset += state.move.turn * turnSpeed;
 
         const planetCenter = state.activePlanetCenter;
-        const surfaceNormal = state.player.clone().sub(planetCenter).lengthSq() > 0.0001
-          ? state.player.clone().sub(planetCenter).normalize()
+        const groundContact = state.player.clone();
+        const surfaceNormal = groundContact.clone().sub(planetCenter).lengthSq() > 0.0001
+          ? groundContact.clone().sub(planetCenter).normalize()
           : sphericalToCartesian(1, state.surfaceLongitude, state.surfaceLatitude).normalize();
         const groundRadius = state.activePlanetRadius * 1.01;
         const surfaceBase = surfaceNormal.clone().multiplyScalar(groundRadius + state.surfaceAltitude).add(planetCenter);
 
-        const forwardDir = getSurfaceForward();
-        const rightDir = new THREE.Vector3().crossVectors(surfaceNormal, forwardDir).normalize();
+        const basis = surfaceFrameAt(state.surfaceLongitude, state.surfaceLatitude);
+        const rawCameraForward = basis.north.clone().multiplyScalar(Math.cos(lookYaw)).add(basis.east.clone().multiplyScalar(Math.sin(lookYaw))).normalize();
+        const cameraForward = projectOntoPlane(rawCameraForward, surfaceNormal).normalize();
+        const cameraRight = new THREE.Vector3().crossVectors(surfaceNormal, cameraForward).normalize();
+
+        const forwardDir = cameraForward;
+        const rightDir = cameraRight;
         const move = new THREE.Vector3();
         move.addScaledVector(forwardDir, moveForwardTotal);
         move.addScaledVector(rightDir, moveStrafe);
@@ -2959,28 +2971,30 @@
           }
         }
 
-        const groundContact = state.player.clone();
+        const bodyFacing = move.lengthSq() > 0 ? move.clone().normalize() : cameraForward.clone();
+        state.surfaceHeading = Math.atan2(bodyFacing.dot(basis.east), bodyFacing.dot(basis.north));
         const groundNormal = groundContact.clone().sub(planetCenter).normalize();
-        const basis = surfaceFrameAt(state.surfaceLongitude, state.surfaceLatitude);
         const bodyForward = basis.north.clone().multiplyScalar(Math.cos(state.surfaceHeading)).add(basis.east.clone().multiplyScalar(Math.sin(state.surfaceHeading))).normalize();
         const bodyRight = new THREE.Vector3().crossVectors(groundNormal, bodyForward).normalize();
         const mat = new THREE.Matrix4().makeBasis(bodyRight, groundNormal, bodyForward);
         player.quaternion.setFromRotationMatrix(mat);
-        const playerViewPosition = groundContact.clone()
-          .addScaledVector(groundNormal, playerStandOffset + state.surfaceAltitude);
 
         const bob = Math.sin(clock.elapsedTime * 8) * 0.035;
-        player.position.copy(playerViewPosition).addScaledVector(groundNormal, bob);
+        player.position.copy(groundContact).addScaledVector(groundNormal, state.surfaceAltitude + bob);
 
-        const cameraForward = bodyForward.clone().multiplyScalar(Math.cos(lookYaw)).add(bodyRight.clone().multiplyScalar(Math.sin(lookYaw))).normalize();
-        const cameraRight = new THREE.Vector3().crossVectors(groundNormal, cameraForward).normalize();
-        const cameraAim = cameraForward.clone().multiplyScalar(Math.cos(lookPitch)).add(groundNormal.clone().multiplyScalar(Math.sin(lookPitch))).normalize();
-        const camUp = groundNormal.clone().multiplyScalar(3.1);
-        const camBack = cameraAim.clone().multiplyScalar(-6.0).add(cameraRight.clone().multiplyScalar(0.25));
-        const desired = player.position.clone().add(camUp).add(camBack);
+        const cameraTarget = groundContact.clone().addScaledVector(groundNormal, 1.12 + state.surfaceAltitude);
+        const cameraHeight = 2.75;
+        const cameraDistance = 5.25;
+        const cameraSide = 0.55;
+        const cameraPitchOffset = lookPitch * 1.6;
+        const desired = cameraTarget
+          .clone()
+          .addScaledVector(surfaceNormal, cameraHeight + cameraPitchOffset)
+          .addScaledVector(cameraForward, -cameraDistance)
+          .addScaledVector(cameraRight, cameraSide);
         camera.position.lerp(desired, Math.min(0.34, 0.14 * speed.camera));
         camera.up.set(0, 1, 0);
-        camera.lookAt(player.position.clone().add(groundNormal.clone().multiplyScalar(1.25)));
+        camera.lookAt(cameraTarget.clone().addScaledVector(surfaceNormal, cameraPitchOffset * 0.55));
 
         insideDome.rotation.y += delta * 0.012;
         stars.rotation.y += delta * 0.006;
