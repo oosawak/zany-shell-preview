@@ -1753,6 +1753,7 @@
         orbitSpinRate: 1,
         orbitSpinBoost: 0,
         planetPreviewMode: 'sphere',
+        activePlanetPreviewMode: 'sphere',
         player: new THREE.Vector3(0, 0, 0),
         surfaceLongitude: 0.4,
         surfaceLatitude: 1.15,
@@ -2556,9 +2557,10 @@
       }
 
       function syncPlanetVisibility(mode) {
-        const orbitAssetVisible = Boolean(loadedOrbitPlanetMesh) && mode !== 'play' && state.planetPreviewMode === 'glb';
+        const previewMode = mode === 'play' ? state.activePlanetPreviewMode : state.planetPreviewMode;
+        const orbitAssetVisible = Boolean(loadedOrbitPlanetMesh) && mode !== 'play' && previewMode === 'glb';
         const surfaceAssetVisible = Boolean(loadedSurfacePlanetMesh) && mode === 'play';
-        const orbitFallbackVisible = mode !== 'play' && (!loadedOrbitPlanetMesh || state.planetPreviewMode !== 'glb');
+        const orbitFallbackVisible = mode !== 'play' && (!loadedOrbitPlanetMesh || previewMode !== 'glb');
 
         if (loadedOrbitPlanetMesh) loadedOrbitPlanetMesh.visible = orbitAssetVisible;
         if (loadedSurfacePlanetMesh) loadedSurfacePlanetMesh.visible = surfaceAssetVisible;
@@ -2707,6 +2709,7 @@
 
       async function enterInterior() {
         setToast('惑星を読み込み中...', 900);
+        state.activePlanetPreviewMode = state.planetPreviewMode;
         await withTimeout(loadPlanetAsset(), 'planet asset');
         setMode('play');
         const startPos = sphericalToCartesian(surfaceRadius * 1.01, state.surfaceLongitude, state.surfaceLatitude);
@@ -2779,6 +2782,7 @@
       function updatePlay(delta) {
         const speed = getSpeedProfile();
         syncPlanetVisibility('play');
+        const useGlbInterior = state.activePlanetPreviewMode === 'glb';
         terrainGroup.visible = false;
         surfaceGroup.visible = true;
         insideDome.visible = true;
@@ -2788,9 +2792,9 @@
         terrainMesh.visible = false;
         obstacleGroup.visible = false;
         surfaceGroup.rotation.y += delta * 0.012;
-        surfacePlanetMesh.visible = !loadedSurfacePlanetMesh;
-        surfaceOcean.visible = !loadedSurfacePlanetMesh;
-        surfaceAtmosphere.visible = !loadedSurfacePlanetMesh;
+        surfacePlanetMesh.visible = !loadedSurfacePlanetMesh || !useGlbInterior;
+        surfaceOcean.visible = !loadedSurfacePlanetMesh || !useGlbInterior;
+        surfaceAtmosphere.visible = !loadedSurfacePlanetMesh || !useGlbInterior;
         surfacePatchGroup.visible = true;
         surfaceObstacleGroup.visible = true;
         surfacePickupGroup.visible = true;
