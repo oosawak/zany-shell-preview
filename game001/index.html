@@ -1623,8 +1623,8 @@
                 </label>
                 <label>
                   <span>Y</span>
-                  <input type="range" id="planet-center-y" min="-20" max="20" step="0.05" value="0">
-                  <b id="planet-center-y-value">0.00</b>
+                  <input type="range" id="planet-center-y" min="-20" max="20" step="0.05" value="-3.35">
+                  <b id="planet-center-y-value">-3.35</b>
                 </label>
                 <label>
                   <span>Z</span>
@@ -1773,6 +1773,7 @@
       const assetBase = location.pathname.includes('/docs/game001/') ? '../../game-mode/assets' : '../assets';
       const planetGlbUrl = '../assets/blender/game001.glb';
       const playerVrmUrl = `${assetBase}/vrm/AvatarSample_C.vrm`;
+      const defaultPlanetCenterOffset = new THREE.Vector3(0, -3.35, 0);
 
       const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
       renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -1833,7 +1834,7 @@
         planetPreviewMode: 'sphere',
         activePlanetPreviewMode: 'sphere',
         activePlanetCenter: new THREE.Vector3(0, 0, 0),
-        planetCenterOffset: new THREE.Vector3(0, 0, 0),
+        planetCenterOffset: defaultPlanetCenterOffset.clone(),
         activePlanetRadius: 37.2,
         player: new THREE.Vector3(0, 0, 0),
         surfaceLongitude: 0.4,
@@ -1925,11 +1926,11 @@
       }
 
       function resetPlanetCenter() {
-        state.planetCenterOffset.set(0, 0, 0);
+        state.planetCenterOffset.copy(defaultPlanetCenterOffset);
         syncPlanetCenterEditor();
         syncLoadedPlanetCenterOffset();
         if (state.activePlanetPreviewMode === 'glb') {
-          state.activePlanetCenter.set(0, 0, 0);
+          state.activePlanetCenter.copy(defaultPlanetCenterOffset);
         }
       }
 
@@ -2974,7 +2975,7 @@
         const camBack = cameraAim.clone().multiplyScalar(-6.0).add(cameraRight.clone().multiplyScalar(0.25));
         const desired = player.position.clone().add(camUp).add(camBack);
         camera.position.lerp(desired, Math.min(0.34, 0.14 * speed.camera));
-        camera.up.copy(groundNormal);
+        camera.up.set(0, 1, 0);
         camera.lookAt(player.position.clone().add(groundNormal.clone().multiplyScalar(1.25)));
 
         insideDome.rotation.y += delta * 0.012;
