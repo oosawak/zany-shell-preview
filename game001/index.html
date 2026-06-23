@@ -686,6 +686,57 @@
         padding-inline: 14px;
       }
 
+      .orbit-camera-editor {
+        display: grid;
+        gap: 10px;
+        padding: 14px 16px;
+        border-radius: 18px;
+        background: rgba(10, 14, 22, 0.62);
+        border: 1px solid rgba(255,255,255,0.08);
+        backdrop-filter: blur(16px);
+        box-shadow: 0 14px 34px rgba(0,0,0,0.28);
+      }
+
+      .orbit-camera-editor strong {
+        display: block;
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--cool-2);
+      }
+
+      .orbit-camera-editor > span {
+        display: block;
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .orbit-camera-editor label {
+        display: grid;
+        grid-template-columns: 18px minmax(0, 1fr) 52px;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+        color: rgba(236, 245, 255, 0.82);
+      }
+
+      .orbit-camera-editor input[type="range"] {
+        width: 100%;
+        accent-color: #62d7df;
+      }
+
+      .orbit-camera-editor b {
+        font-size: 12px;
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+        color: #f7fbff;
+      }
+
+      .orbit-camera-reset {
+        padding-inline: 14px;
+      }
+
       .orbit-speed {
         display: grid;
         gap: 8px;
@@ -1633,6 +1684,21 @@
                 </label>
                 <button class="orbit-btn orbit-center-reset" id="planet-center-reset">中心を戻す</button>
               </div>
+              <div class="orbit-camera-editor">
+                <strong>Camera edit</strong>
+                <span>プレイヤーの後ろから追う距離と高さを調整できます。</span>
+                <label>
+                  <span>D</span>
+                  <input type="range" id="camera-follow-distance" min="2.5" max="10" step="0.05" value="5.25">
+                  <b id="camera-follow-distance-value">5.25</b>
+                </label>
+                <label>
+                  <span>H</span>
+                  <input type="range" id="camera-follow-height" min="1" max="6" step="0.05" value="2.75">
+                  <b id="camera-follow-height-value">2.75</b>
+                </label>
+                <button class="orbit-btn orbit-camera-reset" id="camera-follow-reset">カメラを戻す</button>
+              </div>
               <button class="orbit-btn" id="enter-inside-btn">惑星の中に入る</button>
             </div>
           </div>
@@ -1770,10 +1836,17 @@
       const planetCenterYValue = document.getElementById('planet-center-y-value');
       const planetCenterZValue = document.getElementById('planet-center-z-value');
       const planetCenterReset = document.getElementById('planet-center-reset');
+      const cameraFollowDistance = document.getElementById('camera-follow-distance');
+      const cameraFollowHeight = document.getElementById('camera-follow-height');
+      const cameraFollowDistanceValue = document.getElementById('camera-follow-distance-value');
+      const cameraFollowHeightValue = document.getElementById('camera-follow-height-value');
+      const cameraFollowReset = document.getElementById('camera-follow-reset');
       const assetBase = location.pathname.includes('/docs/game001/') ? '../../game-mode/assets' : '../assets';
       const planetGlbUrl = '../assets/blender/game001.glb';
       const playerVrmUrl = `${assetBase}/vrm/AvatarSample_C.vrm`;
       const defaultPlanetCenterOffset = new THREE.Vector3(0, -3.35, 0);
+      const defaultCameraFollowDistance = 5.25;
+      const defaultCameraFollowHeight = 2.75;
 
       const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
       renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -1836,6 +1909,8 @@
         activePlanetCenter: new THREE.Vector3(0, 0, 0),
         planetCenterOffset: defaultPlanetCenterOffset.clone(),
         activePlanetRadius: 37.2,
+        cameraFollowDistance: defaultCameraFollowDistance,
+        cameraFollowHeight: defaultCameraFollowHeight,
         player: new THREE.Vector3(0, 0, 0),
         surfaceLongitude: 0.4,
         surfaceLatitude: 1.15,
@@ -1907,6 +1982,13 @@
         if (planetCenterZValue) planetCenterZValue.textContent = state.planetCenterOffset.z.toFixed(2);
       }
 
+      function syncCameraFollowEditor() {
+        if (cameraFollowDistance) cameraFollowDistance.value = state.cameraFollowDistance.toFixed(2);
+        if (cameraFollowHeight) cameraFollowHeight.value = state.cameraFollowHeight.toFixed(2);
+        if (cameraFollowDistanceValue) cameraFollowDistanceValue.textContent = state.cameraFollowDistance.toFixed(2);
+        if (cameraFollowHeightValue) cameraFollowHeightValue.textContent = state.cameraFollowHeight.toFixed(2);
+      }
+
       function syncLoadedPlanetCenterOffset() {
         if (loadedOrbitPlanetMesh) {
           loadedOrbitPlanetMesh.position.copy(loadedOrbitPlanetCenter).add(state.planetCenterOffset);
@@ -1932,6 +2014,17 @@
         if (state.activePlanetPreviewMode === 'glb') {
           state.activePlanetCenter.copy(defaultPlanetCenterOffset);
         }
+      }
+
+      function setCameraFollowAxis(axis, value) {
+        state[axis] = value;
+        syncCameraFollowEditor();
+      }
+
+      function resetCameraFollow() {
+        state.cameraFollowDistance = defaultCameraFollowDistance;
+        state.cameraFollowHeight = defaultCameraFollowHeight;
+        syncCameraFollowEditor();
       }
 
       function togglePlanetPreviewMode() {
@@ -2346,60 +2439,37 @@
       player.add(playerShadow);
 
       const playerVisual = new THREE.Group();
-      playerVisual.position.y = -0.22;
+      playerVisual.position.y = -0.16;
       player.add(playerVisual);
 
-      const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.32, 0.85, 4, 10), playerBodyMaterial);
-      torso.position.y = 0.9;
+      const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.3, 0.78, 3, 8), playerBodyMaterial);
+      torso.position.y = 0.88;
       playerVisual.add(torso);
 
-      const head = new THREE.Mesh(new THREE.SphereGeometry(0.28, 24, 24), playerBodyMaterial);
-      head.position.set(0.04, 1.48, 0.14);
+      const head = new THREE.Mesh(new THREE.SphereGeometry(0.26, 18, 16), playerBodyMaterial);
+      head.position.set(0.03, 1.42, 0.12);
       playerVisual.add(head);
 
-      const eyeGeo = new THREE.SphereGeometry(0.06, 12, 12);
-      const eyeMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.4, metalness: 0 });
-      const pupilMaterial = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.7, metalness: 0 });
-      const eyeL = new THREE.Mesh(eyeGeo, eyeMaterial);
-      eyeL.position.set(-0.12, 1.58, 0.28);
-      const eyeR = new THREE.Mesh(eyeGeo, eyeMaterial);
-      eyeR.position.set(0.17, 1.58, 0.28);
-      const pupilL = new THREE.Mesh(new THREE.SphereGeometry(0.02, 8, 8), pupilMaterial);
-      pupilL.position.set(-0.12, 1.58, 0.34);
-      const pupilR = new THREE.Mesh(new THREE.SphereGeometry(0.02, 8, 8), pupilMaterial);
-      pupilR.position.set(0.17, 1.58, 0.34);
-      playerVisual.add(eyeL, eyeR, pupilL, pupilR);
-
       const tail = new THREE.Mesh(
-        new THREE.TorusGeometry(0.18, 0.05, 8, 18, Math.PI * 1.25),
+        new THREE.TorusGeometry(0.16, 0.045, 6, 16, Math.PI * 1.1),
         playerBodyMaterial
       );
-      tail.rotation.z = Math.PI * 0.72;
-      tail.rotation.y = Math.PI * 0.22;
-      tail.position.set(0, 0.82, -0.36);
+      tail.rotation.z = Math.PI * 0.8;
+      tail.rotation.y = Math.PI * 0.18;
+      tail.position.set(0, 0.72, -0.34);
       playerVisual.add(tail);
 
       const legMaterial = new THREE.MeshStandardMaterial({ color: palettes.sunset.player, roughness: 0.7, metalness: 0.02 });
       function addLeg(x, z, rot) {
-        const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, 0.58, 6), legMaterial);
-        leg.position.set(x, 0.55, z);
+        const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, 0.56, 5), legMaterial);
+        leg.position.set(x, 0.52, z);
         leg.rotation.z = rot;
         playerVisual.add(leg);
-        const foot = new THREE.Mesh(new THREE.SphereGeometry(0.06, 8, 8), legMaterial);
-        foot.position.set(x + Math.sin(rot) * 0.28, 0.22, z + Math.cos(rot) * 0.28);
-        playerVisual.add(foot);
       }
-      addLeg(-0.18, 0.18, 0.35);
-      addLeg(0.18, 0.18, -0.35);
-      addLeg(-0.18, -0.18, 0.9);
-      addLeg(0.18, -0.18, -0.9);
-
-      const playerAccent = new THREE.Mesh(
-        new THREE.SphereGeometry(0.14, 16, 16),
-        new THREE.MeshStandardMaterial({ color: 0xffb17e, roughness: 0.55, metalness: 0.08 })
-      );
-      playerAccent.position.set(0, 1.04, 0.18);
-      playerVisual.add(playerAccent);
+      addLeg(-0.16, 0.15, 0.28);
+      addLeg(0.16, 0.15, -0.28);
+      addLeg(-0.16, -0.15, 0.78);
+      addLeg(0.16, -0.15, -0.78);
 
       playerPrimitiveMeshes = playerVisual.children.slice();
       playerAvatarGroup = new THREE.Group();
@@ -2983,8 +3053,8 @@
         player.position.copy(groundContact).addScaledVector(groundNormal, state.surfaceAltitude + bob);
 
         const cameraTarget = groundContact.clone().addScaledVector(groundNormal, 1.12 + state.surfaceAltitude);
-        const cameraHeight = 2.75;
-        const cameraDistance = 5.25;
+        const cameraHeight = state.cameraFollowHeight;
+        const cameraDistance = state.cameraFollowDistance;
         const cameraSide = 0.55;
         const cameraPitchOffset = lookPitch * 1.6;
         const desired = cameraTarget
@@ -3083,6 +3153,20 @@
 
         if (planetCenterReset) {
           planetCenterReset.addEventListener('click', resetPlanetCenter);
+        }
+
+        const bindCameraSlider = (input, axis) => {
+          if (!input) return;
+          input.addEventListener('input', () => {
+            setCameraFollowAxis(axis, Number.parseFloat(input.value) || 0);
+          });
+        };
+
+        bindCameraSlider(cameraFollowDistance, 'cameraFollowDistance');
+        bindCameraSlider(cameraFollowHeight, 'cameraFollowHeight');
+
+        if (cameraFollowReset) {
+          cameraFollowReset.addEventListener('click', resetCameraFollow);
         }
 
         document.addEventListener('keydown', e => {
@@ -3299,6 +3383,7 @@
       syncBiomeButtons();
       syncPlanetPreviewButton();
       syncPlanetCenterEditor();
+      syncCameraFollowEditor();
       bindControls();
       initGameAssets();
       resize();
