@@ -1754,6 +1754,8 @@
         orbitSpinBoost: 0,
         planetPreviewMode: 'sphere',
         activePlanetPreviewMode: 'sphere',
+        activePlanetCenter: new THREE.Vector3(0, 0, 0),
+        activePlanetRadius: 37.2,
         player: new THREE.Vector3(0, 0, 0),
         surfaceLongitude: 0.4,
         surfaceLatitude: 1.15,
@@ -1980,6 +1982,10 @@
       const surfacePlanetAssetGroup = new THREE.Group();
       surfaceGroup.add(surfacePlanetAssetGroup);
       const surfaceRadius = 12.4 * 3;
+      let loadedOrbitPlanetCenter = new THREE.Vector3(0, 0, 0);
+      let loadedSurfacePlanetCenter = new THREE.Vector3(0, 0, 0);
+      let loadedOrbitPlanetRadius = orbitPlanetScale * 2.55;
+      let loadedSurfacePlanetRadius = surfaceRadius;
       const surfacePlanetGeometry = new THREE.SphereGeometry(surfaceRadius, 64, 64);
       const surfacePlanetMaterial = new THREE.MeshStandardMaterial({
         color: palettes.sunset.ground,
@@ -2415,48 +2421,20 @@
           surfacePlanetAssetGroup.remove(loadedSurfacePlanetMesh);
           loadedSurfacePlanetMesh = null;
         }
+        loadedOrbitPlanetCenter.set(0, 0, 0);
+        loadedSurfacePlanetCenter.set(0, 0, 0);
+        loadedOrbitPlanetRadius = orbitPlanetScale * 2.55;
+        loadedSurfacePlanetRadius = surfaceRadius;
       }
 
       function computeSceneCentroidAndRadius(sceneRoot) {
-        const sum = new THREE.Vector3();
-        let count = 0;
-        const point = new THREE.Vector3();
-
-        sceneRoot.traverse(node => {
-          if (!node.isMesh || !node.geometry || !node.geometry.attributes || !node.geometry.attributes.position) return;
-          const position = node.geometry.attributes.position;
-          for (let i = 0; i < position.count; i++) {
-            point.fromBufferAttribute(position, i).applyMatrix4(node.matrixWorld);
-            sum.add(point);
-            count += 1;
-          }
-        });
-
-        if (!count) {
-          const fallbackBounds = new THREE.Box3().setFromObject(sceneRoot);
-          const fallbackCenter = new THREE.Vector3();
-          const fallbackSize = new THREE.Vector3();
-          fallbackBounds.getCenter(fallbackCenter);
-          fallbackBounds.getSize(fallbackSize);
-          return {
-            center: fallbackCenter,
-            radius: Math.max(fallbackSize.x, fallbackSize.y, fallbackSize.z) * 0.5 || 1
-          };
-        }
-
-        const center = sum.multiplyScalar(1 / count);
-        let radius = 0;
-
-        sceneRoot.traverse(node => {
-          if (!node.isMesh || !node.geometry || !node.geometry.attributes || !node.geometry.attributes.position) return;
-          const position = node.geometry.attributes.position;
-          for (let i = 0; i < position.count; i++) {
-            point.fromBufferAttribute(position, i).applyMatrix4(node.matrixWorld);
-            radius = Math.max(radius, point.distanceTo(center));
-          }
-        });
-
-        return { center, radius: radius || 1 };
+        const bounds = new THREE.Box3().setFromObject(sceneRoot);
+        const center = new THREE.Vector3();
+        const size = new THREE.Vector3();
+        bounds.getCenter(center);
+        bounds.getSize(size);
+        const radius = Math.max(size.x, size.y, size.z) * 0.5 || 1;
+        return { center, radius };
       }
 
       function applyLoadedPlanetScene(sceneRoot) {
@@ -2472,12 +2450,16 @@
         orbitScene.scale.setScalar(orbitTargetDiameter / sourceDiameter);
         loadedOrbitPlanetMesh = orbitScene;
         planetAssetGroup.add(loadedOrbitPlanetMesh);
+        loadedOrbitPlanetCenter.copy(center).multiplyScalar(orbitTargetDiameter / sourceDiameter);
+        loadedOrbitPlanetRadius = orbitTargetDiameter * 0.5;
 
         const surfaceScene = sceneRoot.clone(true);
         surfaceScene.position.sub(center);
         surfaceScene.scale.setScalar(surfaceTargetDiameter / sourceDiameter);
         loadedSurfacePlanetMesh = surfaceScene;
         surfacePlanetAssetGroup.add(loadedSurfacePlanetMesh);
+        loadedSurfacePlanetCenter.copy(center).multiplyScalar(surfaceTargetDiameter / sourceDiameter);
+        loadedSurfacePlanetRadius = surfaceTargetDiameter * 0.5;
       }
 
       async function loadPlanetAsset() {
@@ -2711,8 +2693,15 @@
         setToast('惑星を読み込み中...', 900);
         state.activePlanetPreviewMode = state.planetPreviewMode;
         await withTimeout(loadPlanetAsset(), 'planet asset');
+        if (state.activePlanetPreviewMode === 'glb') {
+          state.activePlanetCenter.set(0, 0, 0);
+          state.activePlanetRadius = loadedSurfacePlanetRadius;
+        } else {
+          state.activePlanetCenter.set(0, 0, 0);
+          state.activePlanetRadius = surfaceRadius;
+        }
         setMode('play');
-        const startPos = sphericalToCartesian(surfaceRadius * 1.01, state.surfaceLongitude, state.surfaceLatitude);
+        const startPos = sphericalToCartesian(state.activePlanetRadius * 1.01, state.surfaceLongitude, state.surfaceLatitude).add(state.activePlanetCenter);
         state.player.copy(startPos);
         state.cameraYawOffset = 0;
         state.cameraPitchOffset = 0.18;
@@ -2810,11 +2799,12 @@
         const turnSpeed = 1.7 * delta * speed.turn;
         if (state.move.turn !== 0) state.surfaceHeading += state.move.turn * turnSpeed;
 
-        const surfaceNormal = state.player.lengthSq() > 0.0001
-          ? state.player.clone().normalize()
+        const planetCenter = state.activePlanetCenter;
+        const surfaceNormal = state.player.clone().sub(planetCenter).lengthSq() > 0.0001
+          ? state.player.clone().sub(planetCenter).normalize()
           : sphericalToCartesian(1, state.surfaceLongitude, state.surfaceLatitude).normalize();
-        const groundRadius = surfaceRadius * 1.01;
-        const surfaceBase = surfaceNormal.clone().multiplyScalar(groundRadius + state.surfaceAltitude);
+        const groundRadius = state.activePlanetRadius * 1.01;
+        const surfaceBase = surfaceNormal.clone().multiplyScalar(groundRadius + state.surfaceAltitude).add(planetCenter);
 
         const forwardDir = getSurfaceForward();
         const rightDir = new THREE.Vector3().crossVectors(surfaceNormal, forwardDir).normalize();
@@ -2826,12 +2816,12 @@
         }
 
         const nextPos = surfaceBase.clone().add(move);
-        const nextNormal = nextPos.clone().normalize();
+        const nextNormal = nextPos.clone().sub(planetCenter).normalize();
         const nextLong = Math.atan2(nextPos.z, nextPos.x);
         const nextLat = Math.acos(THREE.MathUtils.clamp(nextNormal.y, -1, 1));
 
         const collidesSurface = surfaceObstacles.some(obstacle => {
-          const obstaclePos = sphericalToCartesian(groundRadius, obstacle.longitude, obstacle.latitude);
+          const obstaclePos = sphericalToCartesian(groundRadius, obstacle.longitude, obstacle.latitude).add(planetCenter);
           return nextPos.distanceTo(obstaclePos) < obstacle.radius + 0.55;
         });
         if (!collidesSurface) {
@@ -2850,7 +2840,7 @@
           }
         }
 
-        const groundNormal = state.player.clone().normalize();
+        const groundNormal = state.player.clone().sub(planetCenter).normalize();
         const basis = surfaceFrameAt(state.surfaceLongitude, state.surfaceLatitude);
         const bodyForward = basis.north.clone().multiplyScalar(Math.cos(state.surfaceHeading)).add(basis.east.clone().multiplyScalar(Math.sin(state.surfaceHeading))).normalize();
         const bodyRight = new THREE.Vector3().crossVectors(groundNormal, bodyForward).normalize();
@@ -2879,11 +2869,11 @@
         for (let i = state.projectiles.length - 1; i >= 0; i--) {
           const projectile = state.projectiles[i];
           projectile.userData.life += delta;
-          projectile.userData.velocity.add(projectile.position.clone().normalize().multiplyScalar(-8.5 * delta));
+          projectile.userData.velocity.add(projectile.position.clone().sub(planetCenter).normalize().multiplyScalar(-8.5 * delta));
           projectile.position.addScaledVector(projectile.userData.velocity, delta);
           projectile.rotation.x += delta * 4.2;
           projectile.rotation.y += delta * 3.1;
-          const distanceFromCenter = projectile.position.length();
+          const distanceFromCenter = projectile.position.clone().sub(planetCenter).length();
           if (projectile.userData.life > 4.5 || distanceFromCenter < groundRadius + 0.15) {
             projectileGroup.remove(projectile);
             state.projectiles.splice(i, 1);
