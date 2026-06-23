@@ -2755,7 +2755,6 @@
         const activeColor = state.camouflage ? palette.ground : palette.player;
         playerBodyMaterial.color.setHex(activeColor);
         legMaterial.color.setHex(activeColor);
-        playerAccent.material.color.setHex(state.camouflage ? palette.land : 0xffb17e);
         if (!silent) setToast(state.camouflage ? '変身モード' : '通常モード', 1100);
       }
 
