@@ -2399,27 +2399,65 @@
         }
       }
 
+      function computeSceneCentroidAndRadius(sceneRoot) {
+        const sum = new THREE.Vector3();
+        let count = 0;
+        const point = new THREE.Vector3();
+
+        sceneRoot.traverse(node => {
+          if (!node.isMesh || !node.geometry || !node.geometry.attributes || !node.geometry.attributes.position) return;
+          const position = node.geometry.attributes.position;
+          for (let i = 0; i < position.count; i++) {
+            point.fromBufferAttribute(position, i).applyMatrix4(node.matrixWorld);
+            sum.add(point);
+            count += 1;
+          }
+        });
+
+        if (!count) {
+          const fallbackBounds = new THREE.Box3().setFromObject(sceneRoot);
+          const fallbackCenter = new THREE.Vector3();
+          const fallbackSize = new THREE.Vector3();
+          fallbackBounds.getCenter(fallbackCenter);
+          fallbackBounds.getSize(fallbackSize);
+          return {
+            center: fallbackCenter,
+            radius: Math.max(fallbackSize.x, fallbackSize.y, fallbackSize.z) * 0.5 || 1
+          };
+        }
+
+        const center = sum.multiplyScalar(1 / count);
+        let radius = 0;
+
+        sceneRoot.traverse(node => {
+          if (!node.isMesh || !node.geometry || !node.geometry.attributes || !node.geometry.attributes.position) return;
+          const position = node.geometry.attributes.position;
+          for (let i = 0; i < position.count; i++) {
+            point.fromBufferAttribute(position, i).applyMatrix4(node.matrixWorld);
+            radius = Math.max(radius, point.distanceTo(center));
+          }
+        });
+
+        return { center, radius: radius || 1 };
+      }
+
       function applyLoadedPlanetScene(sceneRoot) {
         clearLoadedPlanetMeshes();
         sceneRoot.updateMatrixWorld(true);
-        const bounds = new THREE.Box3().setFromObject(sceneRoot);
-        const size = new THREE.Vector3();
-        bounds.getSize(size);
-        const center = new THREE.Vector3();
-        bounds.getCenter(center);
-        const maxDim = Math.max(size.x, size.y, size.z) || 1;
+        const { center, radius } = computeSceneCentroidAndRadius(sceneRoot);
         const orbitTargetDiameter = 2.55 * orbitAssetScale * 2;
         const surfaceTargetDiameter = surfaceRadius * 2;
+        const sourceDiameter = Math.max(radius * 2, 1);
 
         const orbitScene = sceneRoot.clone(true);
         orbitScene.position.sub(center);
-        orbitScene.scale.setScalar(orbitTargetDiameter / maxDim);
+        orbitScene.scale.setScalar(orbitTargetDiameter / sourceDiameter);
         loadedOrbitPlanetMesh = orbitScene;
         planetAssetGroup.add(loadedOrbitPlanetMesh);
 
         const surfaceScene = sceneRoot.clone(true);
         surfaceScene.position.sub(center);
-        surfaceScene.scale.setScalar(surfaceTargetDiameter / maxDim);
+        surfaceScene.scale.setScalar(surfaceTargetDiameter / sourceDiameter);
         loadedSurfacePlanetMesh = surfaceScene;
         surfacePlanetAssetGroup.add(loadedSurfacePlanetMesh);
       }
