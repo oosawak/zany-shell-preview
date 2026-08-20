@@ -39,6 +39,24 @@
       </div>
     </div>
 
+    <div class="mode-switcher" aria-label="モード切り替え">
+      <button class="sidebar-btn mode-switch-btn" id="btn-distraction" title="Desktop">
+        <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/></svg>
+        <span class="sidebar-btn-label">Desktop</span>
+      </button>
+      <button class="sidebar-btn mode-switch-btn" id="btn-avatar-mode" title="Avatar">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="8.5" r="3.1"></circle>
+          <path d="M6.5 18.5c1.2-3 3.5-4.5 5.5-4.5s4.3 1.5 5.5 4.5"></path>
+        </svg>
+        <span class="sidebar-btn-label">Avatar</span>
+      </button>
+      <button class="sidebar-btn mode-switch-btn" id="btn-ai-dock" title="AI Dock">
+        <svg viewBox="0 0 24 24"><path d="M6 6.5h12v11H6z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 10h6M9 13h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span class="sidebar-btn-label">AI Dock</span>
+      </button>
+    </div>
+
     <!-- Top Right: Pomodoro Widget -->
     <div class="top-right-panel">
       <!-- Pomodoro Timer Circular Widget -->
@@ -106,9 +124,6 @@
       </button>
       <button class="sidebar-btn" id="btn-calendar" title="カレンダー">
         <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z" fill="currentColor"/></svg>
-      </button>
-      <button class="sidebar-btn" id="btn-distraction" title="集中表示モード (UI切り替え)">
-        <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/></svg>
       </button>
       <button class="sidebar-btn" id="btn-ssh" title="SSHターミナル">
         <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8h16v10zM6.5 10.5l3 2.5-3 2.5V10.5zM11 15h6v1.5h-6V15z" fill="currentColor"/></svg>
@@ -749,7 +764,7 @@
               <path d="M8 18.5h8"></path>
             </svg>
           </div>
-          <div class="launcher-label">AI</div>
+          <div class="launcher-label">AI Dock</div>
         </button>
         <button class="launcher-item" data-app="ssh">
           <div class="launcher-icon">
@@ -761,6 +776,133 @@
           </div>
           <div class="launcher-label">SSH</div>
         </button>
+      </div>
+    </div>
+
+    <!-- Right Side Drawer: AI Dock -->
+    <div class="ai-dock-panel" id="ai-dock-panel">
+      <div class="ai-dock-header">
+        <div class="ai-dock-titlebar">
+          <h3>AI Dock</h3>
+          <span class="ai-dock-drag-hint">drag</span>
+        </div>
+        <div class="ai-dock-mode-switcher" aria-label="AI Dock モード切り替え">
+          <button class="ai-dock-mode-btn" id="dock-desktop-btn" type="button">Desktop</button>
+          <button class="ai-dock-mode-btn" id="dock-avatar-btn" type="button">Avatar</button>
+          <button class="ai-dock-mode-btn active" id="dock-ai-dock-btn" type="button">AI Dock</button>
+        </div>
+        <button class="todo-close-btn" id="ai-dock-close-btn">&times;</button>
+      </div>
+
+      <div class="ai-dock-statusbar">
+        <span class="ai-dock-status" id="ai-dock-status">待機中</span>
+        <span class="ai-dock-current-template" id="ai-dock-current-template">仕様確認</span>
+      </div>
+
+      <div class="ai-dock-body">
+        <div class="ai-dock-actions">
+          <button class="ai-dock-action-button" data-ai-dock-action="new" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+            <span>新規</span>
+          </button>
+          <button class="ai-dock-action-button" data-ai-dock-action="send" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l16-8-6 16-2.5-6.2L4 12z"></path></svg>
+            <span>送信</span>
+          </button>
+          <button class="ai-dock-action-button" data-ai-dock-action="stop" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"></rect></svg>
+            <span>停止</span>
+          </button>
+          <button class="ai-dock-action-button" data-ai-dock-action="retry" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7H4V3"></path><path d="M4 7c1.8-2.9 5-4.5 8.6-4.1C17.5 3.4 21 7.3 21 12.2"></path><path d="M16 17h4v4"></path><path d="M20 17c-1.8 2.9-5 4.5-8.6 4.1C6.5 20.6 3 16.7 3 11.8"></path></svg>
+            <span>再送</span>
+          </button>
+          <button class="ai-dock-action-button" data-ai-dock-action="template" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4.5h12v15H6z"></path><path d="M9 8h6"></path><path d="M9 12h6"></path></svg>
+            <span>テンプレート</span>
+          </button>
+          <button class="ai-dock-action-button" data-ai-dock-action="summary" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14"></path><path d="M5 12h14"></path><path d="M5 18h9"></path></svg>
+            <span>要約</span>
+          </button>
+          <button class="ai-dock-action-button" data-ai-dock-action="memo" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5h7l3 3V19.5H7z"></path><path d="M10 4.5V8h3.5"></path><path d="M9 12h6"></path><path d="M9 15h6"></path></svg>
+            <span>メモ</span>
+          </button>
+          <button class="ai-dock-action-button" data-ai-dock-action="history" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7v5l3 2"></path><circle cx="12" cy="12" r="8"></circle></svg>
+            <span>履歴</span>
+          </button>
+          <button class="ai-dock-action-button" data-ai-dock-action="workflow" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h4v4H6z"></path><path d="M14 6h4v4h-4z"></path><path d="M14 14h4v4h-4z"></path><path d="M10 10l4 2"></path><path d="M10 14l4-2"></path></svg>
+            <span>ワークフロー</span>
+          </button>
+          <button class="ai-dock-action-button" data-ai-dock-action="settings" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 4.5v2"></path><path d="M12 17.5v2"></path><path d="M4.5 12h2"></path><path d="M17.5 12h2"></path></svg>
+            <span>設定</span>
+          </button>
+        </div>
+
+        <div class="ai-dock-main">
+          <section class="ai-dock-section">
+            <div class="ai-dock-section-title">テンプレート</div>
+            <div class="ai-dock-template-row">
+              <select id="ai-dock-template-select" class="ai-dock-select"></select>
+              <button id="ai-dock-apply-template" class="ai-dock-inline-btn" type="button">反映</button>
+            </div>
+            <div class="ai-dock-template-chips" id="ai-dock-recent-templates"></div>
+          </section>
+
+          <section class="ai-dock-section">
+            <div class="ai-dock-section-title">Prompt</div>
+            <textarea id="ai-dock-prompt" class="ai-dock-prompt" rows="7" placeholder="ここにプロンプトを入力..."></textarea>
+          </section>
+
+          <section class="ai-dock-section">
+            <div class="ai-dock-section-title">ワークフロー</div>
+            <div class="ai-dock-workflows" id="ai-dock-workflows"></div>
+          </section>
+
+          <section class="ai-dock-section">
+            <div class="ai-dock-section-title">履歴</div>
+            <div class="ai-dock-log" id="ai-dock-log"></div>
+          </section>
+
+          <section class="ai-dock-section ai-dock-settings-section">
+            <div class="ai-dock-section-title">Settings</div>
+            <label class="ai-dock-setting">
+              <input type="checkbox" id="ai-dock-keep-history" checked>
+              <span>履歴を保存</span>
+            </label>
+            <label class="ai-dock-setting">
+              <input type="checkbox" id="ai-dock-auto-clear" checked>
+              <span>送信後にクリア</span>
+            </label>
+            <label class="ai-dock-setting">
+              <input type="checkbox" id="ai-dock-show-timestamp" checked>
+              <span>時刻を表示</span>
+            </label>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mode-view ai-dock-view" id="ai-dock-view" aria-hidden="true"></div>
+  <div class="mode-view avatar-view" id="avatar-view" aria-hidden="true">
+    <div class="avatar-panel">
+      <div class="avatar-panel-header">
+        <div class="avatar-panel-title">Avatar Mode</div>
+        <div class="avatar-panel-subtitle">独自UI</div>
+      </div>
+      <div class="avatar-panel-switcher">
+        <button class="avatar-panel-btn" id="avatar-desktop-btn" type="button">Desktop</button>
+        <button class="avatar-panel-btn active" id="avatar-avatar-btn" type="button">Avatar</button>
+        <button class="avatar-panel-btn" id="avatar-ai-dock-btn" type="button">AI Dock</button>
+      </div>
+      <div class="avatar-panel-actions">
+        <button class="avatar-panel-action" id="avatar-3d-btn" type="button">3D設定</button>
+        <button class="avatar-panel-action" id="avatar-settings-btn" type="button">設定</button>
       </div>
     </div>
   </div>

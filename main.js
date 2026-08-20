@@ -30,6 +30,8 @@ const LANGUAGES = {
     settings_tab_3d: '3D',
     settings_theme_general: '全体テーマ',
     settings_theme_customization: 'テーマカスタマイズ',
+    mode_desktop: 'デスクトップモード',
+    mode_avatar: 'アバターモード',
     settings_media_bgm: 'BGM',
     settings_features_title: '機能のオン / オフ',
     settings_3d_vrm_title: 'VRMアバター',
@@ -110,6 +112,48 @@ const LANGUAGES = {
     launcher_editor: 'エディタ',
     launcher_filemanager: 'ファイル',
     launcher_calculator: '計算機',
+    launcher_ai: 'AI Dock',
+    launcher_mascot: 'マスコット起動',
+    ai_dock_title: 'AI Dock',
+    ai_dock_status_idle: '待機中',
+    ai_dock_status_ready: '入力待ち',
+    ai_dock_status_sending: '送信中',
+    ai_dock_status_stopped: '停止中',
+    ai_dock_section_templates: 'テンプレート',
+    ai_dock_section_prompt: 'Prompt',
+    ai_dock_section_workflow: 'ワークフロー',
+    ai_dock_section_history: '履歴',
+    ai_dock_section_settings: 'Settings',
+    ai_dock_template_apply: '反映',
+    ai_dock_prompt_placeholder: 'ここにプロンプトを入力...',
+    ai_dock_setting_keep_history: '履歴を保存',
+    ai_dock_setting_auto_clear: '送信後にクリア',
+    ai_dock_setting_show_timestamp: '時刻を表示',
+    ai_dock_action_new: '新規',
+    ai_dock_action_send: '送信',
+    ai_dock_action_stop: '停止',
+    ai_dock_action_retry: '再送',
+    ai_dock_action_template: 'テンプレート',
+    ai_dock_action_summary: '要約',
+    ai_dock_action_memo: 'メモ',
+    ai_dock_action_history: '履歴',
+    ai_dock_action_workflow: 'ワークフロー',
+    ai_dock_action_settings: '設定',
+    ai_dock_template_spec: '仕様確認',
+    ai_dock_template_plan: '実装方針',
+    ai_dock_template_review: '差分レビュー',
+    ai_dock_template_progress: '進捗更新',
+    ai_dock_template_summary: '要約',
+    ai_dock_template_memo: 'メモ',
+    ai_dock_workflow_review: 'レビュー',
+    ai_dock_workflow_implement: '実装',
+    ai_dock_workflow_summary: '要約',
+    ai_dock_workflow_memo: 'メモ',
+    ai_dock_log_empty: '履歴はまだありません',
+    ai_dock_log_user: '入力',
+    ai_dock_log_system: 'システム',
+    ai_dock_log_template: 'テンプレート',
+    ai_dock_log_workflow: 'ワークフロー',
 
     // Common
     none: 'なし',
@@ -182,6 +226,8 @@ const LANGUAGES = {
     theme_saved_alert: 'Theme saved successfully',
     theme_save_error_required: 'Theme ID and name are required',
     theme_save_error: 'Save error:',
+    mode_desktop: 'Desktop Mode',
+    mode_avatar: 'Avatar Mode',
 
     // Launcher
     launcher_title: 'Launcher',
@@ -190,6 +236,48 @@ const LANGUAGES = {
     launcher_editor: 'Editor',
     launcher_filemanager: 'File Manager',
     launcher_calculator: 'Calculator',
+    launcher_ai: 'AI Dock',
+    launcher_mascot: 'Launch Mascot',
+    ai_dock_title: 'AI Dock',
+    ai_dock_status_idle: 'Idle',
+    ai_dock_status_ready: 'Ready',
+    ai_dock_status_sending: 'Sending',
+    ai_dock_status_stopped: 'Stopped',
+    ai_dock_section_templates: 'Templates',
+    ai_dock_section_prompt: 'Prompt',
+    ai_dock_section_workflow: 'Workflow',
+    ai_dock_section_history: 'History',
+    ai_dock_section_settings: 'Settings',
+    ai_dock_template_apply: 'Apply',
+    ai_dock_prompt_placeholder: 'Enter a prompt here...',
+    ai_dock_setting_keep_history: 'Keep history',
+    ai_dock_setting_auto_clear: 'Clear after send',
+    ai_dock_setting_show_timestamp: 'Show timestamp',
+    ai_dock_action_new: 'New',
+    ai_dock_action_send: 'Send',
+    ai_dock_action_stop: 'Stop',
+    ai_dock_action_retry: 'Retry',
+    ai_dock_action_template: 'Template',
+    ai_dock_action_summary: 'Summary',
+    ai_dock_action_memo: 'Memo',
+    ai_dock_action_history: 'History',
+    ai_dock_action_workflow: 'ワークフロー',
+    ai_dock_action_settings: 'Settings',
+    ai_dock_template_spec: 'Spec Check',
+    ai_dock_template_plan: 'Implementation Plan',
+    ai_dock_template_review: 'Diff Review',
+    ai_dock_template_progress: 'Progress Update',
+    ai_dock_template_summary: 'Summary',
+    ai_dock_template_memo: 'Memo',
+    ai_dock_workflow_review: 'Review',
+    ai_dock_workflow_implement: 'Implement',
+    ai_dock_workflow_summary: 'Summary',
+    ai_dock_workflow_memo: 'Memo',
+    ai_dock_log_empty: 'No history yet',
+    ai_dock_log_user: 'Input',
+    ai_dock_log_system: 'System',
+    ai_dock_log_template: 'Template',
+    ai_dock_log_workflow: 'Workflow',
 
     // Common
     none: 'None',
@@ -214,6 +302,36 @@ function setLanguage(lang) {
   updateAllUITexts();
 }
 
+function setText(selector, key) {
+  const el = document.querySelector(selector);
+  if (el) el.textContent = t(key);
+}
+
+function setTextAll(selector, keys) {
+  document.querySelectorAll(selector).forEach((el, index) => {
+    const key = typeof keys === "function" ? keys(el, index) : keys[index];
+    if (key) el.textContent = t(key);
+  });
+}
+
+function setPlaceholder(selector, key) {
+  const el = document.querySelector(selector);
+  if (el) el.placeholder = t(key);
+}
+
+function setTitle(selector, key) {
+  const el = document.querySelector(selector);
+  if (el) el.title = t(key);
+}
+
+function setOptionTexts(selector, valueToKey) {
+  const select = document.querySelector(selector);
+  if (!select) return;
+  select.querySelectorAll("option").forEach(option => {
+    const key = valueToKey[option.value];
+    if (key) option.textContent = t(key);
+  });
+}
 
 function updateAllUITexts() {
   document.documentElement.lang = currentLanguage;
@@ -321,13 +439,23 @@ function updateAllUITexts() {
   setTitle('#btn-todo', 'todo_title');
   setTitle('#btn-stats', 'settings_features_title');
   setTitle('#btn-calendar', 'launcher_calculator');
-  setTitle('#btn-distraction', 'settings_theme_customization');
+  setText('#launcher-panel .launcher-item[data-app="ai"] .launcher-label', 'launcher_ai');
+  setTitle('#btn-distraction', 'mode_desktop');
+  setTitle('#btn-avatar-mode', 'mode_avatar');
   setTitle('#btn-ssh', 'ssh_title');
   setTitle('#btn-workshop', 'workshop_title');
   setTitle('#btn-theme-editor', 'theme_editor_title');
+  setTitle('#btn-ai-dock', 'ai_dock_title');
   setTitle('#btn-launcher', 'launcher_title');
   setTitle('#btn-settings', 'settings_title');
   setTitle('#btn-close', 'close');
+  setText('#ai-dock-panel h3', 'ai_dock_title');
+  setTextAll('.ai-dock-section-title', ['ai_dock_section_templates', 'ai_dock_section_prompt', 'ai_dock_section_workflow', 'ai_dock_section_history', 'ai_dock_section_settings']);
+  setTextAll('.ai-dock-action-button span', ['ai_dock_action_new', 'ai_dock_action_send', 'ai_dock_action_stop', 'ai_dock_action_retry', 'ai_dock_action_template', 'ai_dock_action_summary', 'ai_dock_action_memo', 'ai_dock_action_history', 'ai_dock_action_workflow', 'ai_dock_action_settings']);
+  setText('#ai-dock-apply-template', 'ai_dock_template_apply');
+  setPlaceholder('#ai-dock-prompt', 'ai_dock_prompt_placeholder');
+  setTextAll('.ai-dock-setting span', ['ai_dock_setting_keep_history', 'ai_dock_setting_auto_clear', 'ai_dock_setting_show_timestamp']);
+  if (typeof renderAiDock === 'function') renderAiDock();
   setTitle('#btn-scene', 'settings_theme');
   setTitle('#btn-rain', 'theme_bg_preview');
   setTitle('#btn-sound', 'theme_color_text');
@@ -402,28 +530,10 @@ async function listFilesFromDB(category, id) {
   return new Promise((resolve, reject) => {
     const request = store.getAll();
     request.onsuccess = () => {
-      const files = request.result
-        .filter(f => f.id.startsWith(prefix))
-        .map(f => f.filename);
+      const files = request.result.filter(f => f.id.startsWith(prefix)).map(f => f.filename);
       resolve(files);
     };
     request.onerror = () => reject(request.error);
-  });
-}
-
-async function deleteFilesFromDB(category, id) {
-  const db = await openWorkshopDB();
-  const tx = db.transaction('files', 'readwrite');
-  const store = tx.objectStore('files');
-  const prefix = `${category}/${id}/`;
-  return new Promise((resolve, reject) => {
-    const request = store.getAll();
-    request.onsuccess = () => {
-      const toDelete = request.result.filter(f => f.id.startsWith(prefix));
-      toDelete.forEach(f => store.delete(f.id));
-    };
-    tx.oncomplete = resolve;
-    tx.onerror = () => reject(tx.error);
   });
 }
 
@@ -433,22 +543,18 @@ async function deleteFilesFromDB(category, id) {
 function updateClock() {
   const now = new Date();
   const timeZone = "Asia/Tokyo";
-  const parts = Object.fromEntries(new Intl.DateTimeFormat("en-US", {
-    timeZone, year: "numeric", month: "2-digit", day: "2-digit",
-    hour: "2-digit", minute: "2-digit", hour12: true
-  }).formatToParts(now).map(({ type, value }) => [type, value]));
+  const parts = Object.fromEntries(new Intl.DateTimeFormat("en-US", { timeZone, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: true }).formatToParts(now).map(({ type, value }) => [type, value]));
   const weekdayName = new Intl.DateTimeFormat("en-US", { timeZone, weekday: "short" }).format(now);
   const weekdayIndex = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(weekdayName);
   const weekdaysArray = t("weekdays").split ? t("weekdays") : LANGUAGES[currentLanguage].weekdays;
-
   document.getElementById("time-text").textContent = `${parts.hour}:${parts.minute}`;
   document.getElementById("ampm-text").textContent = parts.dayPeriod === "AM" ? t("time_period_am") : t("time_period_pm");
   document.getElementById("date-text").textContent = `${parts.year}/${parts.month}/${parts.day}(${weekdaysArray[weekdayIndex]})`;
 }
 setInterval(updateClock, 1000);
 updateClock();
-setInterval(updateClock, 1000);
-updateClock();
+
+// ==========================================
 // 2. POMODORO TIMER ENGINE
 // ==========================================
 let pomoState = 'idle'; // 'idle', 'working', 'breaking', 'paused'
@@ -1433,19 +1539,7 @@ async function loadGlbPoseFromWorkshop(itemId) {
 }
 
 function applyVrmPose() {
-  if (!currentVrm || !currentVrm.humanoid) return;
-  const theme = THEME_PRESETS[currentScene];
-  if (!theme || !theme.vrm || !theme.vrm.pose) return;
-
-  const pose = theme.vrm.pose;
-  Object.entries(pose).forEach(([boneName, rot]) => {
-    const bone = currentVrm.humanoid.getNormalizedBoneNode(boneName);
-    if (bone) {
-      bone.rotation.x = rot.x;
-      bone.rotation.y = rot.y;
-      bone.rotation.z = rot.z;
-    }
-  });
+  applyVrmPoseForDisplayMode();
 }
 
 // Apply VRM pose from current theme (integrated approach for #32)
@@ -1471,6 +1565,87 @@ function applyVrmPoseFromTheme() {
   }
 }
 
+const AVATAR_MODE_VRM_POSE = {
+  hips: { x: 0.0, y: 0, z: 0 },
+  spine: { x: -0.02, y: 0, z: 0 },
+  chest: { x: 0.02, y: 0, z: 0 },
+  neck: { x: 0.01, y: 0, z: 0 },
+  leftUpperLeg: { x: 0.02, y: 0, z: 0.01 },
+  rightUpperLeg: { x: 0.02, y: 0, z: -0.01 },
+  leftLowerLeg: { x: 0.01, y: 0, z: 0 },
+  rightLowerLeg: { x: 0.01, y: 0, z: 0 },
+  leftUpperArm: { x: -0.45, y: 0.18, z: -0.42 },
+  rightUpperArm: { x: -0.45, y: -0.18, z: 0.42 },
+  leftLowerArm: { x: 1.05, y: 0, z: 0.1 },
+  rightLowerArm: { x: 1.05, y: 0, z: -0.1 },
+  leftHand: { x: 0.18, y: 0, z: 0.16 },
+  rightHand: { x: 0.18, y: 0, z: -0.16 },
+  head: { x: 0, y: 0, z: 0 }
+};
+
+function applyAvatarModeVrmPose() {
+  if (!currentVrm || !currentVrm.humanoid) return;
+  Object.entries(AVATAR_MODE_VRM_POSE).forEach(([boneName, rot]) => {
+    const bone = currentVrm.humanoid.getNormalizedBoneNode(boneName);
+    if (bone) {
+      bone.rotation.x = rot.x || 0;
+      bone.rotation.y = rot.y || 0;
+      bone.rotation.z = rot.z || 0;
+    }
+  });
+}
+
+function applyVrmPoseForDisplayMode() {
+  if (displayMode === 'avatar') {
+    applyAvatarModeVrmPose();
+  } else {
+    applyVrmPoseFromTheme();
+  }
+}
+
+function animateAvatarModeVrmPose(elapsedTime) {
+  if (!currentVrm || !currentVrm.humanoid) return;
+  applyAvatarModeVrmPose();
+
+  const chest = currentVrm.humanoid.getNormalizedBoneNode('chest');
+  if (chest) {
+    chest.rotation.x += Math.sin(elapsedTime * 1.15) * 0.018;
+    chest.rotation.y += Math.sin(elapsedTime * 0.8) * 0.01;
+  }
+
+  const head = currentVrm.humanoid.getNormalizedBoneNode('head');
+  if (head) {
+    head.rotation.y += Math.sin(elapsedTime * 0.7) * 0.015;
+    head.rotation.x += Math.sin(elapsedTime * 0.9) * 0.008;
+  }
+
+  const leftUpperArm = currentVrm.humanoid.getNormalizedBoneNode('leftUpperArm');
+  const rightUpperArm = currentVrm.humanoid.getNormalizedBoneNode('rightUpperArm');
+  if (leftUpperArm && rightUpperArm) {
+    const sway = Math.sin(elapsedTime * 1.2) * 0.01;
+    leftUpperArm.rotation.x += sway * 0.25;
+    rightUpperArm.rotation.x -= sway * 0.25;
+  }
+
+  const leftLowerArm = currentVrm.humanoid.getNormalizedBoneNode('leftLowerArm');
+  const rightLowerArm = currentVrm.humanoid.getNormalizedBoneNode('rightLowerArm');
+  if (leftLowerArm && rightLowerArm) {
+    leftLowerArm.rotation.z += 0.0;
+    rightLowerArm.rotation.z += 0.0;
+  }
+}
+
+function applyAvatarModePresentation() {
+  if (!vrmScene3D || !vrmCamera3D) return;
+
+  resetModelToBaseTransform(currentVrmRoot);
+  if (displayMode === 'avatar') {
+    if (currentVrmRoot) frameAvatarModel(currentVrmRoot, vrmCamera3D);
+  } else if (currentVrmRoot) {
+    frameVrmModel(currentVrmRoot, vrmCamera3D);
+  }
+}
+
 function applyGlbPoseFromTheme() {
   if (!currentGlbRoot) return;
   const theme = THEME_PRESETS[currentScene];
@@ -1487,7 +1662,8 @@ function applyGlbPoseFromTheme() {
 }
 
 let currentVrmExpression = 'sleepy';
-let vrmEyeBlinkEnabled = true;
+const VRM_AUTO_BLINK_ENABLED = false;
+let vrmEyeBlinkEnabled = VRM_AUTO_BLINK_ENABLED;
 let currentVrmBehaviorProfile = 'neutral'; // tracking current behavior state
 
 function applyVrmExpression() {
@@ -1496,7 +1672,7 @@ function applyVrmExpression() {
   if (!theme || !theme.vrm) return;
 
   currentVrmExpression = theme.vrm.expression || 'neutral';
-  vrmEyeBlinkEnabled = theme.vrm.eyeBlink !== false;
+  vrmEyeBlinkEnabled = VRM_AUTO_BLINK_ENABLED && theme.vrm.eyeBlink !== false;
 
   const expr = currentVrmExpression;
   currentVrm.expressionManager.setValue('happy', expr === 'happy' ? 1.0 : 0.0);
@@ -1560,7 +1736,7 @@ function applyVrmBehaviorProfile(profileName) {
   // Apply expression
   if (profile.expression && currentVrm.expressionManager) {
     currentVrmExpression = profile.expression;
-    vrmEyeBlinkEnabled = profile.eyeBlink !== false;
+    vrmEyeBlinkEnabled = VRM_AUTO_BLINK_ENABLED && profile.eyeBlink !== false;
 
     const expr = profile.expression;
     currentVrm.expressionManager.setValue('happy', expr === 'happy' ? 1.0 : 0.0);
@@ -1629,7 +1805,7 @@ function applyScene() {
   localStorage.setItem('scene', currentScene);
   update3DLights();
   // Apply VRM behavior profile (pose + expression integrated) for #32
-  applyVrmPoseFromTheme();
+  applyVrmPoseForDisplayMode();
   applyGlbPoseFromTheme();
   applyGlbAnimation();
 }
@@ -1646,12 +1822,17 @@ btnScene.addEventListener('click', () => {
 // ==========================================
 const launcherPanel = document.getElementById('launcher-panel');
 const btnLauncher = document.getElementById('btn-launcher');
+const btnAiDock = document.getElementById('btn-ai-dock');
 const launcherCloseBtn = document.getElementById('launcher-close-btn');
 
 btnLauncher.addEventListener('click', () => {
   closeOtherDrawers(launcherPanel);
   launcherPanel.classList.toggle('active');
   btnLauncher.classList.toggle('active', launcherPanel.classList.contains('active'));
+});
+
+btnAiDock.addEventListener('click', () => {
+  setDisplayMode('ai-dock');
 });
 
 launcherCloseBtn.addEventListener('click', () => {
@@ -1693,7 +1874,9 @@ function launchApp(appName) {
       btnLauncher.classList.remove('active');
       break;
     case 'ai':
-      alert('AIは準備中です');
+      setDisplayMode('ai-dock');
+      launcherPanel.classList.remove('active');
+      btnLauncher.classList.remove('active');
       break;
     case 'ssh':
       sshPanel.classList.add('active');
@@ -1707,21 +1890,511 @@ function launchApp(appName) {
 }
 
 // ==========================================
+// 7.6 AI DOCK
+// ==========================================
+const aiDockPanel = document.getElementById('ai-dock-panel');
+const aiDockCloseBtn = document.getElementById('ai-dock-close-btn');
+const aiDockTemplateSelect = document.getElementById('ai-dock-template-select');
+const aiDockApplyTemplateBtn = document.getElementById('ai-dock-apply-template');
+const aiDockPrompt = document.getElementById('ai-dock-prompt');
+const aiDockLog = document.getElementById('ai-dock-log');
+const aiDockRecentTemplates = document.getElementById('ai-dock-recent-templates');
+const aiDockWorkflows = document.getElementById('ai-dock-workflows');
+const aiDockKeepHistory = document.getElementById('ai-dock-keep-history');
+const aiDockAutoClear = document.getElementById('ai-dock-auto-clear');
+const aiDockShowTimestamp = document.getElementById('ai-dock-show-timestamp');
+const AI_DOCK_STORAGE_KEY = 'aiDockState';
+const AI_DOCK_MAX_LOG = 60;
+
+const AI_DOCK_TEMPLATES = [
+  { id: 'spec', labelKey: 'ai_dock_template_spec', prompt: '仕様を確認して、足りない点と前提を箇条書きでまとめてください。' },
+  { id: 'plan', labelKey: 'ai_dock_template_plan', prompt: 'この作業の実装方針を、変更順と注意点つきで提案してください。' },
+  { id: 'review', labelKey: 'ai_dock_template_review', prompt: 'この差分をレビューして、リスクと改善点を優先度順で挙げてください。' },
+  { id: 'progress', labelKey: 'ai_dock_template_progress', prompt: 'PROGRESS.md に入れる進捗文を、確認中前提で簡潔にまとめてください。' },
+  { id: 'summary', labelKey: 'ai_dock_template_summary', prompt: '直近の会話内容を短く要約してください。' },
+  { id: 'memo', labelKey: 'ai_dock_template_memo', prompt: '作業メモとして残すべき要点を整理してください。' }
+];
+
+const AI_DOCK_WORKFLOWS = [
+  { id: 'review', labelKey: 'ai_dock_workflow_review', templateId: 'review', prompt: 'まず差分をレビューして、問題点と確認事項を整理してください。' },
+  { id: 'implement', labelKey: 'ai_dock_workflow_implement', templateId: 'plan', prompt: '実装方針を決めて、次に触るファイルと変更順を示してください。' },
+  { id: 'summary', labelKey: 'ai_dock_workflow_summary', templateId: 'summary', prompt: '会話の要点と次のアクションを短くまとめてください。' },
+  { id: 'memo', labelKey: 'ai_dock_workflow_memo', templateId: 'memo', prompt: '引き継ぎ用のメモを作成してください。' }
+];
+
+const AI_DOCK_DEFAULT_STATE = {
+  selectedTemplate: 'spec',
+  recentTemplates: ['spec', 'plan', 'review'],
+  workflowOrder: ['review', 'implement', 'summary', 'memo'],
+  prompt: '',
+  lastPrompt: '',
+  history: [],
+  settings: {
+    keepHistory: true,
+    autoClear: true,
+    showTimestamp: true
+  }
+};
+
+let aiDockState = loadAiDockState();
+
+function cloneAiDockDefaults() {
+  return {
+    selectedTemplate: AI_DOCK_DEFAULT_STATE.selectedTemplate,
+    recentTemplates: [...AI_DOCK_DEFAULT_STATE.recentTemplates],
+    workflowOrder: [...AI_DOCK_DEFAULT_STATE.workflowOrder],
+    prompt: '',
+    lastPrompt: '',
+    history: [],
+    settings: { ...AI_DOCK_DEFAULT_STATE.settings }
+  };
+}
+
+function normalizeAiDockIds(values, validIds, fallback) {
+  const seen = new Set();
+  const result = [];
+  (Array.isArray(values) ? values : []).forEach(id => {
+    if (validIds.includes(id) && !seen.has(id)) {
+      seen.add(id);
+      result.push(id);
+    }
+  });
+  fallback.forEach(id => {
+    if (validIds.includes(id) && !seen.has(id)) {
+      seen.add(id);
+      result.push(id);
+    }
+  });
+  return result;
+}
+
+function loadAiDockState() {
+  const fallback = cloneAiDockDefaults();
+  try {
+    const raw = JSON.parse(localStorage.getItem(AI_DOCK_STORAGE_KEY) || 'null');
+    if (!raw || typeof raw !== 'object') return fallback;
+    const templateIds = AI_DOCK_TEMPLATES.map(template => template.id);
+    const workflowIds = AI_DOCK_WORKFLOWS.map(workflow => workflow.id);
+    const state = {
+      ...fallback,
+      ...raw,
+      settings: { ...fallback.settings, ...(raw.settings || {}) }
+    };
+    state.selectedTemplate = templateIds.includes(state.selectedTemplate) ? state.selectedTemplate : fallback.selectedTemplate;
+    state.recentTemplates = normalizeAiDockIds(state.recentTemplates, templateIds, fallback.recentTemplates);
+    state.workflowOrder = normalizeAiDockIds(state.workflowOrder, workflowIds, fallback.workflowOrder);
+    state.history = Array.isArray(raw.history) ? raw.history.slice(-AI_DOCK_MAX_LOG) : [];
+    state.prompt = typeof raw.prompt === 'string' ? raw.prompt : '';
+    state.lastPrompt = typeof raw.lastPrompt === 'string' ? raw.lastPrompt : '';
+    return state;
+  } catch {
+    return fallback;
+  }
+}
+
+function saveAiDockState() {
+  const payload = {
+    selectedTemplate: aiDockState.selectedTemplate,
+    recentTemplates: aiDockState.recentTemplates,
+    workflowOrder: aiDockState.workflowOrder,
+    prompt: aiDockState.prompt,
+    lastPrompt: aiDockState.lastPrompt,
+    history: aiDockState.settings.keepHistory ? aiDockState.history.slice(-AI_DOCK_MAX_LOG) : [],
+    settings: aiDockState.settings
+  };
+  localStorage.setItem(AI_DOCK_STORAGE_KEY, JSON.stringify(payload));
+}
+
+function padAiDockNumber(value) {
+  return String(value).padStart(2, '0');
+}
+
+function formatAiDockTimestamp(value) {
+  const date = value ? new Date(value) : new Date();
+  return `${padAiDockNumber(date.getHours())}:${padAiDockNumber(date.getMinutes())}`;
+}
+
+function getAiDockTemplate(templateId) {
+  return AI_DOCK_TEMPLATES.find(template => template.id === templateId) || null;
+}
+
+function getAiDockWorkflow(workflowId) {
+  return AI_DOCK_WORKFLOWS.find(workflow => workflow.id === workflowId) || null;
+}
+
+function updateAiDockStatus(statusKey, detail = '') {
+  if (!document.getElementById('ai-dock-status')) return;
+  const statusEl = document.getElementById('ai-dock-status');
+  const detailText = detail ? ` · ${detail}` : '';
+  statusEl.textContent = `${t(statusKey)}${detailText}`;
+}
+
+function renderAiDockTemplates() {
+  if (!aiDockTemplateSelect) return;
+  const selectedTemplate = getAiDockTemplate(aiDockState.selectedTemplate) || AI_DOCK_TEMPLATES[0];
+  aiDockTemplateSelect.innerHTML = AI_DOCK_TEMPLATES.map(template => `
+    <option value="${template.id}" ${template.id === selectedTemplate.id ? 'selected' : ''}>${t(template.labelKey)}</option>
+  `).join('');
+  aiDockTemplateSelect.value = selectedTemplate.id;
+
+  const currentTemplate = document.getElementById('ai-dock-current-template');
+  if (currentTemplate) currentTemplate.textContent = t(selectedTemplate.labelKey);
+
+  if (aiDockRecentTemplates) {
+    aiDockRecentTemplates.innerHTML = aiDockState.recentTemplates.map(templateId => {
+      const template = getAiDockTemplate(templateId);
+      if (!template) return '';
+      return `<button type="button" class="ai-dock-chip${template.id === selectedTemplate.id ? ' active' : ''}" data-template-id="${template.id}">${t(template.labelKey)}</button>`;
+    }).join('');
+  }
+}
+
+function renderAiDockWorkflows() {
+  if (!aiDockWorkflows) return;
+  aiDockWorkflows.innerHTML = aiDockState.workflowOrder.map(workflowId => {
+    const workflow = getAiDockWorkflow(workflowId);
+    if (!workflow) return '';
+    return `<button type="button" class="ai-dock-workflow-button" data-workflow-id="${workflow.id}">${t(workflow.labelKey)}</button>`;
+  }).join('');
+}
+
+function renderAiDockLog() {
+  if (!aiDockLog) return;
+  if (!aiDockState.history.length) {
+    aiDockLog.innerHTML = `<div class="ai-dock-log-empty">${t('ai_dock_log_empty')}</div>`;
+    return;
+  }
+
+  aiDockLog.innerHTML = aiDockState.history.map(entry => `
+    <div class="ai-dock-log-entry" data-kind="${escapeHtml(entry.kind || 'system')}">
+      <div class="ai-dock-log-meta">${aiDockState.settings.showTimestamp ? formatAiDockTimestamp(entry.timestamp) + ' · ' : ''}${escapeHtml(t(`ai_dock_log_${entry.kind || 'system'}`) || entry.kind || '')}</div>
+      <div class="ai-dock-log-text">${escapeHtml(entry.message || '')}</div>
+    </div>
+  `).join('');
+  aiDockLog.scrollTop = aiDockLog.scrollHeight;
+}
+
+function renderAiDock() {
+  if (!aiDockPanel) return;
+  aiDockKeepHistory.checked = aiDockState.settings.keepHistory;
+  aiDockAutoClear.checked = aiDockState.settings.autoClear;
+  aiDockShowTimestamp.checked = aiDockState.settings.showTimestamp;
+  aiDockPrompt.value = aiDockState.prompt;
+  renderAiDockTemplates();
+  renderAiDockWorkflows();
+  renderAiDockLog();
+  updateAiDockStatus('ai_dock_status_ready');
+}
+
+function setAiDockTemplate(templateId, options = {}) {
+  const template = getAiDockTemplate(templateId);
+  if (!template) return;
+  aiDockState.selectedTemplate = template.id;
+  aiDockState.recentTemplates = [template.id, ...aiDockState.recentTemplates.filter(id => id !== template.id)].slice(0, 5);
+  aiDockState.prompt = template.prompt;
+  aiDockPrompt.value = template.prompt;
+  appendAiDockLog('template', `${t(template.labelKey)}: ${template.prompt}`);
+  updateAiDockStatus('ai_dock_status_ready', t(template.labelKey));
+  if (!options.skipSave) saveAiDockState();
+  renderAiDockTemplates();
+}
+
+function applyAiDockWorkflow(workflowId) {
+  const workflow = getAiDockWorkflow(workflowId);
+  if (!workflow) return;
+  aiDockState.workflowOrder = [workflow.id, ...aiDockState.workflowOrder.filter(id => id !== workflow.id)];
+  if (workflow.templateId) {
+    setAiDockTemplate(workflow.templateId, { skipSave: true });
+  }
+  aiDockState.prompt = workflow.prompt;
+  aiDockPrompt.value = workflow.prompt;
+  appendAiDockLog('workflow', `${t(workflow.labelKey)}: ${workflow.prompt}`);
+  updateAiDockStatus('ai_dock_status_ready', t(workflow.labelKey));
+  saveAiDockState();
+  renderAiDockWorkflows();
+  renderAiDockTemplates();
+}
+
+function appendAiDockLog(kind, message) {
+  aiDockState.history.push({
+    kind,
+    message,
+    timestamp: new Date().toISOString()
+  });
+  aiDockState.history = aiDockState.history.slice(-AI_DOCK_MAX_LOG);
+  if (aiDockState.settings.keepHistory) saveAiDockState();
+  renderAiDockLog();
+}
+
+function cycleAiDockTemplate(step = 1) {
+  const index = AI_DOCK_TEMPLATES.findIndex(template => template.id === aiDockState.selectedTemplate);
+  const nextIndex = (index + step + AI_DOCK_TEMPLATES.length) % AI_DOCK_TEMPLATES.length;
+  setAiDockTemplate(AI_DOCK_TEMPLATES[nextIndex].id);
+}
+
+function sendAiDockPrompt() {
+  const prompt = aiDockPrompt.value.trim();
+  if (!prompt) {
+    updateAiDockStatus('ai_dock_status_idle');
+    return;
+  }
+
+  aiDockState.prompt = prompt;
+  aiDockState.lastPrompt = prompt;
+  appendAiDockLog('user', prompt);
+  updateAiDockStatus('ai_dock_status_sending');
+  if (aiDockState.settings.autoClear) {
+    aiDockState.prompt = '';
+    aiDockPrompt.value = '';
+  }
+  appendAiDockLog('system', t('ai_dock_status_sending'));
+  saveAiDockState();
+  if (aiDockState.settings.autoClear) renderAiDockTemplates();
+}
+
+function retryAiDockPrompt() {
+  if (!aiDockState.lastPrompt) {
+    updateAiDockStatus('ai_dock_status_idle');
+    return;
+  }
+  aiDockPrompt.value = aiDockState.lastPrompt;
+  aiDockState.prompt = aiDockState.lastPrompt;
+  sendAiDockPrompt();
+}
+
+function handleAiDockAction(action) {
+  switch (action) {
+    case 'new':
+      aiDockState.prompt = '';
+      aiDockState.lastPrompt = '';
+      aiDockPrompt.value = '';
+      updateAiDockStatus('ai_dock_status_idle');
+      appendAiDockLog('system', t('ai_dock_status_idle'));
+      saveAiDockState();
+      break;
+    case 'send':
+      sendAiDockPrompt();
+      break;
+    case 'stop':
+      updateAiDockStatus('ai_dock_status_stopped');
+      appendAiDockLog('system', t('ai_dock_status_stopped'));
+      break;
+    case 'retry':
+      retryAiDockPrompt();
+      break;
+    case 'template':
+      cycleAiDockTemplate(1);
+      break;
+    case 'summary':
+      setAiDockTemplate('summary');
+      break;
+    case 'memo':
+      setAiDockTemplate('memo');
+      break;
+    case 'history':
+      aiDockLog?.scrollTo?.({ top: aiDockLog.scrollHeight, behavior: 'smooth' });
+      updateAiDockStatus('ai_dock_status_ready', t('ai_dock_section_history'));
+      break;
+    case 'workflow':
+      applyAiDockWorkflow(aiDockState.workflowOrder[0] || 'review');
+      break;
+    case 'settings':
+      aiDockKeepHistory?.focus();
+      updateAiDockStatus('ai_dock_status_ready', t('ai_dock_section_settings'));
+      break;
+    default:
+      break;
+  }
+}
+
+aiDockCloseBtn.addEventListener('click', () => {
+  setDisplayMode('desktop');
+});
+
+aiDockTemplateSelect.addEventListener('change', () => {
+  setAiDockTemplate(aiDockTemplateSelect.value);
+});
+
+aiDockApplyTemplateBtn.addEventListener('click', () => {
+  setAiDockTemplate(aiDockTemplateSelect.value);
+});
+
+aiDockPrompt.addEventListener('input', () => {
+  aiDockState.prompt = aiDockPrompt.value;
+  saveAiDockState();
+});
+
+aiDockKeepHistory.addEventListener('change', () => {
+  aiDockState.settings.keepHistory = aiDockKeepHistory.checked;
+  saveAiDockState();
+});
+
+aiDockAutoClear.addEventListener('change', () => {
+  aiDockState.settings.autoClear = aiDockAutoClear.checked;
+  saveAiDockState();
+});
+
+aiDockShowTimestamp.addEventListener('change', () => {
+  aiDockState.settings.showTimestamp = aiDockShowTimestamp.checked;
+  saveAiDockState();
+  renderAiDockLog();
+});
+
+aiDockRecentTemplates.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-template-id]');
+  if (!button) return;
+  setAiDockTemplate(button.dataset.templateId);
+});
+
+aiDockWorkflows.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-workflow-id]');
+  if (!button) return;
+  applyAiDockWorkflow(button.dataset.workflowId);
+});
+
+document.querySelectorAll('.ai-dock-action-button').forEach(button => {
+  button.addEventListener('click', () => handleAiDockAction(button.dataset.aiDockAction));
+});
+
+renderAiDock();
+
+// ==========================================
 // 8. DISTRACTION-FREE & SETTINGS
 // ==========================================
 const btnDistraction = document.getElementById('btn-distraction');
-let distractionMode = false;
+const btnAvatarMode = document.getElementById('btn-avatar-mode');
+const aiDockView = document.getElementById('ai-dock-view');
+const avatarView = document.getElementById('avatar-view');
+const aiDockTitlebar = document.getElementById('ai-dock-titlebar');
+const avatarDesktopBtn = document.getElementById('avatar-desktop-btn');
+const avatarAvatarBtn = document.getElementById('avatar-avatar-btn');
+const avatarAiDockBtn = document.getElementById('avatar-ai-dock-btn');
+const avatar3dBtn = document.getElementById('avatar-3d-btn');
+const avatarSettingsBtn = document.getElementById('avatar-settings-btn');
+const dockDesktopBtn = document.getElementById('dock-desktop-btn');
+const dockAvatarBtn = document.getElementById('dock-avatar-btn');
+const dockAiDockBtn = document.getElementById('dock-ai-dock-btn');
+const AI_DOCK_POSITION_KEY = 'aiDockPanelPosition';
+let aiDockDrag = null;
+const DISPLAY_MODE_STORAGE_KEY = 'displayMode';
+const DISPLAY_MODES = new Set(['desktop', 'avatar', 'ai-dock']);
+let displayMode = localStorage.getItem(DISPLAY_MODE_STORAGE_KEY) || 'desktop';
+if (!DISPLAY_MODES.has(displayMode)) displayMode = 'desktop';
+
+function setDisplayMode(nextMode, { persist = true } = {}) {
+  if (!DISPLAY_MODES.has(nextMode)) nextMode = 'desktop';
+  displayMode = nextMode;
+  if (persist) localStorage.setItem(DISPLAY_MODE_STORAGE_KEY, displayMode);
+
+  const avatarMode = displayMode === 'avatar';
+  const aiDockMode = displayMode === 'ai-dock';
+
+  features.mascot = avatarMode;
+  localStorage.setItem('features', JSON.stringify(features));
+  const mascotCheckbox = document.getElementById('feat-mascot');
+  if (mascotCheckbox) mascotCheckbox.checked = avatarMode;
+  if (aiDockView) aiDockView.setAttribute('aria-hidden', String(!aiDockMode));
+  if (avatarView) avatarView.setAttribute('aria-hidden', String(!avatarMode));
+
+  applyVisibilityModes();
+  if (aiDockPanel) aiDockPanel.classList.toggle('active', aiDockMode);
+  applyVrmSettings();
+  applyGlbSettings();
+  applyVrmPoseForDisplayMode();
+  applyAvatarModePresentation();
+  if (aiDockMode) restoreAiDockPanelPosition();
+}
 
 btnDistraction.addEventListener('click', () => {
-  distractionMode = !distractionMode;
-  applyVisibilityModes();
+  setDisplayMode('desktop');
+});
+
+btnAvatarMode?.addEventListener('click', () => {
+  setDisplayMode(displayMode === 'avatar' ? 'desktop' : 'avatar');
+});
+
+avatarDesktopBtn?.addEventListener('click', () => setDisplayMode('desktop'));
+avatarAvatarBtn?.addEventListener('click', () => setDisplayMode('avatar'));
+avatarAiDockBtn?.addEventListener('click', () => setDisplayMode('ai-dock'));
+dockDesktopBtn?.addEventListener('click', () => setDisplayMode('desktop'));
+dockAvatarBtn?.addEventListener('click', () => setDisplayMode('avatar'));
+dockAiDockBtn?.addEventListener('click', () => setDisplayMode('ai-dock'));
+
+function restoreAiDockPanelPosition() {
+  if (!aiDockPanel) return;
+  try {
+    const saved = JSON.parse(localStorage.getItem(AI_DOCK_POSITION_KEY) || 'null');
+    if (!saved || typeof saved !== 'object') return;
+    if (typeof saved.left === 'number' && typeof saved.top === 'number') {
+      aiDockPanel.style.left = `${saved.left}px`;
+      aiDockPanel.style.top = `${saved.top}px`;
+      aiDockPanel.style.right = 'auto';
+      aiDockPanel.style.bottom = 'auto';
+      aiDockPanel.style.transform = 'none';
+    }
+  } catch {
+    // ignore malformed saved positions
+  }
+}
+
+function saveAiDockPanelPosition(rect) {
+  localStorage.setItem(AI_DOCK_POSITION_KEY, JSON.stringify({
+    left: Math.max(8, Math.round(rect.left)),
+    top: Math.max(8, Math.round(rect.top))
+  }));
+}
+
+aiDockTitlebar?.addEventListener('pointerdown', (event) => {
+  if (event.button !== 0 || !aiDockPanel) return;
+  const rect = aiDockPanel.getBoundingClientRect();
+  aiDockDrag = {
+    pointerId: event.pointerId,
+    offsetX: event.clientX - rect.left,
+    offsetY: event.clientY - rect.top,
+    width: rect.width,
+    height: rect.height
+  };
+  aiDockPanel.style.left = `${rect.left}px`;
+  aiDockPanel.style.top = `${rect.top}px`;
+  aiDockPanel.style.right = 'auto';
+  aiDockPanel.style.bottom = 'auto';
+  aiDockPanel.style.transform = 'none';
+  event.preventDefault();
+});
+
+document.addEventListener('pointermove', (event) => {
+  if (!aiDockDrag || !aiDockPanel) return;
+  const maxX = window.innerWidth - aiDockDrag.width - 8;
+  const maxY = window.innerHeight - aiDockDrag.height - 8;
+  const nextLeft = Math.min(Math.max(8, event.clientX - aiDockDrag.offsetX), maxX);
+  const nextTop = Math.min(Math.max(8, event.clientY - aiDockDrag.offsetY), maxY);
+  aiDockPanel.style.left = `${nextLeft}px`;
+  aiDockPanel.style.top = `${nextTop}px`;
+});
+
+document.addEventListener('pointerup', () => {
+  if (!aiDockDrag || !aiDockPanel) return;
+  saveAiDockPanelPosition(aiDockPanel.getBoundingClientRect());
+  aiDockDrag = null;
+});
+
+document.addEventListener('pointercancel', () => {
+  aiDockDrag = null;
 });
 
 function applyVisibilityModes() {
-  const mascotMode = !!features.mascot;
-  document.body.classList.toggle('hide-ui', distractionMode || mascotMode);
+  const mascotMode = displayMode === 'avatar';
+  const aiDockMode = displayMode === 'ai-dock';
+  document.body.classList.toggle('avatar-mode', mascotMode);
+  document.body.classList.toggle('hide-ui', mascotMode);
   document.body.classList.toggle('desktop-mascot-mode', mascotMode);
-  btnDistraction.classList.toggle('active', distractionMode);
+  document.body.classList.toggle('ai-dock-mode', aiDockMode);
+  btnDistraction.classList.toggle('active', displayMode === 'desktop');
+  btnAvatarMode?.classList.toggle('active', mascotMode);
+  btnAiDock?.classList.toggle('active', aiDockMode);
+  dockDesktopBtn?.classList.toggle('active', displayMode === 'desktop');
+  dockAvatarBtn?.classList.toggle('active', mascotMode);
+  dockAiDockBtn?.classList.toggle('active', aiDockMode);
 }
 
 // Settings panel with feature on/off toggles (persisted to localStorage)
@@ -1751,6 +2424,13 @@ settingsTabButtons.forEach(btn => {
   btn.addEventListener('click', () => applySettingsTab(btn.dataset.settingsTab));
 });
 applySettingsTab(currentSettingsTab);
+avatar3dBtn?.addEventListener('click', () => {
+  btnSettings?.click();
+  applySettingsTab('3d');
+});
+avatarSettingsBtn?.addEventListener('click', () => {
+  btnSettings?.click();
+});
 
 const FEATURE_DEFAULTS = {
   clock: true,
@@ -1762,6 +2442,11 @@ const FEATURE_DEFAULTS = {
   ssh: true
 };
 let features = { ...FEATURE_DEFAULTS, ...JSON.parse(localStorage.getItem('features') || '{}') };
+if (displayMode === 'avatar') {
+  features.mascot = true;
+} else if (displayMode === 'desktop' || displayMode === 'ai-dock') {
+  features.mascot = false;
+}
 
 function applyFeatures() {
   document.querySelector('.clock-widget').classList.toggle('hidden', !features.clock);
@@ -1790,6 +2475,10 @@ Object.keys(FEATURE_DEFAULTS).forEach(key => {
   checkbox.addEventListener('change', () => {
     features[key] = checkbox.checked;
     localStorage.setItem('features', JSON.stringify(features));
+    if (key === 'mascot') {
+      setDisplayMode(checkbox.checked ? 'avatar' : 'desktop');
+      return;
+    }
     applyFeatures();
   });
 });
@@ -1845,7 +2534,7 @@ let customTheme = { ...THEME_DEFAULTS, ...JSON.parse(localStorage.getItem('custo
 function applyCustomTheme() {
   if (customTheme.accentColor) {
     document.documentElement.style.setProperty('--accent', customTheme.accentColor);
-    document.documentElement.style.setProperty('--accent-rgb', (() => { const rgb = hexToRgb(customTheme.accentColor); return rgb ? `${rgb.r}, ${rgb.g}, ${rgb.b}` : "255, 123, 84"; })());
+    document.documentElement.style.setProperty('--accent-rgb', hexToRgb(customTheme.accentColor));
   }
   if (customTheme.accent2Color) {
     document.documentElement.style.setProperty('--accent-2', customTheme.accent2Color);
@@ -1860,7 +2549,7 @@ function applyCustomTheme() {
 
 function hexToRgb(hex) {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : null;
+  return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255, 123, 84';
 }
 
 function loadThemeControls() {
@@ -2027,10 +2716,10 @@ renderBgmPlaylist();
 
 // Drawers share the same slot, so opening one closes the others
 function closeOtherDrawers(except) {
-  [[todoPanel, btnTodo], [settingsPanel, btnSettings], [sshPanel, btnSsh], [workshopPanel, btnWorkshop], [launcherPanel, btnLauncher]].forEach(([panel, btn]) => {
-    if (panel !== except) {
+  [[todoPanel, btnTodo], [settingsPanel, btnSettings], [sshPanel, btnSsh], [workshopPanel, btnWorkshop], [launcherPanel, btnLauncher], [aiDockPanel, null]].forEach(([panel, btn]) => {
+    if (panel && panel !== except) {
       panel.classList.remove('active');
-      btn.classList.remove('active');
+      if (btn) btn.classList.remove('active');
     }
   });
 }
@@ -2585,9 +3274,10 @@ function initThreeScenes() {
   lookAtTarget.position = vrmLookTargetObj.position;
 
   // Sleepy eyes logic state
-  let eyeState = 'closed';
+  let eyeState = 'open';
   let eyeTimer = Math.random() * 5.0 + 5.0;
-  let blinkWeight = 1.0;
+  let blinkWeight = 0.0;
+  const BLINK_MAX_WEIGHT = 0.68;
 
   function updateSleepyEyes(vrm, deltaTime) {
     if (!vrm.expressionManager) return;
@@ -2597,7 +3287,7 @@ function initThreeScenes() {
     const transitionSpeed = 5.0;
 
     if (eyeState === 'closed') {
-      blinkWeight = 1.0;
+      blinkWeight = BLINK_MAX_WEIGHT;
       if (eyeTimer <= 0) {
         eyeState = 'opening';
       }
@@ -2615,8 +3305,8 @@ function initThreeScenes() {
       }
     } else if (eyeState === 'closing') {
       blinkWeight += deltaTime * transitionSpeed;
-      if (blinkWeight >= 1.0) {
-        blinkWeight = 1.0;
+      if (blinkWeight >= BLINK_MAX_WEIGHT) {
+        blinkWeight = BLINK_MAX_WEIGHT;
         eyeState = 'closed';
         eyeTimer = Math.random() * 7.0 + 6.0;
       }
@@ -2685,6 +3375,16 @@ function update3DLights() {
 
   const applyThemeLights = (directionalLight, ambientLight) => {
     if (!directionalLight || !ambientLight) return;
+
+    const useNeutralAvatarLighting = displayMode === 'avatar';
+    if (useNeutralAvatarLighting) {
+      ambientLight.color.setHex(0xc8c8c8);
+      ambientLight.intensity = 0.48;
+      directionalLight.color.setHex(0xf7f7f7);
+      directionalLight.intensity = 0.68;
+      directionalLight.position.set(0.8, 0.9, 1.1).normalize();
+      return;
+    }
 
     if (currentScene === 'night') {
       ambientLight.color.setHex(0x2d2d4c);
@@ -2762,6 +3462,41 @@ function frameVrmModel(modelRoot, camera) {
   camera.lookAt(0.0, Math.max(0.0, size.y * 0.02), 0.0);
 }
 
+function captureModelBaseTransform(modelRoot) {
+  if (!modelRoot) return;
+  modelRoot.userData.baseTransform = {
+    position: modelRoot.position.clone(),
+    rotation: modelRoot.rotation.clone(),
+    scale: modelRoot.scale.clone()
+  };
+}
+
+function resetModelToBaseTransform(modelRoot) {
+  if (!modelRoot?.userData?.baseTransform) return;
+  const base = modelRoot.userData.baseTransform;
+  modelRoot.position.copy(base.position);
+  modelRoot.rotation.copy(base.rotation);
+  modelRoot.scale.copy(base.scale);
+}
+
+function frameAvatarModel(modelRoot, camera) {
+  const THREE = THREE_Lib;
+  const box = new THREE.Box3().setFromObject(modelRoot);
+  const size = new THREE.Vector3();
+  const center = new THREE.Vector3();
+  box.getSize(size);
+  box.getCenter(center);
+
+  modelRoot.position.x -= center.x;
+  modelRoot.position.y -= center.y;
+  modelRoot.position.z -= center.z;
+
+  const maxDim = Math.max(size.x, size.y, size.z) || 1;
+  const distance = Math.max(4.2, (maxDim / 2) / Math.tan((camera.fov * Math.PI / 180) / 2) * 2.2);
+  camera.position.set(0.0, Math.max(0.88, size.y * 0.28), distance);
+  camera.lookAt(0.0, Math.max(0.02, size.y * 0.03), 0.0);
+}
+
 function loadVrmModel(url) {
   if (!vrmScene3D || !GLTFLoader_Lib || !VRMLoaderPlugin_Lib) return;
 
@@ -2786,6 +3521,7 @@ function loadVrmModel(url) {
 
       vrm.scene.rotation.y = (vrmSettings.rotation * Math.PI) / 180;
       vrm.scene.position.set(0.0, -0.18, 0.0);
+      captureModelBaseTransform(vrm.scene);
 
       applyVrmPose();
 
@@ -2799,6 +3535,7 @@ function loadVrmModel(url) {
       vrm.scene.updateMatrixWorld(true);
       frameVrmModel(vrm.scene, vrmCamera3D);
       applyVrmExpression();
+      applyAvatarModePresentation();
 
       console.log('VRM avatar loaded successfully.');
     },
@@ -2930,8 +3667,8 @@ function loadGlbModel(url) {
 // 10. MODEL SETTINGS (position / size / facing)
 // ==========================================
 const MODEL_POSITION_MODE = 'center';
-const VRM_DEFAULTS = { posX: 214, posY: -764, scale: 600, rotation: -14 };
-const GLB_DEFAULTS = { posX: -390, posY: -537, scale: 592, rotation: -38 };
+const VRM_DEFAULTS = { posX: 214, posY: -764, scale: 300, rotation: -14 };
+const GLB_DEFAULTS = { posX: -390, posY: -537, scale: 296, rotation: -38 };
 const GLB_CHAIR_DEFAULTS = { posX: 74, posY: -6, posZ: 2, scale: 109, rotation: -102 };
 const VRM_BASE_WIDTH = 500;
 const VRM_BASE_HEIGHT = 600;
@@ -3002,10 +3739,18 @@ function scaleViewportSize(value) {
 }
 
 function applyVrmSettings() {
-  vrmCanvas.style.left = `calc(50% + ${scaleViewportX(vrmSettings.posX)}px)`;
-  vrmCanvas.style.bottom = `${scaleViewportY(vrmSettings.posY)}px`;
-  vrmCanvas.style.width = `${scaleViewportSize((VRM_BASE_WIDTH * vrmSettings.scale) / 100)}px`;
-  vrmCanvas.style.height = `${scaleViewportSize((VRM_BASE_HEIGHT * vrmSettings.scale) / 100)}px`;
+  if (displayMode === 'avatar') {
+    const avatarScale = 180;
+    vrmCanvas.style.left = '50%';
+    vrmCanvas.style.bottom = '0px';
+    vrmCanvas.style.width = `${scaleViewportSize((VRM_BASE_WIDTH * avatarScale) / 100)}px`;
+    vrmCanvas.style.height = `${scaleViewportSize((VRM_BASE_HEIGHT * avatarScale) / 100)}px`;
+  } else {
+    vrmCanvas.style.left = `calc(50% + ${scaleViewportX(vrmSettings.posX)}px)`;
+    vrmCanvas.style.bottom = `${scaleViewportY(vrmSettings.posY)}px`;
+    vrmCanvas.style.width = `${scaleViewportSize((VRM_BASE_WIDTH * vrmSettings.scale) / 100)}px`;
+    vrmCanvas.style.height = `${scaleViewportSize((VRM_BASE_HEIGHT * vrmSettings.scale) / 100)}px`;
+  }
 
   if (vrmRenderer3D && vrmCamera3D) {
     vrmRenderer3D.setSize(vrmCanvas.clientWidth, vrmCanvas.clientHeight);
@@ -3382,14 +4127,6 @@ async function populateThemeEditorSelects() {
       const option = document.createElement('option');
       option.value = item.id;
       option.textContent = item.name;
-      glbCharSelect.appendChild(option);
-    });
-
-    glbEnvSelect.innerHTML = '<option value="">なし</option>';
-    glbItems.forEach(item => {
-      const option = document.createElement('option');
-      option.value = item.id;
-      option.textContent = item.name;
       glbEnvSelect.appendChild(option);
     });
   } catch (e) {
@@ -3413,6 +4150,14 @@ document.getElementById('theme-behavior-select')?.addEventListener('change', (e)
   themeEditorState.behavior_profile = e.target.value;
 });
 
+function hexToRgbObject(hex) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
 
 function previewThemeChanges() {
   const root = document.documentElement;
@@ -3431,7 +4176,7 @@ function previewThemeChanges() {
 
     // For accent, also update accent-rgb for rgba usage
     if (key === 'accent') {
-      const rgb = hexToRgb(value);
+      const rgb = hexToRgbObject(value);
       if (rgb) {
         root.style.setProperty('--accent-rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`);
       }
@@ -3439,7 +4184,7 @@ function previewThemeChanges() {
 
     // For warm colors, also update warm-rgb
     if (key === 'accent2') {
-      const rgb = hexToRgb(value);
+      const rgb = hexToRgbObject(value);
       if (rgb) {
         root.style.setProperty('--warm-rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`);
       }

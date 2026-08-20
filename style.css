@@ -135,6 +135,11 @@ body.desktop-mascot-mode #vrm-canvas {
   z-index: 6;
 }
 
+body.desktop-mascot-mode #glb-canvas {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 #glb-canvas {
   position: fixed;
   left: 50%;
@@ -153,6 +158,290 @@ body.desktop-mascot-mode #vrm-canvas {
 
 body.desktop-mascot-mode #glb-canvas {
   z-index: 1;
+}
+
+body.desktop-mascot-mode .bg,
+body.ai-dock-mode .bg {
+  opacity: 0 !important;
+}
+
+body.desktop-mascot-mode .overlay,
+body.ai-dock-mode .overlay {
+  background: transparent !important;
+}
+
+body.avatar-mode .overlay {
+  display: none !important;
+}
+
+body.ai-dock-mode .overlay > :not(.ai-dock-panel) {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body.ai-dock-mode .overlay {
+  cursor: default !important;
+  pointer-events: none;
+}
+
+html body.desktop-mascot-mode,
+html body.ai-dock-mode {
+  background: transparent !important;
+}
+
+html body.desktop-mascot-mode::before,
+html body.ai-dock-mode::before {
+  opacity: 0 !important;
+}
+
+body.desktop-mascot-mode .overlay::after,
+body.ai-dock-mode .overlay::after {
+  opacity: 0 !important;
+  background: transparent !important;
+}
+
+body.avatar-mode .mode-switcher,
+body.ai-dock-mode .mode-switcher,
+body.avatar-mode .clock-widget,
+body.ai-dock-mode .clock-widget,
+body.avatar-mode .top-right-panel,
+body.ai-dock-mode .top-right-panel,
+body.avatar-mode .sidebar,
+body.ai-dock-mode .sidebar,
+body.avatar-mode .bottom-left-toolbar,
+body.ai-dock-mode .bottom-left-toolbar,
+body.avatar-mode .music-player,
+body.ai-dock-mode .music-player,
+body.avatar-mode .todo-panel,
+body.ai-dock-mode .todo-panel {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+body.ai-dock-mode #vrm-canvas,
+body.ai-dock-mode #glb-canvas {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.mode-view {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, visibility 0s linear 0.25s;
+}
+
+body.avatar-mode .mode-view.avatar-view,
+body.ai-dock-mode .mode-view.ai-dock-view {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.25s ease;
+  pointer-events: auto;
+}
+
+body.ai-dock-mode .mode-view.ai-dock-view {
+  pointer-events: none !important;
+}
+
+body.ai-dock-mode .mode-view.avatar-view {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body.avatar-mode .mode-view.ai-dock-view {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.ai-dock-view {
+  background: transparent;
+}
+
+body.ai-dock-mode .ai-dock-panel {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+body.ai-dock-mode .ai-dock-panel {
+  top: auto;
+  right: auto;
+  bottom: 16px;
+  left: 50%;
+  width: min(980px, calc(100vw - 32px));
+  height: min(420px, calc(100vh - 32px));
+  max-width: none;
+  border-radius: 24px;
+  transform: translateX(-50%);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  pointer-events: none;
+}
+
+body.ai-dock-mode .ai-dock-header {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: auto;
+}
+
+body.ai-dock-mode .ai-dock-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: auto;
+}
+
+body.ai-dock-mode .ai-dock-titlebar h3 {
+  margin: 0;
+}
+
+body.ai-dock-mode .ai-dock-drag-hint {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+body.ai-dock-mode .ai-dock-mode-switcher {
+  display: inline-flex;
+  gap: 8px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: auto;
+}
+
+body.ai-dock-mode .ai-dock-mode-btn {
+  min-width: 82px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.78);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+body.ai-dock-mode .ai-dock-mode-btn.active {
+  background: rgba(var(--accent-rgb), 0.22);
+  color: #fff;
+}
+
+body.ai-dock-mode .ai-dock-body {
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  pointer-events: auto;
+}
+
+body.ai-dock-mode .ai-dock-actions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  pointer-events: auto;
+}
+
+body.ai-dock-mode .ai-dock-main {
+  overflow: auto;
+  pointer-events: auto;
+}
+
+body.ai-dock-mode .ai-dock-statusbar,
+body.ai-dock-mode .ai-dock-section,
+body.ai-dock-mode .ai-dock-section *,
+body.ai-dock-mode .ai-dock-actions *,
+body.ai-dock-mode .ai-dock-main * {
+  pointer-events: auto;
+}
+
+.avatar-view {
+  background: transparent;
+  pointer-events: auto;
+}
+
+.avatar-panel {
+  position: fixed;
+  top: 118px;
+  right: 24px;
+  width: 218px;
+  padding: 14px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(11, 14, 20, 0.82), rgba(26, 28, 36, 0.72));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(18px);
+}
+
+.avatar-panel-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.avatar-panel-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.avatar-panel-subtitle {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.56);
+}
+
+.avatar-panel-switcher,
+.avatar-panel-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.avatar-panel-switcher {
+  margin-bottom: 10px;
+}
+
+.avatar-panel-btn,
+.avatar-panel-action {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.avatar-panel-btn:hover,
+.avatar-panel-action:hover {
+  background: rgba(var(--accent-rgb), 0.16);
+  border-color: rgba(var(--accent-rgb), 0.45);
+  transform: translateY(-1px);
+}
+
+.avatar-panel-btn.active {
+  background: rgba(var(--accent-rgb), 0.2);
+  border-color: rgba(var(--accent-rgb), 0.5);
+  color: var(--accent);
 }
 
 /* Interactive Overlay Shell */
@@ -473,6 +762,47 @@ body.desktop-mascot-mode #glb-canvas {
 .sidebar-btn svg {
   width: 20px;
   height: 20px;
+}
+
+.sidebar-btn.mode-switch-btn {
+  width: auto;
+  height: 44px;
+  border-radius: 999px;
+  flex-direction: row;
+  gap: 8px;
+  padding: 0 18px;
+  background: rgba(8, 10, 16, 0.72);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.sidebar-btn.mode-switch-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.sidebar-btn-label {
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+.mode-switcher {
+  position: fixed;
+  top: 104px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 9999;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(4, 6, 10, 0.42);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: auto;
 }
 
 /* Bottom Left Toolbar */
@@ -1315,7 +1645,8 @@ html body.ui-theme-zany .overlay {
 .top-right-panel,
 .bottom-left-toolbar,
 .music-player,
-.todo-panel {
+.todo-panel,
+.ai-dock-panel {
   transition: opacity 0.4s ease;
 }
 
@@ -1379,6 +1710,14 @@ html body .overlay::after {
   background:
     radial-gradient(circle at 50% 50%, transparent 58%, rgba(0, 0, 0, 0.16) 100%);
   mix-blend-mode: multiply;
+}
+
+html body.ai-dock-mode,
+html body.ai-dock-mode::before,
+html body.ai-dock-mode .bg,
+html body.ai-dock-mode .overlay,
+html body.ai-dock-mode .overlay::after {
+  background: transparent !important;
 }
 
 html body .clock-widget,
@@ -2188,6 +2527,313 @@ html body #total-time {
   text-align: center;
 }
 
+/* AI Dock Panel */
+.ai-dock-panel {
+  position: fixed;
+  top: 0;
+  right: -460px;
+  width: min(460px, calc(100vw - 24px));
+  height: 100vh;
+  background: linear-gradient(180deg, rgba(12, 14, 20, 0.98) 0%, rgba(20, 20, 30, 0.96) 100%);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: right 0.3s ease, opacity 0.2s ease, visibility 0s linear 0.3s;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.42);
+}
+
+.ai-dock-panel.active {
+  right: 0;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: right 0.3s ease, opacity 0.2s ease;
+}
+
+body.ai-dock-mode .ai-dock-panel.active {
+  top: auto;
+  right: auto;
+  bottom: 16px;
+  left: 50%;
+  width: min(980px, calc(100vw - 32px));
+  height: min(420px, calc(100vh - 32px));
+  max-width: none;
+  transform: translateX(-50%);
+  border: 0;
+  border-left: 0;
+  box-shadow: none;
+}
+
+body.hide-ui .ai-dock-panel {
+  right: -460px !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.ai-dock-statusbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0 14px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 12px;
+}
+
+.ai-dock-status {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.ai-dock-current-template {
+  color: rgba(255, 255, 255, 0.58);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ai-dock-body {
+  display: grid;
+  grid-template-columns: minmax(122px, 146px) minmax(0, 1fr);
+  gap: 12px;
+  min-height: 0;
+  flex: 1;
+}
+
+.ai-dock-actions {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  align-content: start;
+}
+
+.ai-dock-action-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 74px;
+  padding: 12px 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.045);
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.ai-dock-action-button:hover {
+  transform: translateY(-2px);
+  background: rgba(var(--accent-rgb), 0.16);
+  border-color: rgba(var(--accent-rgb), 0.35);
+}
+
+.ai-dock-action-button svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ai-dock-action-button span {
+  font-size: 11px;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.ai-dock-main {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.ai-dock-section {
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ai-dock-section-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.ai-dock-template-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.ai-dock-select,
+.ai-dock-inline-btn,
+.ai-dock-prompt {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  background: rgba(10, 12, 18, 0.82);
+  color: #ffffff;
+}
+
+.ai-dock-select {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+}
+
+.ai-dock-inline-btn {
+  padding: 10px 12px;
+  cursor: pointer;
+  background: rgba(var(--accent-rgb), 0.16);
+  border-color: rgba(var(--accent-rgb), 0.32);
+}
+
+.ai-dock-inline-btn:hover {
+  background: rgba(var(--accent-rgb), 0.24);
+}
+
+.ai-dock-template-chips,
+.ai-dock-workflows {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ai-dock-chip,
+.ai-dock-workflow-button {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.86);
+  border-radius: 999px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.ai-dock-chip:hover,
+.ai-dock-workflow-button:hover {
+  background: rgba(var(--accent-rgb), 0.16);
+  border-color: rgba(var(--accent-rgb), 0.35);
+  transform: translateY(-1px);
+}
+
+.ai-dock-chip.active {
+  background: rgba(var(--accent-rgb), 0.22);
+  border-color: rgba(var(--accent-rgb), 0.48);
+  color: #ffffff;
+}
+
+.ai-dock-prompt {
+  width: 100%;
+  min-height: 130px;
+  resize: vertical;
+  padding: 12px;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.ai-dock-log {
+  max-height: 170px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ai-dock-log-empty {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+}
+
+.ai-dock-log-entry {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ai-dock-log-entry[data-kind="system"] {
+  border-left: 2px solid var(--accent);
+}
+
+.ai-dock-log-entry[data-kind="workflow"] {
+  border-left: 2px solid #4adede;
+}
+
+.ai-dock-log-entry[data-kind="template"] {
+  border-left: 2px solid #ff9f43;
+}
+
+.ai-dock-log-meta {
+  margin-bottom: 4px;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.ai-dock-log-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.ai-dock-settings-section {
+  gap: 8px;
+}
+
+.ai-dock-setting {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.ai-dock-setting input {
+  accent-color: var(--accent);
+}
+
+@media (max-width: 1024px) {
+  .ai-dock-panel {
+    width: min(420px, calc(100vw - 16px));
+  }
+
+  .ai-dock-body {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-dock-actions {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
 /* Theme Editor Panel */
 #theme-editor-panel {
   display: flex;
@@ -2457,4 +3103,32 @@ html body #total-time {
 #theme-publish-btn:hover {
   background: rgba(255, 255, 255, 0.15);
   color: #ffffff;
+}
+
+/* Mode-specific transparency overrides must come last so they beat theme defaults. */
+html body.desktop-mascot-mode,
+html body.ai-dock-mode {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+html body.desktop-mascot-mode::before,
+html body.ai-dock-mode::before {
+  opacity: 0 !important;
+}
+
+html body.desktop-mascot-mode .bg,
+html body.ai-dock-mode .bg,
+html body.desktop-mascot-mode #rain,
+html body.ai-dock-mode #rain {
+  opacity: 0 !important;
+}
+
+html body.desktop-mascot-mode .overlay,
+html body.ai-dock-mode .overlay,
+html body.desktop-mascot-mode .overlay::after,
+html body.ai-dock-mode .overlay::after {
+  background: transparent !important;
+  background-image: none !important;
 }
