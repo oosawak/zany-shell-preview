@@ -432,31 +432,23 @@ async function deleteFilesFromDB(category, id) {
 // ==========================================
 function updateClock() {
   const now = new Date();
+  const timeZone = "Asia/Tokyo";
+  const parts = Object.fromEntries(new Intl.DateTimeFormat("en-US", {
+    timeZone, year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit", hour12: true
+  }).formatToParts(now).map(({ type, value }) => [type, value]));
+  const weekdayName = new Intl.DateTimeFormat("en-US", { timeZone, weekday: "short" }).format(now);
+  const weekdayIndex = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(weekdayName);
+  const weekdaysArray = t("weekdays").split ? t("weekdays") : LANGUAGES[currentLanguage].weekdays;
 
-  // Time: HH:MM
-  let hh = now.getHours();
-  const mm = String(now.getMinutes()).padStart(2, "0");
-  const ampm = hh >= 12 ? t('time_period_pm') : t('time_period_am');
-  hh = hh % 12;
-  hh = hh ? hh : 12; // 0 -> 12
-  const hhStr = String(hh).padStart(2, "0");
-
-  document.getElementById("time-text").textContent = `${hhStr}:${mm}`;
-  document.getElementById("ampm-text").textContent = ampm;
-
-  // Date: YYYY/MM/DD(Day)
-  const yyyy = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const date = String(now.getDate()).padStart(2, "0");
-  const weekdaysArray = t('weekdays').split ? t('weekdays') : LANGUAGES[currentLanguage].weekdays;
-  const day = weekdaysArray[now.getDay()];
-
-  document.getElementById("date-text").textContent = `${yyyy}/${month}/${date}(${day})`;
+  document.getElementById("time-text").textContent = `${parts.hour}:${parts.minute}`;
+  document.getElementById("ampm-text").textContent = parts.dayPeriod === "AM" ? t("time_period_am") : t("time_period_pm");
+  document.getElementById("date-text").textContent = `${parts.year}/${parts.month}/${parts.day}(${weekdaysArray[weekdayIndex]})`;
 }
 setInterval(updateClock, 1000);
 updateClock();
-
-// ==========================================
+setInterval(updateClock, 1000);
+updateClock();
 // 2. POMODORO TIMER ENGINE
 // ==========================================
 let pomoState = 'idle'; // 'idle', 'working', 'breaking', 'paused'
@@ -1853,7 +1845,7 @@ let customTheme = { ...THEME_DEFAULTS, ...JSON.parse(localStorage.getItem('custo
 function applyCustomTheme() {
   if (customTheme.accentColor) {
     document.documentElement.style.setProperty('--accent', customTheme.accentColor);
-    document.documentElement.style.setProperty('--accent-rgb', hexToRgb(customTheme.accentColor));
+    document.documentElement.style.setProperty('--accent-rgb', (() => { const rgb = hexToRgb(customTheme.accentColor); return rgb ? `${rgb.r}, ${rgb.g}, ${rgb.b}` : "255, 123, 84"; })());
   }
   if (customTheme.accent2Color) {
     document.documentElement.style.setProperty('--accent-2', customTheme.accent2Color);
@@ -1868,7 +1860,7 @@ function applyCustomTheme() {
 
 function hexToRgb(hex) {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255, 123, 84';
+  return result ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : null;
 }
 
 function loadThemeControls() {
@@ -3421,14 +3413,6 @@ document.getElementById('theme-behavior-select')?.addEventListener('change', (e)
   themeEditorState.behavior_profile = e.target.value;
 });
 
-function hexToRgb(hex) {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
-  } : null;
-}
 
 function previewThemeChanges() {
   const root = document.documentElement;
